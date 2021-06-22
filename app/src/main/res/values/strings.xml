@@ -7,4 +7,12 @@
     <string name="tab_send_receipt">Отправленные</string>
     <string name="navigation_drawer_open">navi_open</string>
     <string name="navigation_drawer_close">navi_close</string>
+    <string name="close">ЗАКРЫТЬ</string>
+    <string name="cancel">ОТМЕНА</string>
+    <string name="title_dialog_exit">Закрыть Mailer?</string>
+
+
+
+
+
 </resources>

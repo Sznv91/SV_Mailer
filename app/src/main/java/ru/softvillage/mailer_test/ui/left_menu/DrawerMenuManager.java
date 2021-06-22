@@ -21,6 +21,7 @@ import ru.softvillage.mailer_test.BuildConfig;
 import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.ui.IMainView;
+import ru.softvillage.mailer_test.ui.dialog.ExitDialog;
 
 public class DrawerMenuManager<T extends AppCompatActivity> implements IMainView, View.OnClickListener {
 
@@ -124,6 +125,9 @@ public class DrawerMenuManager<T extends AppCompatActivity> implements IMainView
     public void onClick(View v) {
         switch (v.getId()) {
             case R.id.titleExit:
+                ExitDialog exitDialog = ExitDialog.newInstance();
+                exitDialog.setCancelable(false);
+                exitDialog.show(activity.getSupportFragmentManager(), ExitDialog.class.getSimpleName());
                 break;
             case R.id.changeThemeBottom:
                 int currentTheme = SessionPresenter.getInstance().getCurrentTheme();
