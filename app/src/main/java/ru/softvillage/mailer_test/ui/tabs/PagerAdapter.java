@@ -20,9 +20,9 @@ public class PagerAdapter extends FragmentStateAdapter {
     public Fragment createFragment(int position) {
         switch (position) {
             case 0:
-                return AllReceipt.newInstance("0", "0");
+                return AllReceipt.newInstance(0);
             case 1:
-                return SendReceipt.newInstance("0", "0");
+                return SendReceipt.newInstance(0);
         }
         return null;
     }

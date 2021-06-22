@@ -14,18 +14,6 @@
         app:tabIconTint="@color/active_fonts_lt"
         app:tabInlineLabel="true"
         app:tabMode="fixed">
-<!--
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_tab_receipt_all"
-            android:text="Все чеки" />
-
-        <com.google.android.material.tabs.TabItem
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:icon="@drawable/ic_tab_receipt_send"
-            android:text="Отправленнные чеки" />-->
     </com.google.android.material.tabs.TabLayout>
 
     <View
