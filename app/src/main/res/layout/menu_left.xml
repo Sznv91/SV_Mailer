@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/drawer_menu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:layout_gravity="start"
+    android:background="@color/white"
+    android:choiceMode="none"
+    android:clickable="true"
+    android:fillViewport="true"
+    android:focusable="true">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/header"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_vertical"
+        android:orientation="horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:ignore="UseCompoundDrawables">
+
+        <TextView
+            android:id="@+id/titleParams"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+
+
+            android:layout_weight="1"
+            android:fontFamily="@font/roboto_medium"
+            android:paddingStart="@dimen/margin_left_menu_8"
+            android:paddingTop="@dimen/margin_left_menu_image_or_title_16"
+            android:paddingBottom="@dimen/margin_left_menu_image_or_title_16"
+            android:text="@string/title_params"
+            android:textColor="@color/fonts_lt"
+            android:textSize="21sp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <ImageView
+            android:id="@+id/changeTheme"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_marginTop="@dimen/margin_left_menu_image_or_title_16"
+            android:layout_marginEnd="@dimen/margin_left_menu_8"
+            android:layout_marginBottom="@dimen/margin_left_menu_image_or_title_16"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_moon" />
+
+        <FrameLayout
+            android:id="@+id/changeThemeBottom"
+            android:layout_width="40dp"
+            android:layout_height="0dp"
+            android:layout_marginBottom="@dimen/margin_left_menu_8"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/exit"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/iconExit"
+            android:layout_width="wrap_content"
+            android:layout_height="18dp"
+            android:layout_marginStart="@dimen/margin_left_menu_image_or_title_16"
+            android:layout_marginTop="@dimen/margin_left_menu_8"
+            android:layout_marginBottom="@dimen/margin_left_menu_8"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/ic_exit" />
+
+        <TextView
+            android:id="@+id/titleExit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_left_menu_8"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/exit_up"
+            android:textColor="@color/fonts_lt"
+            android:textSize="@dimen/text_size_left_menu"
+            app:layout_constraintBottom_toBottomOf="@+id/iconExit"
+            app:layout_constraintStart_toEndOf="@+id/iconExit"
+            app:layout_constraintTop_toTopOf="@+id/iconExit" />
+
+        <View
+            android:id="@+id/dividerExit"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_lt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/version"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="@dimen/margin_left_menu_image_or_title_16"
+            android:fontFamily="@font/roboto_medium"
+            android:text="TextView"
+            android:textColor="@color/active_fonts_lt"
+            android:textSize="@dimen/text_size_version"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

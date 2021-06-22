@@ -1,0 +1,14 @@
+<resources>
+    <string name="app_name">SV Mailer Test</string>
+    <string name="title_activity_main">SV Мэйлер</string>
+    <string name="exit_up">ВЫХОД</string>
+    <string name="title_params">Параметры</string>
+    <string name="tab_all_receipt">Все чеки</string>
+    <string name="tab_send_receipt">Отправленные</string>
+    <string name="navigation_drawer_open">navi_open</string>
+    <string name="navigation_drawer_close">navi_close</string>
+
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
