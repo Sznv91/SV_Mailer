@@ -44,6 +44,8 @@ public class MainActivity extends AppCompatActivity {
         Log.d("ru.softvillage.mailer_test" + "_Receipt.Header", "Start activity");
 
         Cursor<Receipt.Header> cursor = ReceiptApi.getReceiptHeaders(getApplicationContext(), Receipt.Type.SELL);
+        Log.d("ru.softvillage.mailer_test" + "_Receipt.Header", "Cursor count (size): " + cursor.getCount());
+
         while (cursor != null && cursor.moveToNext()) {
             Log.d("ru.softvillage.mailer_test" + "_Receipt.Header", "cursor.getValue().toString(): " + cursor.getValue().toString());
         }
