@@ -2,6 +2,8 @@ package ru.softvillage.mailer_test.dataBase;
 
 import androidx.lifecycle.LiveData;
 
+import java.util.List;
+
 import lombok.Getter;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
 
@@ -14,7 +16,7 @@ public class DbHelper {
         this.dataBase = dataBase;
     }
 
-    public LiveData<EvoReceipt> getAllEvoReceiptLiveData() {
+    public LiveData<List<EvoReceipt>> getAllEvoReceiptLiveData() {
         return dataBase.receiptDao().getAllEvoReceiptLiveData();
     }
 }

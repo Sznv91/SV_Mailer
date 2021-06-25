@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/item_receipt_layout"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="@color/white">
+
+    <ImageView
+        android:id="@+id/iv_static_check_list"
+        android:layout_width="wrap_content"
+        android:layout_height="25dp"
+        android:src="@drawable/ic_recipient_list"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:id="@+id/title_receipt_sale"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="12dp"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/title_receipt_sale"
+        android:textColor="@color/fonts_lt"
+        app:layout_constraintStart_toEndOf="@+id/iv_static_check_list"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Чек продажи № 3143 на 32 позиции" />
+
+    <TextView
+        android:id="@+id/tv_static_summ"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_medium"
+        android:text="@string/tv_static_summ"
+        android:textColor="@color/active_fonts_lt"
+        android:textSize="10sp"
+        app:layout_constraintStart_toEndOf="@id/iv_static_check_list"
+        app:layout_constraintTop_toBottomOf="@id/title_receipt_sale" />
+
+    <TextView
+        android:fontFamily="@font/roboto_regular"
+        android:id="@+id/title_receipt_time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:paddingEnd="16dp"
+        android:textColor="@color/active_fonts_lt"
+        android:textSize="10sp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_static_summ"
+        tools:text="14:58" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

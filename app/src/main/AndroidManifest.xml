@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="ru.softvillage.mailer_test">
 
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
+
     <application
         android:name=".App"
         android:allowBackup="true"
@@ -9,26 +11,30 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.SWMailerTest"
-        >
-<!--        android:theme="@style/Theme.SWMailerTest"-->
+        android:theme="@style/Theme.SWMailerTest">
 
+        <service
+            android:name=".service.EvoReceiptAdderService"
+            android:enabled="true"
+            android:exported="true"/>
+        <!-- android:theme="@style/Theme.SWMailerTest" -->
         <meta-data
             android:name="app_uuid"
             android:value="3d87a1c7-ac95-4ff1-aabb-091c9e2d5833" />
 
         <activity
-            android:name="ru.softvillage.mailer_test.ui.MainActivity"
+            android:name=".ui.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.SWMailerTest.Launcher">
-
             <meta-data
                 android:name="ru.evotor.launcher.BACKGROUND_COLOR"
                 android:value="#FF5722" />
+
             <intent-filter android:priority="20">
                 <action android:name="android.intent.action.MAIN" />
-                <!--                 Указывает на расоположение инконки на рабочем столе для android устройств (не эвотор)-->
-                <!--                <category android:name="android.intent.category.LAUNCHER" />-->
+                <!-- Указывает на расоположение инконки на рабочем столе для android устройств (не эвотор) -->
+                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
+
 
                 <!-- Указывает, что иконка приложения будет отображаться на главном экране смарт-терминала. -->
                 <category android:name="android.intent.category.EVOTOR" />

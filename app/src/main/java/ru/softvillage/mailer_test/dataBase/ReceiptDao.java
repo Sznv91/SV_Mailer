@@ -16,7 +16,7 @@ import ru.softvillage.mailer_test.dataBase.entity.PartialEvoReceipt;
 public interface ReceiptDao {
 
     @Query("SELECT * FROM evo_receipt_all")
-    LiveData<EvoReceipt> getAllEvoReceiptLiveData();
+    LiveData<List<EvoReceipt>> getAllEvoReceiptLiveData();
 
     @Query("SELECT evo_uuid FROM evo_receipt_all")
     List<String> getAllEvoReceiptUuid();
