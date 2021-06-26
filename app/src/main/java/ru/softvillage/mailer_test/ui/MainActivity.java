@@ -41,6 +41,7 @@ public class MainActivity extends AppCompatActivity {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new TabLayoutFragment()).commit();
             else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new TabLayoutFragment()).commit(); // заглушка переделать
 //                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new LandscapeTabLayoutFragment()).commit();
             }
         }

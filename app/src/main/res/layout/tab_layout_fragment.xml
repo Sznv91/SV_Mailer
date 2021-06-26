@@ -12,6 +12,9 @@
         app:layout_constraintTop_toTopOf="parent"
         app:tabIndicatorColor="@color/header_lt"
         app:tabIconTint="@color/active_fonts_lt"
+        app:tabContentStart="0dp"
+        app:tabGravity="fill"
+        app:tabMaxWidth="0dp"
         app:tabInlineLabel="true"
         app:tabMode="fixed">
     </com.google.android.material.tabs.TabLayout>

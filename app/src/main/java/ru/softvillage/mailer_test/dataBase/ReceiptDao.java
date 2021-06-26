@@ -15,10 +15,10 @@ import ru.softvillage.mailer_test.dataBase.entity.PartialEvoReceipt;
 @Dao
 public interface ReceiptDao {
 
-    @Query("SELECT * FROM evo_receipt_all")
+    @Query("SELECT * FROM evo_receipt_all ORDER BY date_time DESC")
     LiveData<List<EvoReceipt>> getAllEvoReceiptLiveData();
 
-    @Query("SELECT evo_uuid FROM evo_receipt_all")
+    @Query("SELECT evo_uuid FROM evo_receipt_all ORDER BY date_time DESC")
     List<String> getAllEvoReceiptUuid();
 
     @Query("SELECT * FROM evo_receipt_all WHERE evo_uuid =:evoUuid")
