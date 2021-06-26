@@ -20,10 +20,12 @@ import java.util.List;
 
 import ru.softvillage.mailer_test.App;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
+import ru.softvillage.mailer_test.ui.fragmet.AllReceipt;
 import ru.softvillage.mailer_test.ui.recyclerView.ReceiptItemAdapter;
 
 public class AllReceiptViewModel extends ViewModel {
     private Context context;
+    private AllReceipt allReceiptFragment;
     private LinearLayoutManager layoutManager;
     Application app = App.getInstance();
     ReceiptItemAdapter adapter;
@@ -35,11 +37,18 @@ public class AllReceiptViewModel extends ViewModel {
         List<EvoReceipt> goodEntityListWithDate = injectDateEntity(receiptEntities);
         localCopyReceiptEntityListWithDate = goodEntityListWithDate;
         adapter.setItems(goodEntityListWithDate);
+        if (receiptEntities.size() > 0 && allReceiptFragment != null){
+            allReceiptFragment.hideEmptyListStab();
+        }
 //        Log.d(App.TAG + "_Db", receiptEntities.toString());
     };
 
     public void setContext(Context context) {
         this.context = context;
+    }
+
+    public void setAllReceiptFragment (AllReceipt fragment){
+        this.allReceiptFragment = fragment;
     }
 
     public void setLinearLayoutManager(LinearLayoutManager layoutManager) {

@@ -6,6 +6,10 @@ import lombok.Getter;
 import ru.softvillage.mailer_test.dataBase.DbHelper;
 import ru.softvillage.mailer_test.dataBase.LocalDataBase;
 
+/**
+ * Retrofit sync and async request
+ * https://futurestud.io/tutorials/retrofit-synchronous-and-asynchronous-requests
+ */
 public class App extends Application {
     public static final String TAG = "ru.evotor.ru.softvillage.mailer_test";
 

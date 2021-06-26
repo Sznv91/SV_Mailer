@@ -1,29 +1,26 @@
 package ru.softvillage.mailer_test.dataBase.entity;
 
-import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
+import androidx.room.Index;
 import androidx.room.TypeConverters;
 
 import org.joda.time.LocalDateTime;
 
 import java.math.BigDecimal;
 
-import lombok.Data;
 import ru.softvillage.mailer_test.dataBase.converters.BigDecimalConverter;
 import ru.softvillage.mailer_test.dataBase.converters.DateTimeConverter;
 
-@Entity(tableName = "evo_receipt_all")
-@Data
+@Entity(tableName = "evo_receipt_all", indices = {
+        @Index("evo_uuid"),
+        @Index("soft_village_processed")
+})
 @TypeConverters({DateTimeConverter.class, BigDecimalConverter.class})
-public class EvoReceipt {
+public class EvoReceipt extends AbstractEvoReceipt {
     /**
      * Данные получаемые из курсора при выборке всех чеков
      */
-    @PrimaryKey
-    @NonNull
-    private String evo_uuid; //UUID чека хранящийся в БД эвотор
     @ColumnInfo(name = "evo_receipt_number")
     private String evo_receipt_number; // Номер чека печатаемый в верхней части документа
     @ColumnInfo(name = "evo_type")
@@ -34,24 +31,27 @@ public class EvoReceipt {
     /**
      * Для получения этих данных необходимо используя ReceiptApi открыть чек и сгрузить данные
      */
-    @ColumnInfo(name = "countOfPosition")
+    @ColumnInfo(name = "count_of_position")
     private int countOfPosition; // количество позиций
     @ColumnInfo(name = "price")
     private BigDecimal price; // сумма чека
 
-    public EvoReceipt(@NonNull String evo_uuid) {
-        this.evo_uuid = evo_uuid;
-    }
+    /**
+     * Данные для инденификации типа записи (необходимость отображать на второй кладке)
+     */
+
+    @ColumnInfo(name = "soft_village_processed", defaultValue = "false")
+    private boolean soft_village_processed;
+    @ColumnInfo(name = "sv_sent_sms", defaultValue = "false")
+    private boolean sv_sent_sms;
+    @ColumnInfo(name = "sv_sent_email", defaultValue = "false")
+    private boolean sv_sent_email;
 
     public EvoReceipt() {
     }
 
-    public String getEvo_uuid() {
-        return evo_uuid;
-    }
-
-    public void setEvo_uuid(String evo_uuid) {
-        this.evo_uuid = evo_uuid;
+    public EvoReceipt(String evo_uuid) {
+        super(evo_uuid);
     }
 
     public String getEvo_receipt_number() {
@@ -92,5 +92,29 @@ public class EvoReceipt {
 
     public void setPrice(BigDecimal price) {
         this.price = price;
+    }
+
+    public boolean isSoft_village_processed() {
+        return soft_village_processed;
+    }
+
+    public void setSoft_village_processed(boolean soft_village_processed) {
+        this.soft_village_processed = soft_village_processed;
+    }
+
+    public boolean isSv_sent_sms() {
+        return sv_sent_sms;
+    }
+
+    public void setSv_sent_sms(boolean sv_sent_sms) {
+        this.sv_sent_sms = sv_sent_sms;
+    }
+
+    public boolean isSv_sent_email() {
+        return sv_sent_email;
+    }
+
+    public void setSv_sent_email(boolean sv_sent_email) {
+        this.sv_sent_email = sv_sent_email;
     }
 }

@@ -1,14 +1,11 @@
 package ru.softvillage.mailer_test.dataBase.entity;
 
-import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
-import androidx.room.PrimaryKey;
 import androidx.room.TypeConverters;
 
 import java.math.BigDecimal;
 
-import lombok.Data;
 import ru.softvillage.mailer_test.dataBase.converters.BigDecimalConverter;
 
 /**
@@ -16,30 +13,15 @@ import ru.softvillage.mailer_test.dataBase.converters.BigDecimalConverter;
  * позиций и сумме чека
  */
 @Entity
-@Data
 @TypeConverters({BigDecimalConverter.class})
-public class PartialEvoReceipt {
-    @PrimaryKey
-    @NonNull
-    private String evo_uuid; //UUID чека хранящийся в БД эвотор
-    @ColumnInfo(name = "countOfPosition")
+public class PartialEvoReceiptEvoDbUpdate extends AbstractEvoReceipt {
+    @ColumnInfo(name = "count_of_position")
     private int countOfPosition; // количество позиций
     @ColumnInfo(name = "price")
     private BigDecimal price; // сумма чека
 
-    public PartialEvoReceipt(@NonNull String evo_uuid) {
-        this.evo_uuid = evo_uuid;
-    }
-
-    public PartialEvoReceipt() {
-    }
-
-    public String getEvo_uuid() {
-        return evo_uuid;
-    }
-
-    public void setEvo_uuid(String evo_uuid) {
-        this.evo_uuid = evo_uuid;
+    public PartialEvoReceiptEvoDbUpdate(String evo_uuid) {
+        super(evo_uuid);
     }
 
     public int getCountOfPosition() {

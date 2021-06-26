@@ -20,7 +20,7 @@ public class ReceiptItemViewHolder extends AbstractReceiptViewHolder {
     private final TextView title_receipt_sale;
     private final TextView tv_static_summ;
     private final TextView title_receipt_time;
-    private final ImageView iv_static_check_list;
+    private final ImageView iv_static_check_list, sv_send_email, sv_send_sms;
 
     private final ConstraintLayout item_receipt_layout;
 
@@ -50,6 +50,8 @@ public class ReceiptItemViewHolder extends AbstractReceiptViewHolder {
         tv_static_summ = itemView.findViewById(R.id.tv_static_summ);
         title_receipt_time = itemView.findViewById(R.id.title_receipt_time);
         iv_static_check_list = itemView.findViewById(R.id.iv_static_check_list);
+        sv_send_email = itemView.findViewById(R.id.sv_send_email);
+        sv_send_sms = itemView.findViewById(R.id.sv_send_sms);
         SessionPresenter.getInstance().getCurrentThemeLiveData().observeForever(observer);
     }
 
@@ -61,6 +63,11 @@ public class ReceiptItemViewHolder extends AbstractReceiptViewHolder {
         } else {
             title_receipt_sale.setText(String.format(App.getInstance().getString(R.string.title_receipt_sale), entity.getEvo_receipt_number(), entity.getCountOfPosition()));
             iv_static_check_list.setImageDrawable(ContextCompat.getDrawable(iv_static_check_list.getContext(), R.drawable.ic_recipient_list));
+        }
+
+        if (entity.isSoft_village_processed()) {
+            if (entity.isSv_sent_email()) sv_send_email.setVisibility(View.VISIBLE);
+            if (entity.isSv_sent_sms()) sv_send_sms.setVisibility(View.VISIBLE);
         }
         tv_static_summ.setText(String.format(App.getInstance().getString(R.string.tv_static_summ), entity.getPrice()));
         title_receipt_time.setText(entity.getDate_time().toString("HH:mm"));

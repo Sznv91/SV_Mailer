@@ -2,9 +2,9 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/receipt_all_layout_fragment"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/receipt_all_layout_fragment"
     android:background="@color/main_lt"
     tools:context=".ui.fragmet.AllReceipt">
 
@@ -15,16 +15,35 @@
         tools:listitem="@layout/item_receipt_all_tab" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
-        app:backgroundTint="@color/header_lt"
-        app:tint="@color/white"
-        app:borderWidth="0dp"
-        android:visibility="visible"
         android:id="@+id/fab_up"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
         android:layout_margin="16dp"
-        app:srcCompat="@drawable/ic_arrow_up_gray" />
+        android:visibility="visible"
+        app:backgroundTint="@color/header_lt"
+        app:borderWidth="0dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:srcCompat="@drawable/ic_arrow_up_gray"
+        app:tint="@color/white" />
+
+    <FrameLayout
+        tools:visibility="invisible"
+        android:id="@+id/layout_empty_receipt_list"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="@color/main_lt">
+
+        <TextView
+            android:id="@+id/title_empty_receipt_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/title_empty_receipt_list"
+            android:textColor="@color/active_fonts_lt"
+            android:textSize="28sp"
+            tools:text="Журнал чеков пуст" />
+    </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -1,6 +1,5 @@
 package ru.softvillage.mailer_test.ui.recyclerView;
 
-import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,7 +23,6 @@ public class ReceiptItemAdapter extends RecyclerView.Adapter<AbstractReceiptView
     public static final String DATE_SPLITTER_NAME = App.TAG + "_Date_Splitter_NAME";
     private static final int TYPE_NORMAL = 0;
     private static final int TYPE_DATA_SPLITTER = 1;
-    private static final int TYPE_NOT_FISCALIZED = 2;
 
 
     private final LayoutInflater inflater;
@@ -38,7 +36,6 @@ public class ReceiptItemAdapter extends RecyclerView.Adapter<AbstractReceiptView
             case TYPE_DATA_SPLITTER:
                 return new ReceiptDateSplitHolder(inflater.inflate(R.layout.item_good_date, parent, false));
             case TYPE_NORMAL:
-            case TYPE_NOT_FISCALIZED:
                 return new ReceiptItemViewHolder(inflater.inflate(R.layout.item_receipt_all_tab, parent, false));
         }
         return null;
@@ -58,8 +55,6 @@ public class ReceiptItemAdapter extends RecyclerView.Adapter<AbstractReceiptView
             case TYPE_NORMAL:
                 holder.itemView.setOnClickListener(v -> callback.clickClick(itemList.get(position)));
                 break;
-            case TYPE_NOT_FISCALIZED:
-                break;
         }
     }
 
@@ -78,9 +73,6 @@ public class ReceiptItemAdapter extends RecyclerView.Adapter<AbstractReceiptView
     public int getItemViewType(int position) {
         if (itemList.get(position).getEvo_uuid() != null && itemList.get(position).getEvo_uuid().equals(DATE_SPLITTER_NAME)) {
             return TYPE_DATA_SPLITTER;
-        }
-        if (TextUtils.isEmpty(itemList.get(position).getEvo_uuid())) {
-            return TYPE_NOT_FISCALIZED;
         }
         return TYPE_NORMAL;
     }

@@ -9,8 +9,8 @@ import androidx.room.Update;
 
 import java.util.List;
 
+import ru.softvillage.mailer_test.dataBase.entity.AbstractEvoReceipt;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
-import ru.softvillage.mailer_test.dataBase.entity.PartialEvoReceipt;
 
 @Dao
 public interface ReceiptDao {
@@ -28,6 +28,6 @@ public interface ReceiptDao {
     void addEvoReceipt(EvoReceipt receipt);
 
     @Update(entity = EvoReceipt.class)
-    void updateEvoReceipt(PartialEvoReceipt receipt);
+    void updateEvoReceipt(AbstractEvoReceipt receipt);
 
 }

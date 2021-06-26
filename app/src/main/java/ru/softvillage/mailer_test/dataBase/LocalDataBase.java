@@ -10,9 +10,10 @@ import java.util.concurrent.ExecutorService;
 import java.util.concurrent.Executors;
 
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
-import ru.softvillage.mailer_test.dataBase.entity.PartialEvoReceipt;
+import ru.softvillage.mailer_test.dataBase.entity.PartialEvoReceiptEvoDbUpdate;
+import ru.softvillage.mailer_test.dataBase.entity.PartialEvoReceiptSvDbUpdate;
 
-@Database(entities = {EvoReceipt.class, PartialEvoReceipt.class}, version = 1, exportSchema = false)
+@Database(entities = {EvoReceipt.class, PartialEvoReceiptEvoDbUpdate.class, PartialEvoReceiptSvDbUpdate.class}, version = 1, exportSchema = false)
 public abstract class LocalDataBase extends RoomDatabase {
 
     public abstract ReceiptDao receiptDao();

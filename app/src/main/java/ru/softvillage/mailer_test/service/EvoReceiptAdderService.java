@@ -38,7 +38,7 @@ public class EvoReceiptAdderService extends Service {
     private Thread syncThread;
     private NotificationManager notificationManager;
     public static final int DEFAULT_NOTIFICATION_ID = 101;
-    private static final String INFO = "Выполняется добавление чеков в приложение";
+    private static final String INFO = "Выполняется синхронизация чеков";
     private static final String TITLE = "Мэйлер";
 
     @Override
@@ -69,7 +69,7 @@ public class EvoReceiptAdderService extends Service {
                         tempList.add(EvoReceiptTemp.builder()
                                 .uuid(cursor.getValue().getUuid())
                                 .number(cursor.getValue().getNumber())
-                                .type(Receipt.Type.SELL.name())
+                                .type(cursor.getValue().getType().toString())
                                 .date(cursor.getValue().getDate())
                                 .build());
                     }
@@ -119,7 +119,7 @@ public class EvoReceiptAdderService extends Service {
             builder.setContentIntent(contentIntent)
                     .setOngoing(true)   //Can't be swiped out
                     .setSmallIcon(R.drawable.ic_tab_receipt_send)
-                    .setLargeIcon(BitmapFactory.decodeResource(getResources()/*res*/, R.drawable.sv_big_logo))   // большая картинка
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.sv_big_logo))   // большая картинка
                     .setTicker(Ticker)
                     .setContentTitle(Title) //Заголовок
                     .setContentText(Text) // Текст уведомления
@@ -158,7 +158,7 @@ public class EvoReceiptAdderService extends Service {
 
     @Data
     @Builder
-    static class EvoReceiptTemp {
+    private static class EvoReceiptTemp {
         String uuid;
         String number;
         String type;
