@@ -10,7 +10,7 @@
     <string name="close">ЗАКРЫТЬ</string>
     <string name="cancel">ОТМЕНА</string>
     <string name="title_dialog_exit">Закрыть Mailer?</string>
-    <string name="title_receipt_sale">Чек продажи № %d на %d позиции</string>
+    <string name="title_receipt_sale">Чек продажи № %s на %d позиции</string>
     <string name="tv_static_summ">Сумма %.02f руб.</string>
 
 

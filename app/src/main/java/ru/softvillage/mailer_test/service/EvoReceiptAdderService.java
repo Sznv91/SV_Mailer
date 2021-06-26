@@ -5,8 +5,8 @@ import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.app.PendingIntent;
 import android.app.Service;
-import android.content.Context;
 import android.content.Intent;
+import android.graphics.BitmapFactory;
 import android.os.IBinder;
 import android.util.Log;
 
@@ -14,7 +14,6 @@ import androidx.core.app.NotificationCompat;
 
 import org.joda.time.LocalDateTime;
 
-import java.math.BigDecimal;
 import java.util.List;
 
 import ru.evotor.framework.receipt.Receipt;
@@ -46,7 +45,7 @@ public class EvoReceiptAdderService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        sendNotification("Ticker","Title","Text");
+        sendNotification("Ticker", "Title", "Text");
 //        return super.onStartCommand(intent, flags, startId);
         Log.d(App.TAG + "_AddService", "Служба запущенна");
         if (syncThread == null) {
@@ -63,9 +62,10 @@ public class EvoReceiptAdderService extends Service {
                             receipt.setDate_time(LocalDateTime.fromDateFields(cursor.getValue().getDate()));
 
                             Receipt tempReceipt = ReceiptApi.getReceipt(getApplicationContext(), receipt.getEvo_uuid());
+                            Log.d(App.TAG + "_AdderService", "tempReceipt -> " + tempReceipt.toString());
                             receipt.setCountOfPosition(tempReceipt.getPositions().size());
                             receipt.setPrice(tempReceipt.getPayments().get(0).getValue());
-                            Log.d("ru.softvillage.mailer_test" + "_AdderService -> Receipt.Header", "Выполняем запись в БД: " + receipt.toString());
+                            Log.d(App.TAG + "_AdderService -> Receipt.Header", "Выполняем запись в БД: " + receipt.toString());
 
                             App.getInstance().getDbHelper().getDataBase().receiptDao().addEvoReceipt(receipt);
                         }
@@ -80,7 +80,7 @@ public class EvoReceiptAdderService extends Service {
         return Service.START_STICKY;
     }
 
-    public void sendNotification(String Ticker,String Title,String Text) {
+    public void sendNotification(String Ticker, String Title, String Text) {
 
         //These three lines makes Notification to open main activity after clicking on it
         Intent notificationIntent = new Intent(this, MainActivity.class);
@@ -91,22 +91,22 @@ public class EvoReceiptAdderService extends Service {
 
 
         Notification notification;
-        if (android.os.Build.VERSION.SDK_INT<=15) {
+        if (android.os.Build.VERSION.SDK_INT <= 15) {
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this);
             builder.setContentIntent(contentIntent)
                     .setOngoing(true)   //Can't be swiped out
                     .setSmallIcon(R.drawable.ic_launcher_background)
-                    //.setLargeIcon(BitmapFactory.decodeResource(res, R.drawable.large))   // большая картинка
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources()/*res*/, R.drawable.sv_big_logo))   // большая картинка
                     .setTicker(Ticker)
                     .setContentTitle(Title) //Заголовок
                     .setContentText(Text) // Текст уведомления
                     .setWhen(System.currentTimeMillis());
             notification = builder.getNotification(); // API-15 and lower
-        }else{
-            String CHANNEL_ID = "alex_channel";
+        } else {
+            String CHANNEL_ID = "soft_village_channel";
             NotificationChannel channel = new NotificationChannel(CHANNEL_ID, "SoftVillageChanel",
                     NotificationManager.IMPORTANCE_HIGH);
-            channel.setDescription("SV channel description");
+            channel.setDescription("SV mailer notify channel");
             notificationManager.createNotificationChannel(channel);
             NotificationCompat.Builder builder = new NotificationCompat.Builder(this, CHANNEL_ID);
             builder.setContentIntent(contentIntent)
@@ -114,6 +114,7 @@ public class EvoReceiptAdderService extends Service {
                     .setTicker(INFO)
                     .setContentText(INFO)
                     .setSmallIcon(R.drawable.ic_tab_receipt_send)
+                    .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.sv_big_logo))
                     .setOngoing(true).build();
             notification = builder.build();
         }
