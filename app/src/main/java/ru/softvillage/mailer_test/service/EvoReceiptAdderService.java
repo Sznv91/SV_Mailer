@@ -24,6 +24,10 @@ import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
 import ru.softvillage.mailer_test.ui.MainActivity;
 
+/**
+ * https://www.tutlane.com/tutorial/android/android-progress-notification-with-examples
+ * Добовление прогресс бара
+ */
 public class EvoReceiptAdderService extends Service {
     private Thread syncThread;
     private NotificationManager notificationManager;

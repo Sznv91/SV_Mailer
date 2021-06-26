@@ -7,7 +7,7 @@ import ru.softvillage.mailer_test.dataBase.DbHelper;
 import ru.softvillage.mailer_test.dataBase.LocalDataBase;
 
 public class App extends Application {
-    public static final String TAG = "ru.softvillage.mailer_test";
+    public static final String TAG = "ru.evotor.ru.softvillage.mailer_test";
 
     @Getter
     private static App instance;

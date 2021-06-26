@@ -12,6 +12,9 @@
     <string name="title_dialog_exit">Закрыть Mailer?</string>
     <string name="title_receipt_sale">Чек продажи № %s на %d позиции</string>
     <string name="tv_static_summ">Сумма %.02f руб.</string>
+    <string name="receipt_detail_sale_num">Продажа №%s</string>
+    <string name="receipt_detail_session_id">Смена №%d</string>
+    <string name="title_site_fns">Сайт ФНС: www.nalog.ru</string>
 
 
 

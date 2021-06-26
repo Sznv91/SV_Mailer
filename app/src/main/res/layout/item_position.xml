@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginTop="5dp"
+    android:layout_marginStart="10dp"
+    android:layout_marginEnd="10dp">
+
+    <TextView
+        android:id="@+id/position_name"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_medium"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Обои Артикул № 000004"
+        app:drawableLeftCompat="@drawable/ic_baseline_receipt_24" />
+
+<!--    android:textSize="12sp"-->
+    <TextView
+        android:fontFamily="@font/roboto_regular"
+        android:id="@+id/receipt_item_single_position"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text=""
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/position_name"
+        tools:text="1.000 X 2.00 = 2.00" />
+
+<!--    android:textSize="12sp"-->
+    <TextView
+        android:fontFamily="@font/roboto_regular"
+        android:id="@+id/receipt_item_nds"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:visibility="gone"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/receipt_item_single_position"
+        tools:text="НДС 20% = 2.00"
+        tools:visibility="visible" />
+
+
+<!--    android:textSize="12sp"-->
+    <TextView
+        android:fontFamily="@font/roboto_regular"
+        android:id="@+id/receipt_item_position_discount"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="СКИДКА = 1.00"
+
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/receipt_item_nds" />
+
+<!--    android:textSize="12sp"-->
+    <TextView
+        android:fontFamily="@font/roboto_regular"
+        android:id="@+id/receipt_item_position_cost"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/receipt_item_position_discount"
+        tools:text="ЦЕНА = 1203.55" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
