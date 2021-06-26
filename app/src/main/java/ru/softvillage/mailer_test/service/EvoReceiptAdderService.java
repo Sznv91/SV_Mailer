@@ -100,7 +100,8 @@ public class EvoReceiptAdderService extends Service {
                     .setTicker(Ticker)
                     .setContentTitle(Title) //Заголовок
                     .setContentText(Text) // Текст уведомления
-                    .setWhen(System.currentTimeMillis());
+                    .setWhen(System.currentTimeMillis())
+                    .setProgress(100, 50, true);
             notification = builder.getNotification(); // API-15 and lower
         } else {
             String CHANNEL_ID = "soft_village_channel";
@@ -115,7 +116,9 @@ public class EvoReceiptAdderService extends Service {
                     .setContentText(INFO)
                     .setSmallIcon(R.drawable.ic_tab_receipt_send)
                     .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.drawable.sv_big_logo))
-                    .setOngoing(true).build();
+                    .setOngoing(true)
+                    .setProgress(100, 50, true)
+                    .build();
             notification = builder.build();
         }
 
