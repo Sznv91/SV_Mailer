@@ -21,6 +21,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
+import ru.softvillage.mailer_test.App;
 import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.ui.recyclerView.ReceiptItemAdapter;
@@ -43,6 +44,7 @@ public class AllReceipt extends Fragment {
         mViewModel = new ViewModelProvider(this).get(AllReceiptViewModel.class);
         mViewModel.setContext(getContext());
         mViewModel.setAllReceiptFragment(this);
+        App.getInstance().getDbHelper().getUniqueDate().size(); // Первичная инициализация доступных дат
 
         return inflater.inflate(R.layout.fragment_all_receipt, container, false);
     }
@@ -57,7 +59,7 @@ public class AllReceipt extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-//        SessionPresenter.getInstance().getDrawerManager().showUpButton(false);
+        SessionPresenter.getInstance().getDrawerManager().showUpButton(false);
         layout_empty_receipt_list = view.findViewById(R.id.layout_empty_receipt_list);
         title_empty_receipt_list = view.findViewById(R.id.title_empty_receipt_list);
         receipt_all_layout_fragment = view.findViewById(R.id.receipt_all_layout_fragment);
@@ -83,7 +85,7 @@ public class AllReceipt extends Fragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
         mViewModel.setContext(getContext());
-//        SessionPresenter.getInstance().getDrawerManager().showUpButton(false);
+        SessionPresenter.getInstance().getDrawerManager().showUpButton(false);
     }
 
     ///////////////////////////////////////////////////////////////////////////////////

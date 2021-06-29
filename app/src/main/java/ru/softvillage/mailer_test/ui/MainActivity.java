@@ -5,14 +5,11 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import ru.evotor.framework.receipt.Receipt;
-import ru.evotor.framework.receipt.ReceiptApi;
-import ru.evotor.query.Cursor;
+import ru.softvillage.mailer_test.App;
 import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.service.EvoReceiptAdderService;
@@ -35,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        App.getInstance().getFragmentDispatcher().setActivity(this);
         DrawerMenuManager<MainActivity> manager = new DrawerMenuManager<>(this); // Инициализация бокового меню
 
         if (savedInstanceState == null) {
@@ -46,19 +44,9 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        //////////////////////////////////////////////////////////////////////////////////
-        /*Log.d("ru.softvillage.mailer_test" + "_Receipt.Header", "Start activity");
-
-        Cursor<Receipt.Header> cursor = ReceiptApi.getReceiptHeaders(getApplicationContext(), Receipt.Type.SELL);
-        Log.d("ru.softvillage.mailer_test" + "_Receipt.Header", "Cursor count (size): " + cursor.getCount());
-
-        while (cursor != null && cursor.moveToNext()) {
-            Log.d("ru.softvillage.mailer_test" + "_Receipt.Header", "cursor.getValue().toString(): " + cursor.getValue().toString());
-        }*/
         startAdderService();
     }
 
-    ///////////////////////////////////////////////////////////////////////////////////////////////
     private void startAdderService() {
         if (isMyServiceRunning(EvoReceiptAdderService.class)) {
             Toast.makeText(getApplicationContext(), "Service already running", Toast.LENGTH_LONG).show();
@@ -78,11 +66,12 @@ public class MainActivity extends AppCompatActivity {
         }
         return false;
     }
-    //////////////////////////
 
     @Override
     protected void onDestroy() {
+        App.getInstance().getFragmentDispatcher().setActivity(null);
         SessionPresenter.getInstance().setiMainView1(null);
+        SessionPresenter.getInstance().setDrawerMenuManager(null);
         super.onDestroy();
     }
 }

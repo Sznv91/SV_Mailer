@@ -17,16 +17,23 @@ public class App extends Application {
     private static App instance;
     @Getter
     private DbHelper dbHelper;
+    @Getter
+    private FragmentDispatcher fragmentDispatcher;
 
     @Override
     public void onCreate() {
         super.onCreate();
         instance = this;
         initDbHelper();
+        initFragmentDispatcher();
     }
 
     private void initDbHelper() {
         LocalDataBase db = LocalDataBase.getDataBase(this);
         dbHelper = new DbHelper(db);
+    }
+
+    private void initFragmentDispatcher() {
+        fragmentDispatcher = new FragmentDispatcher();
     }
 }

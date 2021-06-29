@@ -29,6 +29,10 @@ android {
 }
 
 dependencies {
+    /*Генератор QR кодов*/
+    implementation group: 'com.google.zxing', name: 'android-core', version: '3.3.0'
+    implementation group: 'com.google.zxing', name: 'core', version: '3.4.1'
+
     //Joda time
     implementation 'joda-time:joda-time:2.10.10'
 

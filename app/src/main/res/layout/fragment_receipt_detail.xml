@@ -5,7 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
 
-    tools:context=".tabs.fragments.ReceiptDetailFragment">
+    tools:context=".ui.fragmet.ReceiptDetailFragment">
 
     <ScrollView
         android:id="@+id/receipt_detail_layout"
