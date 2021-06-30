@@ -1,10 +1,12 @@
 package ru.softvillage.mailer_test.ui;
 
+import android.annotation.SuppressLint;
 import android.app.ActivityManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Configuration;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +27,19 @@ import ru.softvillage.mailer_test.ui.tabs.TabLayoutFragment;
  * --> Example 2 of TabLayout Using ViewPager
  */
 public class MainActivity extends AppCompatActivity {
+
+    /**
+     * Для запрета возврата из ReceiptDetailFragment до окончания загрузки данных на UI
+     */
+    @SuppressLint("LongLogTag")
+    @Override
+    public void onBackPressed() {
+        if (App.getInstance().getFragmentDispatcher().isAllowBack()) {
+            super.onBackPressed();
+        } else {
+            Log.d(App.TAG + "_MainActivity", "onBackPressed false");
+        }
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

@@ -42,7 +42,6 @@ public class AllReceipt extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(AllReceiptViewModel.class);
-        mViewModel.setContext(getContext());
         mViewModel.setAllReceiptFragment(this);
         App.getInstance().getDbHelper().getUniqueDate().size(); // Первичная инициализация доступных дат
 
@@ -52,7 +51,6 @@ public class AllReceipt extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mViewModel.setContext(null);
         mViewModel.setAllReceiptFragment(null);
     }
 
@@ -84,7 +82,9 @@ public class AllReceipt extends Fragment {
     @Override
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
-        mViewModel.setContext(getContext());
+        if (mViewModel.getAdapter().getItemCount() > 0) {
+            hideEmptyListStab();
+        }
         SessionPresenter.getInstance().getDrawerManager().showUpButton(false);
     }
 

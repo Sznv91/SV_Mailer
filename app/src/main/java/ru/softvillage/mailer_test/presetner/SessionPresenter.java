@@ -49,6 +49,7 @@ public class SessionPresenter {
             address,
             payment_place,
             sno_type;
+    @Getter
     private long org_inn;
     private LocalDateTime lastOpenReceiptDetailFragment;
     private int currentTheme;
@@ -122,11 +123,11 @@ public class SessionPresenter {
     /**
      * Если не заданно "Место расчетов"(payment_place), то оно заполняется информаций о адрессе предприятния.
      *
-     * @param shop_name     назвение предприятия
-     * @param address       адресс предприятния
+     * @param shop_name     назвение предприятия (Не меняется пользователем)
+     * @param address       адресс предприятния (Не меняется пользователем)
      * @param payment_place место расчетов
      * @param sno_type      СНО (УСН Доход - расход)
-     * @param org_inn       ИНН предприятия
+     * @param org_inn       ИНН предприятия (Указывается при регистрации)
      */
     public void setShopInfo(String shop_name, String address, String payment_place, String sno_type, long org_inn) {
         if (!this.shop_name.equals(shop_name)) {

@@ -66,17 +66,6 @@
                     app:layout_constraintTop_toTopOf="parent"
                     tools:text="Продажа №12345" />
 
-                <TextView
-                    android:id="@+id/session_id"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_medium"
-                    android:paddingEnd="10dp"
-                    android:text="@string/receipt_detail_session_id"
-                    app:layout_constraintRight_toRightOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    tools:text="Смена № 55" />
-
             </androidx.constraintlayout.widget.ConstraintLayout>
 
             <FrameLayout
@@ -240,32 +229,11 @@
                     app:layout_constraintTop_toBottomOf="@+id/shop_name"
                     tools:text="346500, Ростовская область, г.Шахты, ул.Шевченко 141" />
 
-                <ImageView
-                    android:id="@+id/user_icon"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:src="@drawable/ic_user_icon"
-                    app:layout_constraintLeft_toLeftOf="@id/title_payment"
-                    app:layout_constraintTop_toBottomOf="@+id/address" />
 
-                <TextView
-                    android:id="@+id/title_user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:fontFamily="@font/roboto_medium"
-                    android:text="Кассир"
-                    app:layout_constraintLeft_toLeftOf="@id/shop_name"
-                    app:layout_constraintTop_toTopOf="@id/user_icon"
-                    tools:text="Кассир" />
 
-                <TextView
-                    android:id="@+id/user_name"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:layout_constraintRight_toRightOf="@+id/total_cost"
-                    app:layout_constraintTop_toTopOf="@+id/title_user_name"
-                    tools:text="Чупахина Оксана" />
+
+
+
 
                 <ImageView
                     android:id="@+id/location_icon"
@@ -274,7 +242,7 @@
                     android:layout_marginTop="16dp"
                     android:src="@drawable/ic_place_icon"
                     app:layout_constraintLeft_toLeftOf="@id/title_payment"
-                    app:layout_constraintTop_toBottomOf="@id/title_user_name" />
+                    app:layout_constraintTop_toBottomOf="@id/address" />
 
                 <TextView
                     android:id="@+id/title_payment_location"
@@ -409,7 +377,7 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="@font/roboto_regular"
-                    android:text="ИНН:"
+                    android:text="@string/title_inn_num"
                     app:layout_constraintRight_toRightOf="@+id/total_cost"
                     app:layout_constraintTop_toBottomOf="@+id/title_fn_num"
                     tools:text="ИНН: 6155089066" />

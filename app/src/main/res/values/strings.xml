@@ -14,9 +14,20 @@
     <string name="tv_static_summ">Сумма %.02f руб.</string>
     <string name="receipt_detail_sale_num">Продажа №%s</string>
     <string name="receipt_detail_session_id">Смена №%d</string>
-    <string name="title_site_fns">Сайт ФНС: www.nalog.ru</string>
     <string name="title_empty_receipt_list">Журнал чеков пуст</string>
+    <string name="receipt_item_position_cost">ЦЕНА = %.02f</string>
+    <string name="receipt_item_single_position">%.003f X %.02f = %.02f</string>
+    <string name="receipt_item_position_discount">СКИДКА = %.02f</string>
 
+    <string name="receipt_item_nds">НДС %s = %.02f</string>
+    <string name="title_session_fm">Смена %d</string>
+    <string name="title_fd_num">ФД № %d</string>
+    <string name="title_fp_num">ФП: %d</string>
+    <string name="title_rn_kkt">РН ККТ: %s</string>
+    <string name="title_zn_kkt">ЗН ККТ: ↑%s↑</string>
+    <string name="title_site_fns">Сайт ФНС: www.nalog.ru</string>
+    <string name="title_fn_num">ФН № %d</string>
+    <string name="title_inn_num">ИНН: %d</string>
 
 
 

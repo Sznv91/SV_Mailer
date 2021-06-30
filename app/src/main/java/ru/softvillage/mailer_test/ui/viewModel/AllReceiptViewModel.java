@@ -2,11 +2,12 @@ package ru.softvillage.mailer_test.ui.viewModel;
 
 import android.annotation.SuppressLint;
 import android.app.Application;
-import android.content.Context;
+import android.content.res.Configuration;
 import android.os.Parcel;
 import android.util.Log;
 import android.view.LayoutInflater;
 
+import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
 import androidx.lifecycle.ViewModel;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -16,6 +17,7 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 import org.joda.time.DateTime;
+import org.joda.time.Duration;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
@@ -23,8 +25,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 import ru.softvillage.mailer_test.App;
+import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
+import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.ui.fragmet.AllReceipt;
+import ru.softvillage.mailer_test.ui.fragmet.ReceiptDetailFragment;
 import ru.softvillage.mailer_test.ui.recyclerView.ReceiptItemAdapter;
 
 /**
@@ -32,7 +37,6 @@ import ru.softvillage.mailer_test.ui.recyclerView.ReceiptItemAdapter;
  * Ограничение выбора дат в календаре
  */
 public class AllReceiptViewModel extends ViewModel {
-    private Context context;
     private AllReceipt allReceiptFragment;
     private LinearLayoutManager layoutManager;
     Application app = App.getInstance();
@@ -48,12 +52,7 @@ public class AllReceiptViewModel extends ViewModel {
         if (receiptEntities.size() > 0 && allReceiptFragment != null) {
             allReceiptFragment.hideEmptyListStab();
         }
-//        Log.d(App.TAG + "_Db", receiptEntities.toString());
     };
-
-    public void setContext(Context context) {
-        this.context = context;
-    }
 
     public void setAllReceiptFragment(AllReceipt fragment) {
         this.allReceiptFragment = fragment;
@@ -73,22 +72,22 @@ public class AllReceiptViewModel extends ViewModel {
                             /**
                              * Расчет Duration с момента последнего открытия фрагмена.
                              */
-                           /* Duration durationLastOpenReceiptDetailFragment = new Duration(SessionPresenter.getInstance().getLastOpenReceiptDetailFragment().toDateTime(), LocalDateTime.now().toDateTime());
+                            Duration durationLastOpenReceiptDetailFragment = new Duration(SessionPresenter.getInstance().getLastOpenReceiptDetailFragment().toDateTime(), LocalDateTime.now().toDateTime());
                             if (ReceiptDetailFragment.LOADER_TIME_SCREEN <= durationLastOpenReceiptDetailFragment.getMillis()) {
-                                Log.d(EvoApp.TAG + "_Recycler", "click - click " + recipientEntity.getReceiptNumber());
-                                Fragment fragment = ReceiptDetailFragment.newInstance(String.valueOf(recipientEntity.getSv_id()));
-                                if (EvoApp.getInstance().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
-                                    EvoApp.getInstance().getFragmentDispatcher().replaceFragment(fragment);
-                                } else if (EvoApp.getInstance().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                                    int count = EvoApp.getInstance().getFragmentDispatcher().getActivity().getSupportFragmentManager().getBackStackEntryCount();
-                                    Log.d(EvoApp.TAG + "_backStack", "Count back stack is: " + count);
+                                Log.d(App.TAG + "_Recycler", "click - click " + recipientEntity.getEvo_receipt_number());
+                                Fragment fragment = ReceiptDetailFragment.newInstance(String.valueOf(recipientEntity.getEvo_uuid()));
+                                if (App.getInstance().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+                                    App.getInstance().getFragmentDispatcher().replaceFragment(fragment);
+                                } else if (App.getInstance().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                                    int count = App.getInstance().getFragmentDispatcher().getActivity().getSupportFragmentManager().getBackStackEntryCount();
+                                    Log.d(App.TAG + "_backStack", "Count back stack is: " + count);
                                     if (count == 0) {
-                                        EvoApp.getInstance().getFragmentDispatcher().getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.holder_statistic_fragment, fragment).addToBackStack(String.valueOf(fragment.getId())).commit();
+                                        App.getInstance().getFragmentDispatcher().getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.holder_receipts, fragment).addToBackStack(String.valueOf(fragment.getId())).commit();
                                     } else {
-                                        EvoApp.getInstance().getFragmentDispatcher().getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.holder_statistic_fragment, fragment).commit();
+                                        App.getInstance().getFragmentDispatcher().getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.holder_receipts, fragment).commit();
                                     }
                                 }
-                            }*/
+                            }
                         }
 
                         @Override
