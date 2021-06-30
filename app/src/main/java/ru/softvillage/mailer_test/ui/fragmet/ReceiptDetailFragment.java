@@ -1,7 +1,6 @@
 package ru.softvillage.mailer_test.ui.fragmet;
 
 import android.annotation.SuppressLint;
-import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
@@ -53,12 +52,10 @@ import static android.graphics.Color.WHITE;
  * create an instance of this fragment.
  */
 public class ReceiptDetailFragment extends Fragment {
-    public static int LOADER_TIME_SCREEN = 2000;
     PrepareToDisplay backgroundThread;
     /**
      * Элементы несущие информационную нагрузку.
      */
-    private TextView tab_title_statistic_information;
 
     private TextView saleNumber;
     private TextView totalCost;
@@ -135,6 +132,7 @@ public class ReceiptDetailFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         App.getInstance().getFragmentDispatcher().setAllowBack(false);
+        SessionPresenter.getInstance().setFragmentBusy(true);
         return inflater.inflate(R.layout.fragment_receipt_detail, container, false);
     }
 
@@ -198,11 +196,6 @@ public class ReceiptDetailFragment extends Fragment {
 
         recycler.setAdapter(adapter);
 
-        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-            tab_title_statistic_information = view.findViewById(R.id.tab_title_statistic_information);
-            tab_title_statistic_information.setText("Детали чека");
-        }
-
         backgroundThread = new PrepareToDisplay();
         backgroundThread.start(evoReceiptUuid, this);
     }
@@ -243,6 +236,7 @@ public class ReceiptDetailFragment extends Fragment {
             payment_location_address_city.setText(SessionPresenter.getInstance().getPayment_place());
             content_sno.setText(SessionPresenter.getInstance().getSno_type());
             title_inn_num.setText(String.format(getString(R.string.title_inn_num), SessionPresenter.getInstance().getOrg_inn()));
+            SessionPresenter.getInstance().setFragmentBusy(false); // Признак того что загрузка фрагмента завершена, можно отпускать диспетчер.
         });
 
 

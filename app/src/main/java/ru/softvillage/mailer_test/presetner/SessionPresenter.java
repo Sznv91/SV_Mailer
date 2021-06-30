@@ -12,6 +12,7 @@ import androidx.lifecycle.MutableLiveData;
 import org.joda.time.LocalDateTime;
 
 import lombok.Getter;
+import lombok.Setter;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
@@ -54,6 +55,9 @@ public class SessionPresenter {
     private LocalDateTime lastOpenReceiptDetailFragment;
     private int currentTheme;
     private MutableLiveData<Integer> currentThemeLiveData;
+    @Getter
+    @Setter
+    boolean fragmentBusy = false; // false - свободен
 
     public static SessionPresenter getInstance() {
         if (instance == null) {

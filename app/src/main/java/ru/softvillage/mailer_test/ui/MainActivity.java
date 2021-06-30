@@ -17,6 +17,7 @@ import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.service.EvoReceiptAdderService;
 import ru.softvillage.mailer_test.ui.left_menu.DrawerMenuManager;
 import ru.softvillage.mailer_test.ui.tabs.TabLayoutFragment;
+import ru.softvillage.mailer_test.ui.tabs.TabLayoutFragmentLandscape;
 
 /**
  * SplashScreen выполнен по статье
@@ -54,8 +55,7 @@ public class MainActivity extends AppCompatActivity {
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new TabLayoutFragment()).commit();
             else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new TabLayoutFragment()).commit(); // заглушка переделать
-//                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new LandscapeTabLayoutFragment()).commit();
+                getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new TabLayoutFragmentLandscape()).commit();
             }
         }
 

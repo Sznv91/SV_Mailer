@@ -6,6 +6,7 @@ import android.content.res.Configuration;
 import android.os.Parcel;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.widget.TextView;
 
 import androidx.fragment.app.Fragment;
 import androidx.lifecycle.Observer;
@@ -17,7 +18,6 @@ import com.google.android.material.datepicker.MaterialDatePicker;
 import com.google.android.material.datepicker.MaterialPickerOnPositiveButtonClickListener;
 
 import org.joda.time.DateTime;
-import org.joda.time.Duration;
 import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
@@ -70,15 +70,16 @@ public class AllReceiptViewModel extends ViewModel {
                         @Override
                         public void clickClick(EvoReceipt recipientEntity) {
                             /**
-                             * Расчет Duration с момента последнего открытия фрагмена.
+                             * Проверка свободен ли FragmentManager
                              */
-                            Duration durationLastOpenReceiptDetailFragment = new Duration(SessionPresenter.getInstance().getLastOpenReceiptDetailFragment().toDateTime(), LocalDateTime.now().toDateTime());
-                            if (ReceiptDetailFragment.LOADER_TIME_SCREEN <= durationLastOpenReceiptDetailFragment.getMillis()) {
+                            if (!SessionPresenter.getInstance().isFragmentBusy()) {
                                 Log.d(App.TAG + "_Recycler", "click - click " + recipientEntity.getEvo_receipt_number());
                                 Fragment fragment = ReceiptDetailFragment.newInstance(String.valueOf(recipientEntity.getEvo_uuid()));
                                 if (App.getInstance().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                                     App.getInstance().getFragmentDispatcher().replaceFragment(fragment);
                                 } else if (App.getInstance().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+                                    TextView title_receipts = allReceiptFragment.requireActivity().findViewById(R.id.title_receipts);
+                                    title_receipts.setText("Детали чека");
                                     int count = App.getInstance().getFragmentDispatcher().getActivity().getSupportFragmentManager().getBackStackEntryCount();
                                     Log.d(App.TAG + "_backStack", "Count back stack is: " + count);
                                     if (count == 0) {

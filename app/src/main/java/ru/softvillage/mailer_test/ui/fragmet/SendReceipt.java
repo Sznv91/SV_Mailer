@@ -1,13 +1,17 @@
 package ru.softvillage.mailer_test.ui.fragmet;
 
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.TextView;
 
+import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
 
 import ru.softvillage.mailer_test.R;
+import ru.softvillage.mailer_test.presetner.SessionPresenter;
 
 public class SendReceipt extends Fragment {
 
@@ -16,6 +20,16 @@ public class SendReceipt extends Fragment {
 
     public SendReceipt() {
         // Required empty public constructor
+    }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
+            TextView title_receipts = requireActivity().findViewById(R.id.title_receipts);
+            title_receipts.setText("Отправленные");
+        }
+        SessionPresenter.getInstance().getDrawerManager().showUpButton(false);
     }
 
     public static SendReceipt newInstance(int startPositionOnRecyclerView) {
