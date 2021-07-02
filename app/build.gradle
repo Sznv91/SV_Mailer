@@ -7,10 +7,10 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "ru.softvillage.mailer_test"
+        applicationId "ru.softvillage.mailer__test"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 2
+        versionCode 1
         versionName "0.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

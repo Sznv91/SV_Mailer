@@ -2,7 +2,7 @@
     <string name="app_name">SV Mailer Test</string>
     <string name="title_activity_main">SV Мэйлер</string>
     <string name="exit_up">ВЫХОД</string>
-    <string name="title_params">Параметры</string>
+    <string name="title_left_menu">SV.Mailer</string>
     <string name="tab_all_receipt">Все чеки</string>
     <string name="tab_send_receipt">Отправленные</string>
     <string name="navigation_drawer_open">navi_open</string>
@@ -28,8 +28,12 @@
     <string name="title_site_fns">Сайт ФНС: www.nalog.ru</string>
     <string name="title_fn_num">ФН № %d</string>
     <string name="title_inn_num">ИНН: %d</string>
-
-
+    <string name="title_receipts_count">Количество чеков</string>
+    <string name="title_send_sms">Отправлено sms</string>
+    <string name="title_send_email">Отправлено E-mail</string>
+    <string name="value_left_menu">%d шт</string>
+    <string name="title_sim">Ваши SIM-карты</string>
+    <string name="title_about">О приложении</string>
 
 
 </resources>

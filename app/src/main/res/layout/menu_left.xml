@@ -34,7 +34,7 @@
             android:paddingStart="@dimen/margin_left_menu_8"
             android:paddingTop="@dimen/margin_left_menu_image_or_title_16"
             android:paddingBottom="@dimen/margin_left_menu_image_or_title_16"
-            android:text="@string/title_params"
+            android:text="@string/title_left_menu"
             android:textColor="@color/fonts_lt"
             android:textSize="21sp"
             app:layout_constraintLeft_toLeftOf="parent"
@@ -59,6 +59,182 @@
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintRight_toRightOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/divider_left_menu_title"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:background="@color/divider_lt"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/left_menu_values_module"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@+id/header">
+
+        <ImageView
+            android:id="@+id/icon_receipts_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_left_menu_receipt_count" />
+
+        <TextView
+            android:id="@+id/title_receipts_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+
+            android:fontFamily="@font/roboto_regular"
+            android:text="@string/title_receipts_count"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/icon_receipts_count"
+            app:layout_constraintLeft_toRightOf="@+id/icon_receipts_count"
+            app:layout_constraintTop_toTopOf="@+id/icon_receipts_count" />
+
+        <TextView
+            android:id="@+id/value_receipts_count"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:fontFamily="@font/roboto_regular"
+            android:text="@string/value_left_menu"
+            android:textSize="16sp"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="@id/title_receipts_count"
+            tools:text="0 шт" />
+
+        <ImageView
+            android:id="@+id/icon_send_sms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="@+id/icon_receipts_count"
+            app:layout_constraintTop_toBottomOf="@+id/icon_receipts_count"
+            tools:src="@drawable/ic_left_menu_send_sms" />
+
+        <TextView
+            android:id="@+id/title_send_sms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:text="@string/title_send_sms"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/icon_send_sms"
+            app:layout_constraintLeft_toLeftOf="@id/title_receipts_count"
+            app:layout_constraintTop_toTopOf="@+id/icon_send_sms" />
+
+        <TextView
+            android:id="@+id/value_send_sms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:text="@string/value_left_menu"
+            android:textSize="16sp"
+            app:layout_constraintRight_toRightOf="@+id/value_receipts_count"
+            app:layout_constraintTop_toTopOf="@id/title_send_sms"
+            tools:text="0 шт" />
+
+        <ImageView
+            android:id="@+id/icon_send_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="@+id/icon_send_sms"
+            app:layout_constraintTop_toBottomOf="@+id/icon_send_sms"
+            tools:src="@drawable/ic_left_menu_send_email" />
+
+        <TextView
+            android:id="@+id/title_send_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:text="@string/title_send_email"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/icon_send_email"
+            app:layout_constraintLeft_toLeftOf="@id/title_send_sms"
+            app:layout_constraintTop_toTopOf="@+id/icon_send_email" />
+
+        <TextView
+            android:id="@+id/value_send_email"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:text="@string/value_left_menu"
+            android:textSize="16sp"
+            app:layout_constraintRight_toRightOf="@+id/value_send_sms"
+            app:layout_constraintTop_toTopOf="@id/title_send_email"
+            tools:text="0 шт" />
+
+        <View
+            android:id="@+id/divider_left_menu_values_module"
+            android:layout_width="0dp"
+            android:layout_height="1dp"
+            android:layout_marginTop="8dp"
+            android:background="@color/divider_lt"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/icon_send_email"
+            app:layout_constraintTop_toBottomOf="@+id/icon_send_email" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/left_menu_sim_info"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/exit"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/left_menu_values_module">
+
+        <ImageView
+            android:id="@+id/icon_sim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            tools:src="@drawable/ic_left_menu_sim" />
+
+        <TextView
+            android:id="@+id/title_sim"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_left_menu_8"
+            android:fontFamily="@font/roboto_regular"
+            android:text="@string/title_sim"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/icon_sim"
+            app:layout_constraintLeft_toRightOf="@+id/icon_sim"
+            app:layout_constraintTop_toTopOf="@+id/icon_sim" />
+
+        <ImageView
+            android:id="@+id/icon_about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/icon_sim"
+            tools:src="@drawable/ic_left_menu_about" />
+
+        <TextView
+            android:id="@+id/title_about"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:text="@string/title_about"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/icon_about"
+            app:layout_constraintLeft_toLeftOf="@+id/title_sim"
+            app:layout_constraintTop_toTopOf="@+id/icon_about" />
+
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -109,12 +285,12 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/margin_left_menu_image_or_title_16"
             android:fontFamily="@font/roboto_medium"
-            android:text="TextView"
             android:textColor="@color/active_fonts_lt"
             android:textSize="@dimen/text_size_version"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toTopOf="parent"
+            tools:text="v 1.0.0 (21)" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

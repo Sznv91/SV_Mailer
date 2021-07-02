@@ -29,7 +29,7 @@ import ru.softvillage.mailer_test.network.BackendInterface;
  * https://futurestud.io/tutorials/retrofit-synchronous-and-asynchronous-requests
  */
 public class App extends Application {
-    public static final String TAG = "ru.evotor.ru.softvillage.mailer_test";
+    public static final String TAG = "ru.evotor.ru.softvillage.mailer__test";
 
     @Getter
     private static App instance;

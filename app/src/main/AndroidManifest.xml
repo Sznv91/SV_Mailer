@@ -17,11 +17,11 @@
         <service
             android:name=".service.EvoReceiptAdderService"
             android:enabled="true"
-            android:exported="true"/>
+            android:exported="true" />
         <!-- android:theme="@style/Theme.SWMailerTest" -->
         <meta-data
             android:name="app_uuid"
-            android:value="3d87a1c7-ac95-4ff1-aabb-091c9e2d5833" />
+            android:value="fdf9ba03-f2ec-47c1-ae3d-363c31794052" />
 
         <activity
             android:name=".ui.MainActivity"
@@ -29,7 +29,7 @@
             android:theme="@style/Theme.SWMailerTest.Launcher">
             <meta-data
                 android:name="ru.evotor.launcher.BACKGROUND_COLOR"
-                android:value="#FF5722" />
+                android:value="#7EFF22" />
 
             <intent-filter android:priority="20">
                 <action android:name="android.intent.action.MAIN" />

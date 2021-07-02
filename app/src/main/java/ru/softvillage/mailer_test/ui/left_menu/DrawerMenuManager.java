@@ -1,6 +1,11 @@
 package ru.softvillage.mailer_test.ui.left_menu;
 
 import android.annotation.SuppressLint;
+import android.graphics.BlendMode;
+import android.graphics.BlendModeColorFilter;
+import android.graphics.PorterDuff;
+import android.graphics.drawable.Drawable;
+import android.os.Build;
 import android.util.DisplayMetrics;
 import android.view.View;
 import android.widget.FrameLayout;
@@ -30,10 +35,33 @@ public class DrawerMenuManager<T extends AppCompatActivity> implements IMainView
     private Toolbar toolbar;
     private DrawerLayout drawer;
     private ConstraintLayout drawerMenu;
-    private ImageView changeTheme;
-    private View dividerExit;
+    private ImageView changeTheme,
+            icon_receipts_count,
+            icon_send_sms,
+            icon_send_email,
+            icon_sim,
+            icon_about;
+
+    private Drawable dIconReceiptsCount,
+            dIconSendSms,
+            dIconSendEmail,
+            dIconSim,
+            dIconAbout;
+
+    private View divider_left_menu_title,
+            divider_left_menu_values_module,
+            dividerExit;
+
     private FrameLayout changeThemeBottom;
     private TextView titleParams,
+            title_receipts_count,
+            value_receipts_count,
+            title_send_sms,
+            value_send_sms,
+            title_send_email,
+            value_send_email,
+            title_sim,
+            title_about,
             titleExit,
             version;
 
@@ -54,11 +82,32 @@ public class DrawerMenuManager<T extends AppCompatActivity> implements IMainView
         drawer = activity.findViewById(R.id.drawer);
         drawerMenu = activity.findViewById(R.id.drawer_menu);
         changeTheme = activity.findViewById(R.id.changeTheme);
+        icon_receipts_count = activity.findViewById(R.id.icon_receipts_count);
+        icon_send_sms = activity.findViewById(R.id.icon_send_sms);
+        icon_send_email = activity.findViewById(R.id.icon_send_email);
+        icon_sim = activity.findViewById(R.id.icon_sim);
+        icon_about = activity.findViewById(R.id.icon_about);
+        divider_left_menu_title = activity.findViewById(R.id.divider_left_menu_title);
+        divider_left_menu_values_module = activity.findViewById(R.id.divider_left_menu_values_module);
         dividerExit = activity.findViewById(R.id.dividerExit);
         changeThemeBottom = activity.findViewById(R.id.changeThemeBottom);
         titleParams = activity.findViewById(R.id.titleParams);
+        title_receipts_count = activity.findViewById(R.id.title_receipts_count);
+        value_receipts_count = activity.findViewById(R.id.value_receipts_count);
+        title_send_sms = activity.findViewById(R.id.title_send_sms);
+        value_send_sms = activity.findViewById(R.id.value_send_sms);
+        title_send_email = activity.findViewById(R.id.title_send_email);
+        value_send_email = activity.findViewById(R.id.value_send_email);
+        title_sim = activity.findViewById(R.id.title_sim);
+        title_about = activity.findViewById(R.id.title_about);
         titleExit = activity.findViewById(R.id.titleExit);
         version = activity.findViewById(R.id.version);
+
+        dIconReceiptsCount = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_left_menu_receipt_count);
+        dIconSendSms = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_left_menu_send_sms);
+        dIconSendEmail = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_left_menu_send_email);
+        dIconSim = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_left_menu_sim);
+        dIconAbout = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_left_menu_about);
 
         updateVersion();
         updateUITheme();
@@ -101,24 +150,71 @@ public class DrawerMenuManager<T extends AppCompatActivity> implements IMainView
 
     @Override
     public void themeChange(int themeStyle) {
+        changeIconColor(themeStyle);
         if (themeStyle == SessionPresenter.THEME_LIGHT) {
             toolbar.setBackgroundColor(ContextCompat.getColor(toolbar.getContext(), R.color.header_lt));
             drawer.setBackgroundColor(ContextCompat.getColor(drawer.getContext(), R.color.background_lt));
             drawerMenu.setBackgroundColor(ContextCompat.getColor(drawerMenu.getContext(), R.color.background_lt));
+            divider_left_menu_title.setBackgroundColor(ContextCompat.getColor(divider_left_menu_title.getContext(), R.color.divider_lt));
+            divider_left_menu_values_module.setBackgroundColor(ContextCompat.getColor(divider_left_menu_values_module.getContext(), R.color.divider_lt));
             dividerExit.setBackgroundColor(ContextCompat.getColor(dividerExit.getContext(), R.color.divider_lt));
             changeTheme.setImageResource(R.drawable.ic_moon);
             titleParams.setTextColor(ContextCompat.getColor(titleParams.getContext(), R.color.fonts_lt));
+            title_receipts_count.setTextColor(ContextCompat.getColor(title_receipts_count.getContext(), R.color.fonts_lt));
+            value_receipts_count.setTextColor(ContextCompat.getColor(value_receipts_count.getContext(), R.color.fonts_lt));
+            title_send_sms.setTextColor(ContextCompat.getColor(title_send_sms.getContext(), R.color.fonts_lt));
+            value_send_sms.setTextColor(ContextCompat.getColor(value_send_sms.getContext(), R.color.fonts_lt));
+            title_send_email.setTextColor(ContextCompat.getColor(title_send_email.getContext(), R.color.fonts_lt));
+            value_send_email.setTextColor(ContextCompat.getColor(value_send_email.getContext(), R.color.fonts_lt));
+            title_sim.setTextColor(ContextCompat.getColor(title_sim.getContext(), R.color.fonts_lt));
+            title_about.setTextColor(ContextCompat.getColor(title_about.getContext(), R.color.fonts_lt));
             titleExit.setTextColor(ContextCompat.getColor(titleExit.getContext(), R.color.fonts_lt));
             version.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_lt));
         } else {
             toolbar.setBackgroundColor(ContextCompat.getColor(toolbar.getContext(), R.color.background_dt));
             drawer.setBackgroundColor(ContextCompat.getColor(drawer.getContext(), R.color.background_dt));
             drawerMenu.setBackgroundColor(ContextCompat.getColor(drawerMenu.getContext(), R.color.background_dt));
+            divider_left_menu_title.setBackgroundColor(ContextCompat.getColor(divider_left_menu_title.getContext(), R.color.divider_dt));
+            divider_left_menu_values_module.setBackgroundColor(ContextCompat.getColor(divider_left_menu_values_module.getContext(), R.color.divider_dt));
             dividerExit.setBackgroundColor(ContextCompat.getColor(dividerExit.getContext(), R.color.divider_dt));
             changeTheme.setImageResource(R.drawable.ic_sun);
             titleParams.setTextColor(ContextCompat.getColor(titleParams.getContext(), R.color.fonts_dt));
+            title_receipts_count.setTextColor(ContextCompat.getColor(title_receipts_count.getContext(), R.color.fonts_dt));
+            value_receipts_count.setTextColor(ContextCompat.getColor(value_receipts_count.getContext(), R.color.fonts_dt));
+            title_send_sms.setTextColor(ContextCompat.getColor(title_send_sms.getContext(), R.color.fonts_dt));
+            value_send_sms.setTextColor(ContextCompat.getColor(value_send_sms.getContext(), R.color.fonts_dt));
+            title_send_email.setTextColor(ContextCompat.getColor(title_send_email.getContext(), R.color.fonts_dt));
+            value_send_email.setTextColor(ContextCompat.getColor(value_send_email.getContext(), R.color.fonts_dt));
+            title_sim.setTextColor(ContextCompat.getColor(title_sim.getContext(), R.color.fonts_dt));
+            title_about.setTextColor(ContextCompat.getColor(title_about.getContext(), R.color.fonts_dt));
             titleExit.setTextColor(ContextCompat.getColor(titleExit.getContext(), R.color.fonts_dt));
             version.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_dt));
+        }
+        icon_receipts_count.setImageDrawable(dIconReceiptsCount);
+        icon_send_sms.setImageDrawable(dIconSendSms);
+        icon_send_email.setImageDrawable(dIconSendEmail);
+        icon_sim.setImageDrawable(dIconSim);
+        icon_about.setImageDrawable(dIconAbout);
+    }
+
+    private void changeIconColor(int themeStyle) {
+        int tabIconColor = ContextCompat.getColor(activity.getApplicationContext(), R.color.icon_dt);
+        if (themeStyle == SessionPresenter.THEME_LIGHT) {
+            tabIconColor = ContextCompat.getColor(activity.getApplicationContext(), R.color.fonts_lt);
+        }
+
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            dIconReceiptsCount.setColorFilter(new BlendModeColorFilter(tabIconColor, BlendMode.SRC_IN));
+            dIconSendSms.setColorFilter(new BlendModeColorFilter(tabIconColor, BlendMode.SRC_IN));
+            dIconSendEmail.setColorFilter(new BlendModeColorFilter(tabIconColor, BlendMode.SRC_IN));
+            dIconSim.setColorFilter(new BlendModeColorFilter(tabIconColor, BlendMode.SRC_IN));
+            dIconAbout.setColorFilter(new BlendModeColorFilter(tabIconColor, BlendMode.SRC_IN));
+        } else {
+            dIconReceiptsCount.setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+            dIconSendSms.setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+            dIconSendEmail.setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+            dIconSim.setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+            dIconAbout.setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
         }
     }
 
