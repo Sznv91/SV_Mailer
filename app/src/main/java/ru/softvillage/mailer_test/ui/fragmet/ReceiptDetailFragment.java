@@ -14,6 +14,7 @@ import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
@@ -105,6 +106,8 @@ public class ReceiptDetailFragment extends Fragment {
             title_fn_num,
             title_inn_num;
 
+    private ConstraintLayout control_module;
+
     private PositionGoodsItemAdapter adapter;
 
     private static final String ARG_PARAM = "evotor_receipt_uuid";
@@ -192,6 +195,7 @@ public class ReceiptDetailFragment extends Fragment {
         title_site_fns = view.findViewById(R.id.title_site_fns);
         title_fn_num = view.findViewById(R.id.title_fn_num);
         title_inn_num = view.findViewById(R.id.title_inn_num);
+        control_module = view.findViewById(R.id.control_module);
         initColor(SessionPresenter.getInstance().getCurrentTheme());
 
         button_cancel.setOnClickListener(v -> getActivity().onBackPressed());
@@ -300,6 +304,8 @@ public class ReceiptDetailFragment extends Fragment {
             title_site_fns.setTextColor(ContextCompat.getColor(title_site_fns.getContext(), R.color.active_fonts_lt));
             title_fn_num.setTextColor(ContextCompat.getColor(title_fn_num.getContext(), R.color.active_fonts_lt));
             title_inn_num.setTextColor(ContextCompat.getColor(title_inn_num.getContext(), R.color.active_fonts_lt));
+
+            control_module.setBackgroundColor(ContextCompat.getColor(control_module.getContext(), R.color.background_lt));
         } else {
             fragment_receipt_loader.setBackgroundColor(ContextCompat.getColor(fragment_receipt_loader.getContext(), R.color.main_dt));
             receipt_detail_title_holder.setBackgroundColor(ContextCompat.getColor(receipt_detail_layout.getContext(), R.color.main_dt));
@@ -343,6 +349,8 @@ public class ReceiptDetailFragment extends Fragment {
             title_site_fns.setTextColor(ContextCompat.getColor(title_site_fns.getContext(), R.color.active_fonts_dt));
             title_fn_num.setTextColor(ContextCompat.getColor(title_fn_num.getContext(), R.color.active_fonts_dt));
             title_inn_num.setTextColor(ContextCompat.getColor(title_inn_num.getContext(), R.color.active_fonts_dt));
+
+            control_module.setBackgroundColor(ContextCompat.getColor(control_module.getContext(), R.color.background_dt));
         }
 
     }

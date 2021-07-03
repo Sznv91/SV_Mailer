@@ -1,6 +1,7 @@
 package ru.softvillage.mailer_test.ui.fragmet;
 
 import android.annotation.SuppressLint;
+import android.content.res.Configuration;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -67,9 +68,16 @@ public class SendDialog extends DialogFragment {
     @Override
     public void onStart() {
         super.onStart();
-        int width = Double.valueOf(getResources().getDisplayMetrics().widthPixels * 0.90).intValue();
-        int height = Double.valueOf(getResources().getDisplayMetrics().heightPixels * 0.50).intValue();
-        getDialog().getWindow().setLayout(width, height);
+        if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
+            int width = Double.valueOf(getResources().getDisplayMetrics().widthPixels * 0.90).intValue();
+            int height = Double.valueOf(getResources().getDisplayMetrics().heightPixels * 0.50).intValue();
+            getDialog().getWindow().setLayout(width, height);
+        } else {
+            int width = Double.valueOf(getResources().getDisplayMetrics().widthPixels * 0.50).intValue();
+            int height = Double.valueOf(getResources().getDisplayMetrics().heightPixels * 0.498).intValue();
+            getDialog().getWindow().setLayout(width, height);
+        }
+
         if (SessionPresenter.getInstance().getCurrentTheme() == SessionPresenter.THEME_LIGHT) {
             getDialog().getWindow().setBackgroundDrawableResource(R.drawable.bg_dialog);
         } else {
