@@ -46,9 +46,9 @@ public class Prefs {
         return sharedPreferences.getBoolean(key, false);
     }
 
-/*    public boolean loadBoolean(String key, boolean defaultValue) {
+    public boolean loadBoolean(String key, boolean defaultValue) {
         return sharedPreferences.getBoolean(key, defaultValue);
-    }*/
+    }
 
     public void saveBoolean(String key, boolean value) {
         sharedPreferences.edit().putBoolean(key, value).commit();

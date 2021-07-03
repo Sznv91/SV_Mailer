@@ -41,6 +41,7 @@ public class SessionPresenter {
     public final static String PAYMENT_PLACE_ADDRESS = "payment_place_address";
     public final static String SNO_TYPE = "sno_type";
     public final static String ORG_INN = "org_inn";
+    public final static String NEED_SAVE_CONTACT = "need_save_contact";
 
     /**
      * Блок определения переменных
@@ -58,6 +59,7 @@ public class SessionPresenter {
     @Getter
     @Setter
     boolean fragmentBusy = false; // false - свободен
+    boolean saveContact;
 
     public static SessionPresenter getInstance() {
         if (instance == null) {
@@ -93,6 +95,8 @@ public class SessionPresenter {
         payment_place = Prefs.getInstance().loadString(PAYMENT_PLACE_ADDRESS);
         sno_type = Prefs.getInstance().loadString(SNO_TYPE);
         org_inn = Prefs.getInstance().loadLong(ORG_INN);
+
+        saveContact = Prefs.getInstance().loadBoolean(NEED_SAVE_CONTACT, true);
 
         initOrgInfo();
     }
@@ -202,5 +206,16 @@ public class SessionPresenter {
     public void setLastOpenReceiptDetailFragment(LocalDateTime lastOpenReceiptDetailFragment) {
         this.lastOpenReceiptDetailFragment = lastOpenReceiptDetailFragment;
         Prefs.getInstance().saveString(LAST_OPEN_RECEIPT_DETAIL_FRAGMENT, lastOpenReceiptDetailFragment.toString());
+    }
+
+    public boolean isSaveContact() {
+        return saveContact;
+    }
+
+    public void setSaveContact(boolean saveContact) {
+        if (this.saveContact != saveContact) {
+            this.saveContact = saveContact;
+            Prefs.getInstance().saveBoolean(NEED_SAVE_CONTACT, this.saveContact);
+        }
     }
 }

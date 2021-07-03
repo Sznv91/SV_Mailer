@@ -33,6 +33,7 @@ import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.Map;
 
+import lombok.Setter;
 import ru.evotor.framework.receipt.FiscalReceipt;
 import ru.evotor.framework.receipt.Position;
 import ru.evotor.framework.receipt.Receipt;
@@ -64,6 +65,9 @@ public class ReceiptDetailFragment extends Fragment {
     private TextView cash;
     private TextView ndsDigit;
     private TextView ndsType;
+
+    View button_cancel,
+            button_send;
 
     private ImageView diplomat_icon,
             location_icon,
@@ -106,6 +110,9 @@ public class ReceiptDetailFragment extends Fragment {
     private static final String ARG_PARAM = "evotor_receipt_uuid";
 
     private String evoReceiptUuid;
+
+    @Setter
+    private Receipt receipt = null;
 
     public ReceiptDetailFragment() {
         SessionPresenter.getInstance().getDrawerManager().showUpButton(true);
@@ -150,6 +157,9 @@ public class ReceiptDetailFragment extends Fragment {
         ndsDigit = view.findViewById(R.id.nds);
         ndsType = view.findViewById(R.id.nds_type);
 
+        button_cancel = view.findViewById(R.id.button_cancel);
+        button_send = view.findViewById(R.id.button_send);
+
         receipt_detail_title_holder = view.findViewById(R.id.receipt_detail_title_holder);
         fragment_receipt_loader = view.findViewById(R.id.fragment_receipt_loader);
         receipt_detail_layout = view.findViewById(R.id.receipt_detail_layout);
@@ -183,6 +193,9 @@ public class ReceiptDetailFragment extends Fragment {
         title_fn_num = view.findViewById(R.id.title_fn_num);
         title_inn_num = view.findViewById(R.id.title_inn_num);
         initColor(SessionPresenter.getInstance().getCurrentTheme());
+
+        button_cancel.setOnClickListener(v -> getActivity().onBackPressed());
+        button_send.setOnClickListener(this::createSendDialog);
 
         /**
          * Экран загрузки
@@ -401,6 +414,7 @@ public class ReceiptDetailFragment extends Fragment {
 
         public void run() {
             Receipt receipt = ReceiptApi.getReceipt(fragment.requireContext(), evoReceiptUuid);
+            fragment.setReceipt(receipt);
 
             BigDecimal totalDigit = BigDecimal.ZERO; //Общая стоимость
             BigDecimal totalDiscount = BigDecimal.ZERO; //Скидка
@@ -598,5 +612,15 @@ public class ReceiptDetailFragment extends Fragment {
             }
             return " БЕЗ НДС";
         }
+    }
+
+    /**
+     * Вызов окна вводна номера телефона (отправки чека)
+     */
+    private void createSendDialog(View v) {
+        LocalDateTime ldt = LocalDateTime.fromDateFields(receipt.getHeader().getDate());
+        SendDialog dialog = SendDialog.newInstance(receipt.getHeader().getNumber(), ldt.toString("dd.MM.yyyy HH:mm:ss"));
+        dialog.setCancelable(false);
+        dialog.show(getChildFragmentManager(), "send_dialog");
     }
 }

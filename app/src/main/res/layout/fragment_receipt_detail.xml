@@ -10,9 +10,10 @@
     <ScrollView
         android:id="@+id/receipt_detail_layout"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        android:layout_marginBottom="5dp"
         android:orientation="vertical"
-        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/control_module"
         app:layout_constraintTop_toTopOf="parent">
 
         <LinearLayout
@@ -85,11 +86,11 @@
                 android:layout_height="wrap_content">
 
                 <TextView
-                    android:layout_marginTop="16dp"
                     android:id="@+id/title_total_cost"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="10dp"
+                    android:layout_marginTop="16dp"
                     android:fontFamily="@font/roboto_regular"
                     android:text="Общая стоимость"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -112,8 +113,7 @@
                     android:fontFamily="@font/roboto_regular"
                     android:text="Скидка"
                     app:layout_constraintLeft_toLeftOf="@+id/title_total_cost"
-                    app:layout_constraintTop_toBottomOf="@id/title_total_cost"
-                    />
+                    app:layout_constraintTop_toBottomOf="@id/title_total_cost" />
 
                 <TextView
                     android:id="@+id/discount"
@@ -125,23 +125,23 @@
                     tools:text="20000" />
 
                 <View
-                    android:background="@color/divider_lt"
                     android:id="@+id/divider"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    app:layout_constraintTop_toBottomOf="@+id/title_discount"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_marginTop="8dp"
+                    android:background="@color/divider_lt"
+                    app:layout_constraintTop_toBottomOf="@+id/title_discount" />
 
                 <TextView
                     android:id="@+id/title_total"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
                     android:fontFamily="@font/roboto_medium"
                     android:text="ИТОГО"
                     android:textSize="18sp"
                     app:layout_constraintLeft_toLeftOf="@+id/title_total_cost"
-                    app:layout_constraintTop_toTopOf="@id/divider"
-                    android:layout_marginTop="8dp"/>
+                    app:layout_constraintTop_toTopOf="@id/divider" />
 
                 <TextView
                     android:id="@+id/total"
@@ -163,10 +163,10 @@
                     app:layout_constraintTop_toBottomOf="@id/title_total" />
 
                 <TextView
-                    android:fontFamily="@font/roboto_regular"
                     android:id="@+id/nds"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
                     android:text=""
                     app:layout_constraintRight_toRightOf="@+id/total_cost"
                     app:layout_constraintTop_toBottomOf="@id/title_total"
@@ -183,22 +183,22 @@
                     app:layout_constraintTop_toBottomOf="@id/nds_type" />
 
                 <TextView
-                    android:fontFamily="@font/roboto_regular"
                     android:id="@+id/cash"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
                     android:text=""
                     app:layout_constraintRight_toRightOf="@+id/total_cost"
                     app:layout_constraintTop_toBottomOf="@id/nds"
                     tools:text="114" />
 
                 <View
-                    android:background="@color/divider_lt"
                     android:id="@+id/divider_cred"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
-                    app:layout_constraintTop_toBottomOf="@+id/title_payment"
-                    android:layout_marginTop="8dp"/>
+                    android:layout_marginTop="8dp"
+                    android:background="@color/divider_lt"
+                    app:layout_constraintTop_toBottomOf="@+id/title_payment" />
 
                 <ImageView
                     android:id="@+id/diplomat_icon"
@@ -220,19 +220,14 @@
                     tools:text="OOO ''Астория''" />
 
                 <TextView
-                    android:fontFamily="@font/roboto_regular"
                     android:id="@+id/address"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
                     app:layout_constraintLeft_toLeftOf="@id/shop_name"
                     app:layout_constraintRight_toRightOf="@+id/total"
                     app:layout_constraintTop_toBottomOf="@+id/shop_name"
                     tools:text="346500, Ростовская область, г.Шахты, ул.Шевченко 141" />
-
-
-
-
-
 
 
                 <ImageView
@@ -255,21 +250,21 @@
                     tools:text="Место расчетов" />
 
                 <TextView
-                    android:fontFamily="@font/roboto_regular"
                     android:id="@+id/payment_place"
                     android:layout_width="0dp"
                     android:layout_height="wrap_content"
+                    android:fontFamily="@font/roboto_regular"
                     app:layout_constraintLeft_toLeftOf="@id/title_payment_location"
                     app:layout_constraintRight_toRightOf="@+id/total"
                     app:layout_constraintTop_toBottomOf="@+id/title_payment_location"
                     tools:text="346500, Ростовская область, г.Шахты, ул.Шевченко 141" />
 
                 <View
-                    android:layout_marginTop="16dp"
-                    android:background="@color/divider_lt"
                     android:id="@+id/divider_shop_info"
                     android:layout_width="match_parent"
                     android:layout_height="1dp"
+                    android:layout_marginTop="16dp"
+                    android:background="@color/divider_lt"
                     app:layout_constraintTop_toBottomOf="@+id/payment_place" />
 
                 <TextView
@@ -398,6 +393,58 @@
         </LinearLayout>
     </ScrollView>
 
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/control_module"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginBottom="5dp"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <View
+            android:id="@+id/button_cancel"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/button_send"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/button_send"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/button_cancel"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+
+        <TextView
+            android:id="@+id/title_button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/cancel"
+            android:textColor="@color/header_lt"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/title_button_send" />
+
+        <TextView
+            android:id="@+id/title_button_send"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/button_send"
+            android:textColor="@color/icon_lt"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/title_button_cancel"
+            app:layout_constraintLeft_toRightOf="@+id/title_button_cancel"
+            app:layout_constraintRight_toRightOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
     <FrameLayout
         android:id="@+id/fragment_receipt_loader"
         android:layout_width="match_parent"
@@ -409,7 +456,7 @@
         <ProgressBar
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_gravity="center"/>
+            android:layout_gravity="center" />
     </FrameLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

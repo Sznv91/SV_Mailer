@@ -18,6 +18,9 @@
         </item>
         <item name="materialCalendarTheme">@style/ThemeOverlay.MaterialComponents.MaterialCalendar
         </item>
+
+<!--        Влияет на цвет loader'a, switch compat, курсор EditText-->
+        <item name="colorControlActivated">@color/icon_lt</item>
     </style>
 
 </resources>

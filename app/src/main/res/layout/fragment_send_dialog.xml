@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.fragmet.SendDialog">
+
+    <TextView
+        android:id="@+id/title_send_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="7dp"
+        android:fontFamily="@font/roboto_regular"
+        android:text="@string/title_send_dialog"
+        android:textColor="@color/fonts_lt"
+        android:textSize="15sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Введите данные для отправки чека № 4200" />
+
+    <TextView
+        android:id="@+id/subtitle_send_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="3dp"
+        android:fontFamily="@font/roboto_regular"
+        android:text="@string/subtitle_send_dialog"
+        android:textColor="@color/active_fonts_lt"
+        android:textSize="12sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_send_dialog"
+        tools:text="от 28.09.2020 10:55:25" />
+
+    <View
+        android:id="@+id/divider_send_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="7dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/divider_lt"
+        app:layout_constraintTop_toBottomOf="@+id/subtitle_send_dialog" />
+
+    <ImageView
+
+        android:id="@+id/icon_send_sms"
+
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_mailer_sended_sms"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_text_send_sms"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/edit_text_send_sms"
+        app:layout_constraintTop_toTopOf="@+id/edit_text_send_sms" />
+
+    <EditText
+        android:id="@+id/edit_text_send_sms"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="12dp"
+        android:autofillHints="+7"
+        android:background="@drawable/edit_text_background_light"
+        android:hint="@string/text_input_sms"
+        android:inputType="phone"
+        android:paddingStart="10dp"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toStartOf="@+id/icon_send_sms"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider_send_dialog_title" />
+
+
+    <ImageView
+        android:id="@+id/icon_send_email"
+
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginEnd="20dp"
+        android:src="@drawable/ic_mailer_sended_email"
+        app:layout_constraintBottom_toBottomOf="@+id/edit_text_send_email"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="1"
+        app:layout_constraintStart_toEndOf="@+id/edit_text_send_email"
+        app:layout_constraintTop_toTopOf="@+id/edit_text_send_email" />
+
+    <EditText
+        android:id="@+id/edit_text_send_email"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="20dp"
+        android:layout_marginTop="8dp"
+        android:autofillHints="+7"
+        android:background="@drawable/edit_text_background_light"
+        android:fontFamily="@font/roboto_regular"
+        android:hint="@string/text_input_email"
+        android:inputType="textEmailAddress"
+        android:paddingStart="10dp"
+        android:textSize="17sp"
+        app:layout_constraintEnd_toStartOf="@+id/icon_send_email"
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintHorizontal_weight="8"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_send_sms" />
+
+    <View
+        android:id="@+id/divider_send_dialog_sms_email"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="12dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/divider_lt"
+        app:layout_constraintTop_toBottomOf="@+id/edit_text_send_email" />
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/dialog_switch_module"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toTopOf="@+id/control_module"
+        app:layout_constraintTop_toBottomOf="@+id/divider_send_dialog_sms_email">
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/dialog_save_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+
+            android:fontFamily="@font/roboto_regular"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toEndOf="@+id/title_save_contact"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/title_save_contact"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:fontFamily="@font/roboto_regular"
+            android:gravity="center"
+            android:text="@string/title_save_contact"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_save_switch"
+            app:layout_constraintEnd_toStartOf="@+id/dialog_save_switch"
+            app:layout_constraintHorizontal_bias="0.5"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/dialog_save_switch" />
+
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/dialog_send_email_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="12dp"
+            android:fontFamily="@font/roboto_regular"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_save_switch"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_save_switch" />
+
+        <TextView
+            android:id="@+id/title_send_email"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+            android:fontFamily="@font/roboto_regular"
+            android:gravity="center"
+            android:text="@string/dialog_title_send_email"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_send_email_switch"
+            app:layout_constraintStart_toStartOf="@+id/title_save_contact"
+            app:layout_constraintTop_toTopOf="@+id/dialog_send_email_switch" />
+
+        <androidx.appcompat.widget.SwitchCompat
+            android:id="@+id/dialog_send_sms_switch"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="@font/roboto_regular"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="@+id/dialog_save_switch"
+            app:layout_constraintTop_toBottomOf="@+id/dialog_send_email_switch" />
+
+        <TextView
+            android:id="@+id/title_send_sms"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_regular"
+            android:gravity="center"
+            android:text="@string/dialog_title_send_sms"
+            app:layout_constraintBottom_toBottomOf="@+id/dialog_send_sms_switch"
+            app:layout_constraintStart_toStartOf="@+id/title_save_contact"
+            app:layout_constraintTop_toTopOf="@+id/dialog_send_sms_switch" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/holder_find_result"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/control_module"
+        app:layout_constraintTop_toBottomOf="@+id/divider_send_dialog_sms_email">
+
+        <TextView
+            android:id="@+id/not_found"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:gravity="center"
+            android:text="@string/not_found"
+            android:textColor="@color/active_fonts_lt"
+            android:textSize="30sp" />
+    </FrameLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/control_module"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent">
+
+        <View
+            android:id="@+id/divider_dialog_switch_module"
+            android:layout_width="match_parent"
+            android:layout_height="1dp"
+            android:layout_marginStart="10dp"
+            android:layout_marginEnd="10dp"
+            android:background="@color/divider_lt"
+            app:layout_constraintBottom_toTopOf="parent" />
+
+        <View
+            android:id="@+id/button_cancel"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintRight_toLeftOf="@+id/button_send"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <View
+            android:id="@+id/button_send"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toRightOf="@+id/button_cancel"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/title_button_cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:layout_marginBottom="12dp"
+            android:fontFamily="@font/roboto_medium"
+            android:gravity="center"
+            android:text="@string/cancel"
+            android:textColor="@color/header_lt"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintLeft_toLeftOf="@+id/button_cancel"
+            app:layout_constraintRight_toRightOf="@+id/button_cancel"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/button_continue"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/roboto_medium"
+            android:text="@string/button_continue"
+            android:textColor="@color/icon_lt"
+            android:textSize="16sp"
+            app:layout_constraintBottom_toBottomOf="@+id/title_button_cancel"
+            app:layout_constraintLeft_toLeftOf="@+id/button_send"
+            app:layout_constraintRight_toRightOf="@+id/button_send" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
