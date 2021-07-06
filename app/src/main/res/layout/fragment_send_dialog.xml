@@ -5,7 +5,7 @@
     xmlns:mask="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragmet.SendDialog">
+    tools:context=".ui.dialog.SendDialog">
 
     <TextView
         android:id="@+id/title_send_dialog"
@@ -65,7 +65,7 @@
         android:textColorHint="@color/active_fonts_lt"
         android:fontFamily="@font/roboto_regular"
         mask:allowed_chars="1234567890"
-        mask:mask="+7(###)###-##-##"
+        mask:mask="+7 (###) ###-##-##"
         android:hint="1234567890"
         app:keep_hint="true"
 
@@ -129,6 +129,7 @@
         app:layout_constraintTop_toBottomOf="@+id/edit_text_send_email" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        tools:visibility="gone"
         android:id="@+id/dialog_switch_module"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -172,6 +173,7 @@
             app:layout_constraintEnd_toEndOf="@+id/dialog_save_switch"
             app:layout_constraintTop_toBottomOf="@+id/dialog_save_switch" />
 
+
         <TextView
             android:id="@+id/title_send_email"
             android:layout_width="wrap_content"
@@ -209,22 +211,40 @@
     </androidx.constraintlayout.widget.ConstraintLayout>
 
     <FrameLayout
-        android:id="@+id/holder_find_result"
+        tools:visibility="visible"
+        android:id="@+id/holder_phone_find_result"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:visibility="gone"
         app:layout_constraintBottom_toTopOf="@+id/control_module"
         app:layout_constraintTop_toBottomOf="@+id/divider_send_dialog_sms_email">
 
-        <TextView
-            android:id="@+id/found_result_tv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+        <androidx.recyclerview.widget.RecyclerView
             android:layout_gravity="center"
-            android:gravity="center"
-            android:text="@string/not_found"
-            android:textColor="@color/active_fonts_lt"
-            android:textSize="12sp" />
+            android:id="@+id/dialog_recycler_view_phone_found_item"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_dialog_found_result"
+            tools:itemCount="5"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/holder_email_find_result"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:visibility="gone"
+        app:layout_constraintBottom_toTopOf="@+id/control_module"
+        app:layout_constraintTop_toBottomOf="@+id/divider_send_dialog_sms_email">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:layout_gravity="center"
+            android:id="@+id/dialog_recycler_view_email_found_item"
+            app:layout_constraintTop_toTopOf="parent"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            tools:listitem="@layout/item_dialog_found_result"
+            tools:itemCount="5"/>
     </FrameLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout

@@ -14,6 +14,7 @@ import java.util.List;
 
 import ru.softvillage.mailer_test.dataBase.converters.DateTimeConverter;
 import ru.softvillage.mailer_test.dataBase.entity.AbstractEvoReceipt;
+import ru.softvillage.mailer_test.dataBase.entity.Email;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
 import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
 
@@ -44,4 +45,10 @@ public interface ReceiptDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void createPhoneNumber(PhoneNumber entity);
+
+    @Query("SELECT * FROM email WHERE phone_number =:phoneNumber ORDER BY send_count DESC")
+    List<Email> getEmailListByPhone(long phoneNumber);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void createEmail(Email entity);
 }

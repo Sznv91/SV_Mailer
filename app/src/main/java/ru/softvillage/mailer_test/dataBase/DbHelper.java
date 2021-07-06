@@ -9,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import lombok.Getter;
+import ru.softvillage.mailer_test.dataBase.entity.Email;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
 import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
 
@@ -41,13 +42,33 @@ public class DbHelper {
 
     public List<PhoneNumber> getPhoneNumberList(String partialNumber) {
         String arg = partialNumber + "%";
-        return dataBase.receiptDao().getPhoneNumberList(arg);
+        List<PhoneNumber> founded = dataBase.receiptDao().getPhoneNumberList(arg);
+        List<PhoneNumber> result = new ArrayList<>();
+        int LIMIT_LIST = founded.size();
+        if (founded.size() >= 5) {
+            LIMIT_LIST = 5;
+        }
+        for (int i = 0; i < LIMIT_LIST; i++) {
+            result.add(founded.get(i));
+        }
+        return result;
     }
 
     public void createOrReplacePhone(PhoneNumber phoneNumber) {
         phoneNumber.setCountSend(phoneNumber.getCountSend() + 1);
         LocalDataBase.databaseWriteExecutor.execute(() -> {
             dataBase.receiptDao().createPhoneNumber(phoneNumber);
+        });
+    }
+
+    public List<Email> getEmailListByPhoneNumber(long phoneNumber) {
+        return dataBase.receiptDao().getEmailListByPhone(phoneNumber);
+    }
+
+    public void createOrUpdateEmail(Email email) {
+        email.setSendCount(email.getSendCount() + 1);
+        LocalDataBase.databaseWriteExecutor.execute(() -> {
+            dataBase.receiptDao().createEmail(email);
         });
     }
 }

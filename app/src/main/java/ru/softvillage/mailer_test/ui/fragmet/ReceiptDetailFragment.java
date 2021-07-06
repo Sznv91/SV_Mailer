@@ -44,6 +44,7 @@ import ru.evotor.query.Cursor;
 import ru.softvillage.mailer_test.App;
 import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
+import ru.softvillage.mailer_test.ui.dialog.SendDialog;
 import ru.softvillage.mailer_test.ui.recyclerView.PositionGoodsItemAdapter;
 
 import static android.graphics.Color.WHITE;

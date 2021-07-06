@@ -114,6 +114,7 @@ public class DrawerMenuManager<T extends AppCompatActivity> implements IMainView
 
         titleExit.setOnClickListener(this);
         changeThemeBottom.setOnClickListener(this);
+        title_about.setOnClickListener(this);
 
         toolbar.setTitle(activity.getString(R.string.app_name));
         activity.setSupportActionBar(toolbar);
@@ -230,6 +231,9 @@ public class DrawerMenuManager<T extends AppCompatActivity> implements IMainView
             case R.id.changeThemeBottom:
                 int currentTheme = SessionPresenter.getInstance().getCurrentTheme();
                 SessionPresenter.getInstance().setCurrentTheme(currentTheme + 1);
+                break;
+            case R.id.title_about:
+//                activity.getSupportFragmentManager().beginTransaction().replace(R.id.drawer, new AboutFragment()).addToBackStack("about_fragment").commit();
                 break;
         }
     }
