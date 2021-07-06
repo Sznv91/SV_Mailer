@@ -15,6 +15,7 @@ import java.util.List;
 import ru.softvillage.mailer_test.dataBase.converters.DateTimeConverter;
 import ru.softvillage.mailer_test.dataBase.entity.AbstractEvoReceipt;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
+import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
 
 @Dao
 public interface ReceiptDao {
@@ -38,4 +39,9 @@ public interface ReceiptDao {
     @Update(entity = EvoReceipt.class)
     void updateEvoReceipt(AbstractEvoReceipt receipt);
 
+    @Query("SELECT * FROM user_phone_number WHERE number LIKE :partialNumber ORDER BY count_send DESC")
+    List<PhoneNumber> getPhoneNumberList(String partialNumber);
+
+    @Insert(onConflict = OnConflictStrategy.REPLACE)
+    void createPhoneNumber(PhoneNumber entity);
 }

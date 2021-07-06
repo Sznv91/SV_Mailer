@@ -10,6 +10,7 @@ import java.util.List;
 
 import lombok.Getter;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
+import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
 
 public class DbHelper {
     List<LocalDate> localDateList = new ArrayList<>();
@@ -36,5 +37,17 @@ public class DbHelper {
             }
         });
         return localDateList;
+    }
+
+    public List<PhoneNumber> getPhoneNumberList(String partialNumber) {
+        String arg = partialNumber + "%";
+        return dataBase.receiptDao().getPhoneNumberList(arg);
+    }
+
+    public void createOrReplacePhone(PhoneNumber phoneNumber) {
+        phoneNumber.setCountSend(phoneNumber.getCountSend() + 1);
+        LocalDataBase.databaseWriteExecutor.execute(() -> {
+            dataBase.receiptDao().createPhoneNumber(phoneNumber);
+        });
     }
 }

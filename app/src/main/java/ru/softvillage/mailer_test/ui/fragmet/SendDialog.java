@@ -20,10 +20,14 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.fragment.app.DialogFragment;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Objects;
 
+import br.com.sapereaude.maskedEditText.MaskedEditText;
 import ru.softvillage.mailer_test.App;
 import ru.softvillage.mailer_test.R;
+import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
 
 //https://medium.com/swlh/alertdialog-and-customdialog-in-android-with-kotlin-f42a168c1936
@@ -38,12 +42,12 @@ public class SendDialog extends DialogFragment {
             title_save_contact,
             title_send_email,
             title_send_sms,
-            not_found;
+            found_result_tv;
     private View divider_send_dialog_title,
             divider_send_dialog_sms_email,
             divider_dialog_switch_module;
-    private EditText edit_text_send_sms,
-            edit_text_send_email;
+    private MaskedEditText edit_text_send_sms;
+    private EditText edit_text_send_email;
 
     private SwitchCompat dialog_save_switch,
             dialog_send_email_switch,
@@ -60,6 +64,9 @@ public class SendDialog extends DialogFragment {
 
     private String receiptNumber;
     private String receiptDate;
+
+    private PhoneNumber selectedPhoneNumber;
+    private List<PhoneNumber> phoneNumberList = new ArrayList<>();
 
     public SendDialog() {
         // Required empty public constructor
@@ -119,7 +126,7 @@ public class SendDialog extends DialogFragment {
         title_save_contact = view.findViewById(R.id.title_save_contact);
         title_send_email = view.findViewById(R.id.title_send_email);
         title_send_sms = view.findViewById(R.id.title_send_sms);
-        not_found = view.findViewById(R.id.not_found);
+        found_result_tv = view.findViewById(R.id.found_result_tv);
         divider_send_dialog_title = view.findViewById(R.id.divider_send_dialog_title);
         divider_send_dialog_sms_email = view.findViewById(R.id.divider_send_dialog_sms_email);
         divider_dialog_switch_module = view.findViewById(R.id.divider_dialog_switch_module);
@@ -136,8 +143,8 @@ public class SendDialog extends DialogFragment {
         dialog_switch_module = view.findViewById(R.id.dialog_switch_module);
         holder_find_result = view.findViewById(R.id.holder_find_result);
 
-        initColor();
         initField();
+        initColor();
     }
 
     @SuppressLint("StringFormatMatches")
@@ -169,14 +176,27 @@ public class SendDialog extends DialogFragment {
             @SuppressLint("LongLogTag")
             @Override
             public void afterTextChanged(Editable s) {
-                Log.d(App.TAG + "_SendDialog", "EditText -> afterTextChanged: s.length() = " + s.length());
-                if (s.length() >= 3) {
-                    findPhoneNumber(s.toString());
-                } else if (s.length() == 0) showControlModule();
+//                Log.d(App.TAG + "_SendDialog", "EditText -> afterTextChanged: s.length() = " + s.length());
+//                Log.d(App.TAG + "_SendDialog", "EditText -> afterTextChanged: Editable s " + s.toString());
+//                Log.d(App.TAG + "_SendDialog", "EditText -> afterTextChanged: .getRawText():" + edit_text_send_sms.getRawText());
+                String enteredText = edit_text_send_sms.getRawText();
+                if (enteredText.length() >= 4) {
+                    findPhoneNumber(enteredText);
+                } else if (enteredText.length() == 0) showControlModule();
+
+//                Log.d(App.TAG + "_SendDialog", "EditText -> afterTextChanged: .getRawText():" + enteredText + "_length: " + enteredText.length());
+                if (enteredText.length() == 10) {
+                    phoneSetter(enteredText);
+                }
             }
         });
 
         button_cancel.setOnClickListener(v -> Objects.requireNonNull(getDialog()).cancel());
+        button_send.setOnClickListener(v -> {
+            if (selectedPhoneNumber != null) {
+                App.getInstance().getDbHelper().createOrReplacePhone(selectedPhoneNumber);
+            }
+        });
     }
 
     private void showControlModule() {
@@ -185,8 +205,43 @@ public class SendDialog extends DialogFragment {
     }
 
     private void findPhoneNumber(String phoneNumberPart) {
-        dialog_switch_module.setVisibility(View.GONE);
-        holder_find_result.setVisibility(View.VISIBLE);
+        Thread searchThread = new Thread(() -> {
+            phoneNumberList = App.getInstance().getDbHelper().getPhoneNumberList(phoneNumberPart);
+            Log.d(App.TAG + "_SendDialog", "findPhoneNumber Thread. Выполнили поиск по БД, результат: " + phoneNumberList.toString());
+            //todo заглушка, необходима замена условия >=
+            if (phoneNumberList.size() > 0) {
+                getActivity().runOnUiThread(() -> {
+                    dialog_switch_module.setVisibility(View.GONE);
+                    found_result_tv.setText(phoneNumberList.toString());
+                    holder_find_result.setVisibility(View.VISIBLE);
+                });
+            } else {
+                if (dialog_switch_module.getVisibility() != View.VISIBLE) {
+                    requireActivity().runOnUiThread(this::showControlModule);
+                }
+            }
+        });
+
+        if (edit_text_send_sms.getRawText().length() < 10) {
+            if (searchThread.isAlive()) {
+                searchThread.interrupt();
+            }
+            searchThread.start();
+        }
+
+    }
+
+    private void phoneSetter(String editTextSendSmsFieldContent) {
+        Long phoneNumberDigit = Long.parseLong(editTextSendSmsFieldContent);
+        for (PhoneNumber phoneNumber : phoneNumberList) {
+            if (phoneNumber.getNumber().equals(phoneNumberDigit)) {
+                selectedPhoneNumber = phoneNumber;
+                break;
+            }
+        }
+        if (selectedPhoneNumber == null || !selectedPhoneNumber.getNumber().equals(phoneNumberDigit)) {
+            selectedPhoneNumber = new PhoneNumber(phoneNumberDigit);
+        }
     }
 
     private void initColor() {
@@ -197,13 +252,14 @@ public class SendDialog extends DialogFragment {
             title_save_contact.setTextColor(ContextCompat.getColor(title_save_contact.getContext(), R.color.fonts_lt));
             title_send_email.setTextColor(ContextCompat.getColor(title_send_email.getContext(), R.color.fonts_lt));
             title_send_sms.setTextColor(ContextCompat.getColor(title_send_sms.getContext(), R.color.fonts_lt));
-            not_found.setTextColor(ContextCompat.getColor(not_found.getContext(), R.color.active_fonts_lt));
+            found_result_tv.setTextColor(ContextCompat.getColor(found_result_tv.getContext(), R.color.active_fonts_lt));
             divider_send_dialog_title.setBackgroundColor(ContextCompat.getColor(divider_send_dialog_title.getContext(), R.color.divider_lt));
             divider_send_dialog_sms_email.setBackgroundColor(ContextCompat.getColor(divider_send_dialog_sms_email.getContext(), R.color.divider_lt));
             divider_dialog_switch_module.setBackgroundColor(ContextCompat.getColor(divider_send_dialog_sms_email.getContext(), R.color.divider_lt));
             edit_text_send_sms.setBackground(ContextCompat.getDrawable(edit_text_send_sms.getContext(), R.drawable.edit_text_background_light));
             edit_text_send_sms.setTextColor(ContextCompat.getColor(edit_text_send_sms.getContext(), R.color.fonts_lt));
             edit_text_send_sms.setHintTextColor(ContextCompat.getColor(edit_text_send_sms.getContext(), R.color.active_fonts_lt));
+            edit_text_send_sms.setDrawingCacheBackgroundColor(ContextCompat.getColor(edit_text_send_sms.getContext(), R.color.fonts_lt));
             edit_text_send_email.setBackground(ContextCompat.getDrawable(edit_text_send_email.getContext(), R.drawable.edit_text_background_light));
             edit_text_send_email.setTextColor(ContextCompat.getColor(edit_text_send_email.getContext(), R.color.fonts_lt));
             edit_text_send_email.setHintTextColor(ContextCompat.getColor(edit_text_send_email.getContext(), R.color.active_fonts_lt));
@@ -213,7 +269,7 @@ public class SendDialog extends DialogFragment {
             title_save_contact.setTextColor(ContextCompat.getColor(title_save_contact.getContext(), R.color.fonts_dt));
             title_send_email.setTextColor(ContextCompat.getColor(title_send_email.getContext(), R.color.fonts_dt));
             title_send_sms.setTextColor(ContextCompat.getColor(title_send_sms.getContext(), R.color.fonts_dt));
-            not_found.setTextColor(ContextCompat.getColor(not_found.getContext(), R.color.active_fonts_dt));
+            found_result_tv.setTextColor(ContextCompat.getColor(found_result_tv.getContext(), R.color.active_fonts_dt));
             divider_send_dialog_title.setBackgroundColor(ContextCompat.getColor(divider_send_dialog_title.getContext(), R.color.divider_dt));
             divider_send_dialog_sms_email.setBackgroundColor(ContextCompat.getColor(divider_send_dialog_sms_email.getContext(), R.color.divider_dt));
             divider_dialog_switch_module.setBackgroundColor(ContextCompat.getColor(divider_send_dialog_sms_email.getContext(), R.color.divider_dt));

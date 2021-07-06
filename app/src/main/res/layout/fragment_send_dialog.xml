@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    xmlns:mask="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.fragmet.SendDialog">
@@ -60,18 +61,23 @@
         app:layout_constraintStart_toEndOf="@+id/edit_text_send_sms"
         app:layout_constraintTop_toTopOf="@+id/edit_text_send_sms" />
 
-    <EditText
+    <br.com.sapereaude.maskedEditText.MaskedEditText
+        android:textColorHint="@color/active_fonts_lt"
+        android:fontFamily="@font/roboto_regular"
+        mask:allowed_chars="1234567890"
+        mask:mask="+7(###)###-##-##"
+        android:hint="1234567890"
+        app:keep_hint="true"
+
         android:id="@+id/edit_text_send_sms"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="12dp"
-        android:autofillHints="+7"
         android:background="@drawable/edit_text_background_light"
-        android:hint="@string/text_input_sms"
         android:inputType="phone"
         android:paddingStart="10dp"
-        android:textSize="17sp"
+        android:textSize="16sp"
         app:layout_constraintEnd_toStartOf="@+id/icon_send_sms"
         app:layout_constraintHorizontal_bias="0.5"
         app:layout_constraintHorizontal_weight="8"
@@ -100,7 +106,6 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="20dp"
         android:layout_marginTop="8dp"
-        android:autofillHints="+7"
         android:background="@drawable/edit_text_background_light"
         android:fontFamily="@font/roboto_regular"
         android:hint="@string/text_input_email"
@@ -212,14 +217,14 @@
         app:layout_constraintTop_toBottomOf="@+id/divider_send_dialog_sms_email">
 
         <TextView
-            android:id="@+id/not_found"
+            android:id="@+id/found_result_tv"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
             android:gravity="center"
             android:text="@string/not_found"
             android:textColor="@color/active_fonts_lt"
-            android:textSize="30sp" />
+            android:textSize="12sp" />
     </FrameLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
