@@ -45,6 +45,9 @@
     <string name="dialog_title_send_email">Отправить E-mail</string>
     <string name="dialog_title_send_sms">Отправить на телефон</string>
     <string name="not_found">Нет номеров соответсвующих запросу</string>
+    <string name="title_button_delete">УДАЛИТЬ</string>
+    <string name="delete_type_phone">Удалить номер?</string>
+    <string name="delete_type_email">Удалить E-mail?</string>
 
 
 </resources>

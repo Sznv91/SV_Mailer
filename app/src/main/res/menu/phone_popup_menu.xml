@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    android:background="@color/header_lt">
+    <item
+        android:background="@color/active_fonts_lt"
+        android:id="@+id/delete_phone_popup"
+        android:title="Удалить" />
+</menu>
