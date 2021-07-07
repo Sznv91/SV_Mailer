@@ -49,6 +49,9 @@ public interface ReceiptDao {
     @Query("SELECT * FROM email WHERE phone_number =:phoneNumber ORDER BY send_count DESC")
     List<Email> getEmailListByPhone(long phoneNumber);
 
+    @Query("SELECT * FROM email WHERE email_address LIKE :partialMail ORDER BY send_count DESC")
+    List<Email> getEmailListByPartialMail(String partialMail);
+
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void createEmail(Email entity);
 }

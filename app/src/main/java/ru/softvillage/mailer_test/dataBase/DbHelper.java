@@ -65,6 +65,11 @@ public class DbHelper {
         return dataBase.receiptDao().getEmailListByPhone(phoneNumber);
     }
 
+    public List<Email> getEmailListByPartialMail(String partialMail) {
+        String arg = partialMail + "%";
+        return dataBase.receiptDao().getEmailListByPartialMail(arg);
+    }
+
     public void createOrUpdateEmail(Email email) {
         email.setSendCount(email.getSendCount() + 1);
         LocalDataBase.databaseWriteExecutor.execute(() -> {

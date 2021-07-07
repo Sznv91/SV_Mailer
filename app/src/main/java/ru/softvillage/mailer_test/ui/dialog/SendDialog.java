@@ -201,7 +201,14 @@ public class SendDialog extends DialogFragment {
                 String enteredText = edit_text_send_sms.getRawText();
                 if (enteredText.length() >= 4) {
                     findPhoneNumber(enteredText);
-                } else if (enteredText.length() == 0) showControlModule();
+                } else if (enteredText.length() == 0) {
+                    showControlModule();
+                    emailList.clear();
+                    phoneNumberList.clear();
+                    selectedPhoneNumber = null;
+                    selectedEmail = null;
+                    edit_text_send_email.setText("");
+                }
 
 //                Log.d(App.TAG + "_SendDialog", "EditText -> afterTextChanged: .getRawText():" + enteredText + "_length: " + enteredText.length());
                 if (enteredText.length() == 10) {
@@ -210,11 +217,44 @@ public class SendDialog extends DialogFragment {
             }
         });
 
+        edit_text_send_email.addTextChangedListener(new TextWatcher() {
+
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                String textSmsField = edit_text_send_sms.getRawText();
+                if (TextUtils.isEmpty(textSmsField) && s.length() > 2) {
+                    findPartialEmails(s.toString());
+                }
+                if (s.length() == 0) {
+                    if (phoneNumberList.size() > 0) {
+                        showPhoneFoundResult();
+                    } else {
+                        emailList.clear();
+                        showControlModule();
+                    }
+                }
+            }
+        });
+
+        edit_text_send_email.setOnClickListener(v -> showEmailFoundResult());
 
         edit_text_send_email.setOnFocusChangeListener(new View.OnFocusChangeListener() {
             @Override
             public void onFocusChange(View v, boolean hasFocus) {
                 if (hasFocus) {
+                    if (edit_text_send_sms.getRawText().length() == 0) {
+                        phoneNumberList.clear();
+                    }
                     showEmailFoundResult();
                     Log.d(App.TAG + "_SendDialog", "edit_text_send_email.setOnFocusChangeListener");
                 }
@@ -226,18 +266,20 @@ public class SendDialog extends DialogFragment {
             if (selectedPhoneNumber != null) {
                 App.getInstance().getDbHelper().createOrReplacePhone(selectedPhoneNumber);
             }
-            //todo переделать заглушку
+
+
             String textFieldEmail = edit_text_send_email.getText().toString();
             if (!TextUtils.isEmpty(textFieldEmail) && selectedEmail != null) {
-                if (textFieldEmail.equals(selectedEmail.getEmailAddress())){
+                if (textFieldEmail.equals(selectedEmail.getEmailAddress())) {
                     App.getInstance().getDbHelper().createOrUpdateEmail(selectedEmail);
                 } else {
-                    for (Email emailTemp: emailList){
-                        if (emailTemp.getEmailAddress().equals(textFieldEmail)){
+                    for (Email emailTemp : emailList) {
+                        if (emailTemp.getEmailAddress().equals(textFieldEmail)) {
                             selectedEmail = emailTemp;
                             break;
                         }
-                    } if (!textFieldEmail.equals(selectedEmail.getEmailAddress())){
+                    }
+                    if (!textFieldEmail.equals(selectedEmail.getEmailAddress())) {
                         selectedEmail = new Email();
                         selectedEmail.setEmailAddress(edit_text_send_email.getText().toString());
                         selectedEmail.setLinkedPhoneNumber(selectedPhoneNumber.getNumber());
@@ -246,16 +288,18 @@ public class SendDialog extends DialogFragment {
 
                 }
             } else {
-                for (Email emailTemp: emailList) {
+                for (Email emailTemp : emailList) {
                     if (emailTemp.getEmailAddress().equals(textFieldEmail)) {
                         selectedEmail = emailTemp;
                         break;
                     }
                 }
-                if (selectedEmail == null){
+                if (selectedEmail == null) {
                     selectedEmail = new Email();
                     selectedEmail.setEmailAddress(textFieldEmail);
-                    selectedEmail.setLinkedPhoneNumber(selectedPhoneNumber.getNumber());
+                    if (selectedPhoneNumber != null) {
+                        selectedEmail.setLinkedPhoneNumber(selectedPhoneNumber.getNumber());
+                    }
                 }
                 App.getInstance().getDbHelper().createOrUpdateEmail(selectedEmail);
 
@@ -276,15 +320,40 @@ public class SendDialog extends DialogFragment {
     }
 
     private void showEmailFoundResult() {
-        Log.d(App.TAG + "_SendDialog", "showEmailFoundResult -> emailList.size() " + emailList.size());
-        if (emailList.size() > 0){
-            holder_email_find_result.setVisibility(View.VISIBLE);
-            holder_phone_find_result.setVisibility(View.GONE);
-            dialog_switch_module.setVisibility(View.GONE);
-        } else {
-            showControlModule();
-        }
+        showEmailFoundResult(false);
+    }
 
+    private void showEmailFoundResult(boolean findByEmail) {
+        Log.d(App.TAG + "_SendDialog", "showEmailFoundResult -> emailList.size() " + emailList.size());
+        if (findByEmail) {
+            if (emailList.size() > 0) {
+                holder_email_find_result.setVisibility(View.VISIBLE);
+                holder_phone_find_result.setVisibility(View.GONE);
+                dialog_switch_module.setVisibility(View.GONE);
+            } else {
+                showControlModule();
+            }
+
+        } else {
+            if (emailList.size() > 0) {
+                boolean needClearField = true;
+                String emailFieldText = edit_text_send_email.getText().toString();
+                for (Email email : emailList) {
+                    if (email.getEmailAddress().equals(emailFieldText)) {
+                        needClearField = false;
+                        break;
+                    }
+                }
+                if (needClearField) edit_text_send_email.setText("");
+                holder_email_find_result.setVisibility(View.VISIBLE);
+                holder_phone_find_result.setVisibility(View.GONE);
+                dialog_switch_module.setVisibility(View.GONE);
+            } else {
+                edit_text_send_email.setText("");
+                selectedEmail = null;
+                showControlModule();
+            }
+        }
     }
 
     private void findPhoneNumber(String phoneNumberPart) {
@@ -329,6 +398,24 @@ public class SendDialog extends DialogFragment {
         searchThread.start();
     }
 
+    private void findPartialEmails(String partEmail) {
+        Thread searchThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                emailList = App.getInstance().getDbHelper().getEmailListByPartialMail(partEmail);
+                getActivity().runOnUiThread(() -> {
+                    emailAdapter.setItems(emailList);
+                    showEmailFoundResult(true);
+                });
+            }
+        });
+
+        if (searchThread.isAlive()) {
+            searchThread.interrupt();
+        }
+        searchThread.start();
+    }
+
     private void phoneSetter(String editTextSendSmsFieldContent) {
         Long phoneNumberDigit = Long.parseLong(editTextSendSmsFieldContent);
         for (PhoneNumber phoneNumber : phoneNumberList) {
@@ -363,6 +450,10 @@ public class SendDialog extends DialogFragment {
         emailAdapter = new EmailFoundAdapter(LayoutInflater.from(getContext()), email -> {
             edit_text_send_email.setText(email.getEmailAddress());
             selectedEmail = email;
+            if (edit_text_send_sms.getRawText().length() == 0 &&
+                    email.getLinkedPhoneNumber() != null) {
+                edit_text_send_sms.setText(email.getLinkedPhoneNumber().toString());
+            }
             Log.d(App.TAG + "_SendDialog", "_initEmailRecyclerView -> callBack: " + email.toString());
         });
 
