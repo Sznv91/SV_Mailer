@@ -5,4 +5,8 @@
         android:id="@+id/delete_item_popup"
         android:background="@color/active_fonts_lt"
         android:title="@string/delete_popup" />
+    <item
+        android:id="@+id/edit_item_popup"
+        android:background="@color/active_fonts_lt"
+        android:title="@string/edit_item_popup" />
 </menu>

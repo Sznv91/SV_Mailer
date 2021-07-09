@@ -48,6 +48,8 @@
     <string name="title_button_delete">УДАЛИТЬ</string>
     <string name="delete_type_phone">Удалить номер?</string>
     <string name="delete_type_email">Удалить E-mail?</string>
+    <string name="delete_popup">Удалить</string>
+    <string name="edit_item_popup">Редактировать</string>
 
 
 </resources>

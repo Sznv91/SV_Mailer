@@ -14,13 +14,15 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
+import ru.softvillage.mailer_test.ui.dialog.DeleteDialog;
 
 @RequiredArgsConstructor
 public class PhoneFoundAdapter extends RecyclerView.Adapter<PhoneItemHolder> {
 
     private final List<PhoneNumber> itemList = new ArrayList<>();
     private final LayoutInflater inflater;
-    public final selectResultInterface callback;
+    public final ISelectCallback selectCallback;
+    private final DeleteDialog.IDeleteDialog deleteCallback;
 
     protected int lastSelectedPosition = -1;
 
@@ -34,7 +36,7 @@ public class PhoneFoundAdapter extends RecyclerView.Adapter<PhoneItemHolder> {
     @SuppressLint("LongLogTag")
     @Override
     public void onBindViewHolder(@NonNull PhoneItemHolder holder, int position) {
-        holder.bind(itemList.get(position), this);
+        holder.bind(itemList.get(position), this, deleteCallback);
         ((RadioButton) holder.itemView.findViewById(R.id.found_item_radio_selector)).setChecked(lastSelectedPosition == position);
     }
 
@@ -48,9 +50,5 @@ public class PhoneFoundAdapter extends RecyclerView.Adapter<PhoneItemHolder> {
         itemList.addAll(entityList);
         lastSelectedPosition = -1;
         notifyDataSetChanged();
-    }
-
-    public interface selectResultInterface {
-        void click(PhoneNumber number);
     }
 }

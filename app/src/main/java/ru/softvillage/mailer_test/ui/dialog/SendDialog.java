@@ -36,6 +36,8 @@ import ru.softvillage.mailer_test.dataBase.entity.Email;
 import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.ui.dialog.sendAdapter.EmailFoundAdapter;
+import ru.softvillage.mailer_test.ui.dialog.sendAdapter.EntityType;
+import ru.softvillage.mailer_test.ui.dialog.sendAdapter.ISelectCallback;
 import ru.softvillage.mailer_test.ui.dialog.sendAdapter.PhoneFoundAdapter;
 
 //https://medium.com/swlh/alertdialog-and-customdialog-in-android-with-kotlin-f42a168c1936
@@ -43,7 +45,7 @@ import ru.softvillage.mailer_test.ui.dialog.sendAdapter.PhoneFoundAdapter;
 //https://github.com/Angads25/android-toggle Библиотека для SwitchCompat с возможностью перекраски элементов, и доб. текст
 //https://github.com/BelkaLab/Android-Toggle-Switch больше 2х вариантов выбора в SwitchCompat
 //https://stackoverflow.com/questions/11134144/android-edittext-onchange-listener EditText действие по оканчаию ввода
-public class SendDialog extends DialogFragment {
+public class SendDialog extends DialogFragment implements DeleteDialog.IDeleteDialog, ISelectCallback {
 
     private TextView title_send_dialog,
             subtitle_send_dialog,
@@ -431,10 +433,9 @@ public class SendDialog extends DialogFragment {
     }
 
     private void initPhoneRecyclerView() {
-        phoneAdapter = new PhoneFoundAdapter(LayoutInflater.from(getContext()), number -> {
-            edit_text_send_sms.setText(number.getNumber().toString());
-            Log.d(App.TAG + "_SendDialog", "_initPhoneRecyclerView -> callBack: " + number.toString());
-        });
+        phoneAdapter = new PhoneFoundAdapter(LayoutInflater.from(getContext()),
+                this,
+                this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         dialog_recycler_view_phone_found_item.setLayoutManager(layoutManager);
@@ -447,15 +448,8 @@ public class SendDialog extends DialogFragment {
     }
 
     private void initEmailRecyclerView() {
-        emailAdapter = new EmailFoundAdapter(LayoutInflater.from(getContext()), email -> {
-            edit_text_send_email.setText(email.getEmailAddress());
-            selectedEmail = email;
-            if (edit_text_send_sms.getRawText().length() == 0 &&
-                    email.getLinkedPhoneNumber() != null) {
-                edit_text_send_sms.setText(email.getLinkedPhoneNumber().toString());
-            }
-            Log.d(App.TAG + "_SendDialog", "_initEmailRecyclerView -> callBack: " + email.toString());
-        });
+        emailAdapter = new EmailFoundAdapter(LayoutInflater.from(getContext()),
+                this, this);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         dialog_recycler_view_email_found_item.setLayoutManager(layoutManager);
@@ -464,6 +458,57 @@ public class SendDialog extends DialogFragment {
         DividerItemDecoration divider = new DividerItemDecoration(getContext(), DividerItemDecoration.VERTICAL);
         divider.setDrawable(Objects.requireNonNull(AppCompatResources.getDrawable(getContext(), R.drawable.line_divider)));
         dialog_recycler_view_email_found_item.addItemDecoration(divider);
+    }
+
+    @SuppressLint("LongLogTag")
+    @Override
+    public void clickOnItem(Object content, EntityType type) {
+        switch (type) {
+            case EMAIL:
+                Email email = (Email) content;
+                edit_text_send_email.setText(email.getEmailAddress());
+                selectedEmail = email;
+                if (edit_text_send_sms.getRawText().length() == 0 &&
+                        email.getLinkedPhoneNumber() != null) {
+                    edit_text_send_sms.setText(email.getLinkedPhoneNumber().toString());
+                }
+                Log.d(App.TAG + "_SendDialog", "_initEmailRecyclerView -> callBackEmail: " + email.toString());
+                break;
+
+            case PHONE_NUMBER:
+                PhoneNumber number = (PhoneNumber) content;
+                edit_text_send_sms.setText(number.getNumber().toString());
+                Log.d(App.TAG + "_SendDialog", "_initPhoneRecyclerView -> callBackPhone: " + number.toString());
+                break;
+        }
+    }
+
+    @Override
+    public void delete(String phoneOrNumber, int adapterPosition, EntityType type) {
+        switch (type) {
+            case PHONE_NUMBER:
+                Long phoneNumber = Long.parseLong(phoneOrNumber);
+                new Thread(() -> {
+                    App.getInstance().getDbHelper().getDataBase().receiptDao().deletePhoneNumber(phoneNumber);
+                    requireActivity().runOnUiThread(() -> {
+                        phoneAdapter.notifyItemRemoved(adapterPosition);
+                        updatePhoneList();
+                    });
+                    App.getInstance().getDbHelper().getDataBase().receiptDao().deleteEmailAssociatedWithPhone(phoneNumber);
+                    updateEmailList();
+                }).start();
+                break;
+
+            case EMAIL:
+                break;
+        }
+    }
+
+    private void updatePhoneList() {
+    }
+
+    private void updateEmailList() {
+
     }
 
     private void initColor() {

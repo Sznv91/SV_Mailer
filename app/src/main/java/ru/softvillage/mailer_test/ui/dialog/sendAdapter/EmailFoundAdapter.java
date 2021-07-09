@@ -14,16 +14,17 @@ import java.util.List;
 import lombok.RequiredArgsConstructor;
 import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.dataBase.entity.Email;
+import ru.softvillage.mailer_test.ui.dialog.DeleteDialog;
 
 @RequiredArgsConstructor
 public class EmailFoundAdapter extends RecyclerView.Adapter<EmailItemHolder> {
 
     private final List<Email> itemList = new ArrayList<>();
     private final LayoutInflater inflater;
-    public final selectResultInterface callback;
+    public final ISelectCallback selectCallback;
+    private final DeleteDialog.IDeleteDialog deleteCallback;
 
     protected int lastSelectedPosition = -1;
-
 
     @NonNull
     @Override
@@ -34,7 +35,7 @@ public class EmailFoundAdapter extends RecyclerView.Adapter<EmailItemHolder> {
     @SuppressLint("LongLogTag")
     @Override
     public void onBindViewHolder(@NonNull EmailItemHolder holder, int position) {
-        holder.bind(itemList.get(position), this);
+        holder.bind(itemList.get(position), this, deleteCallback);
         ((RadioButton) holder.itemView.findViewById(R.id.found_item_radio_selector)).setChecked(lastSelectedPosition == position);
     }
 
@@ -48,9 +49,5 @@ public class EmailFoundAdapter extends RecyclerView.Adapter<EmailItemHolder> {
         itemList.addAll(entityList);
         lastSelectedPosition = -1;
         notifyDataSetChanged();
-    }
-
-    public interface selectResultInterface {
-        void click(Email email);
     }
 }

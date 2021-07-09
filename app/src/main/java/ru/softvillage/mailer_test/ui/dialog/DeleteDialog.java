@@ -15,17 +15,18 @@ import androidx.fragment.app.DialogFragment;
 
 import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
+import ru.softvillage.mailer_test.ui.dialog.sendAdapter.EntityType;
 
 
 public class DeleteDialog extends DialogFragment {
-    public static final String TYPE_PHONE = "phone";
-    public static final String TYPE_EMAIL = "email";
-
     private static final String ARG_TYPE = "type";
     private static final String ARG_CONTENT = "content";
+    private static final String ARG_POSITION = "adapter_position";
 
-    private String type;
+    private EntityType type;
     private String contentText;
+    private int position;
+    private final IDeleteDialog callback;
 
     private TextView title_delete_dialog,
             content_delete_dialog,
@@ -35,7 +36,8 @@ public class DeleteDialog extends DialogFragment {
             divider_delete_dialog_content;
 
 
-    public DeleteDialog() {
+    public DeleteDialog(IDeleteDialog callback) {
+        this.callback = callback;
         // Required empty public constructor
     }
 
@@ -59,11 +61,12 @@ public class DeleteDialog extends DialogFragment {
         }
     }
 
-    public static DeleteDialog newInstance(String type, String contentText) {
-        DeleteDialog fragment = new DeleteDialog();
+    public static DeleteDialog newInstance(EntityType type, String contentText, int adapterPosition, IDeleteDialog callBack) {
+        DeleteDialog fragment = new DeleteDialog(callBack);
         Bundle args = new Bundle();
-        args.putString(ARG_TYPE, type);
+        args.putString(ARG_TYPE, type.toString());
         args.putString(ARG_CONTENT, contentText);
+        args.putInt(ARG_POSITION, adapterPosition);
         fragment.setArguments(args);
         return fragment;
     }
@@ -72,8 +75,9 @@ public class DeleteDialog extends DialogFragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            type = getArguments().getString(ARG_TYPE);
+            type = EntityType.valueOf(getArguments().getString(ARG_TYPE));
             contentText = getArguments().getString(ARG_CONTENT);
+            position = getArguments().getInt(ARG_POSITION);
         }
     }
 
@@ -97,18 +101,27 @@ public class DeleteDialog extends DialogFragment {
 
         initColor();
         initContent();
+        initButton();
     }
 
     private void initContent() {
-        if (type.equals(TYPE_PHONE)) {
+        Drawable icon;
+        if (type.equals(EntityType.PHONE_NUMBER)) {
             title_delete_dialog.setText(getText(R.string.delete_type_phone));
             content_delete_dialog.setText(String.format("+7 (%s) %s-%s-%s", contentText.substring(0, 3), contentText.substring(3, 6), contentText.substring(6, 8), contentText.substring(8, 10)));
-            Drawable phone = ContextCompat.getDrawable(content_delete_dialog.getContext(), R.drawable.ic_mailer_sended_sms);
-            content_delete_dialog.setCompoundDrawablesRelativeWithIntrinsicBounds(phone, null, null, null);
-            content_delete_dialog.setCompoundDrawablePadding(10);
-        } else title_delete_dialog.setText(getText(R.string.delete_type_email));
+            icon = ContextCompat.getDrawable(content_delete_dialog.getContext(), R.drawable.ic_mailer_sended_sms);
+        } else {
+            title_delete_dialog.setText(getText(R.string.delete_type_email));
+            content_delete_dialog.setText(contentText);
+            icon = ContextCompat.getDrawable(content_delete_dialog.getContext(), R.drawable.ic_mailer_sended_email);
+        }
+        content_delete_dialog.setCompoundDrawablesRelativeWithIntrinsicBounds(icon, null, null, null);
+        content_delete_dialog.setCompoundDrawablePadding(10);
+    }
 
-
+    private void initButton() {
+        title_button_cancel.setOnClickListener(v -> dismiss());
+        title_button_delete.setOnClickListener(v -> callback.delete(contentText, position, type));
     }
 
     private void initColor() {
@@ -123,5 +136,9 @@ public class DeleteDialog extends DialogFragment {
             divider_delete_dialog_title.setBackground(ContextCompat.getDrawable(divider_delete_dialog_title.getContext(), R.color.divider_dt));
             divider_delete_dialog_content.setBackground(ContextCompat.getDrawable(divider_delete_dialog_content.getContext(), R.color.divider_dt));
         }
+    }
+
+    public interface IDeleteDialog {
+        void delete(String phoneOrNumber, int adapterPosition, EntityType type);
     }
 }

@@ -20,6 +20,7 @@ import ru.softvillage.mailer_test.ui.dialog.DeleteDialog;
 public class PhoneItemHolder extends RecyclerView.ViewHolder {
     private final RadioButton found_item_radio_selector;
     private PhoneNumber number;
+    private DeleteDialog.IDeleteDialog deleteCallback;
 
     public PhoneItemHolder(@NonNull View itemView) {
         super(itemView);
@@ -28,12 +29,13 @@ public class PhoneItemHolder extends RecyclerView.ViewHolder {
     }
 
     @SuppressLint("SetTextI18n")
-    public void bind(PhoneNumber entity, PhoneFoundAdapter adapter) {
+    public void bind(PhoneNumber entity, PhoneFoundAdapter adapter, DeleteDialog.IDeleteDialog callback) {
+        this.deleteCallback = callback;
         number = entity;
         found_item_radio_selector.setOnClickListener(v -> {
             adapter.lastSelectedPosition = getAdapterPosition();
             adapter.notifyDataSetChanged();
-            adapter.callback.click(entity);
+            adapter.selectCallback.clickOnItem(entity, EntityType.PHONE_NUMBER);
         });
         String toDisplay = entity.getNumber().toString();
         found_item_radio_selector.setText(String.format("+7 (%s) %s-%s-%s", toDisplay.substring(0, 3), toDisplay.substring(3, 6), toDisplay.substring(6, 8), toDisplay.substring(8, 10)));
@@ -49,9 +51,9 @@ public class PhoneItemHolder extends RecyclerView.ViewHolder {
     private void showPopupMenu(View v) {
         PopupMenu popupMenu = new PopupMenu(found_item_radio_selector.getContext(), v);
         popupMenu.inflate(R.menu.phone_popup_menu);
-
         popupMenu.setOnMenuItemClickListener(item -> {
-            DeleteDialog deleteDialog = DeleteDialog.newInstance(DeleteDialog.TYPE_PHONE, number.getNumber().toString());
+            DeleteDialog deleteDialog = DeleteDialog.newInstance(EntityType.PHONE_NUMBER, number.getNumber().toString(), deleteCallback);
+            deleteDialog.setCancelable(false);
             deleteDialog.show(App.getInstance().getFragmentDispatcher().getActivity().getSupportFragmentManager(), "delete_dialog");
             Log.d(App.TAG + "_PhoneItemHolder", "showPopupMenu -> Delete: " + number.toString());
             return false;
