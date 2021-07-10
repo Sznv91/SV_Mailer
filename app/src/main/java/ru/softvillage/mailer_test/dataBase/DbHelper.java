@@ -6,6 +6,7 @@ import org.joda.time.LocalDate;
 import org.joda.time.LocalDateTime;
 
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 import lombok.Getter;
@@ -42,16 +43,7 @@ public class DbHelper {
 
     public List<PhoneNumber> getPhoneNumberList(String partialNumber) {
         String arg = partialNumber + "%";
-        List<PhoneNumber> founded = dataBase.receiptDao().getPhoneNumberList(arg);
-        List<PhoneNumber> result = new ArrayList<>();
-        int LIMIT_LIST = founded.size();
-        if (founded.size() >= 5) {
-            LIMIT_LIST = 5;
-        }
-        for (int i = 0; i < LIMIT_LIST; i++) {
-            result.add(founded.get(i));
-        }
-        return result;
+        return listLimiter(dataBase.receiptDao().getPhoneNumberList(arg));
     }
 
     public void createOrReplacePhone(PhoneNumber phoneNumber) {
@@ -62,12 +54,29 @@ public class DbHelper {
     }
 
     public List<Email> getEmailListByPhoneNumber(long phoneNumber) {
-        return dataBase.receiptDao().getEmailListByPhone(phoneNumber);
+        return listLimiter(dataBase.receiptDao().getEmailListByPhone(phoneNumber));
     }
 
     public List<Email> getEmailListByPartialMail(String partialMail) {
         String arg = partialMail + "%";
-        return dataBase.receiptDao().getEmailListByPartialMail(arg);
+        List<Email> founded = dataBase.receiptDao().getEmailListByPartialMail(arg);
+        return listLimiter(founded);
+    }
+
+    private <T> List<T> listLimiter(Collection<T> founded) {
+        List<T> result = new ArrayList<>();
+        int LIMIT_LIST = founded.size();
+        if (founded.size() >= 5) {
+            LIMIT_LIST = 5;
+        }
+        int count = 0;
+        for (T element : founded) {
+            if (count < LIMIT_LIST) {
+                result.add(element);
+                count++;
+            }
+        }
+        return result;
     }
 
     public void createOrUpdateEmail(Email email) {

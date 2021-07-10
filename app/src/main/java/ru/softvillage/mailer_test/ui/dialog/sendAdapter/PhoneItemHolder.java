@@ -52,7 +52,7 @@ public class PhoneItemHolder extends RecyclerView.ViewHolder {
         PopupMenu popupMenu = new PopupMenu(found_item_radio_selector.getContext(), v);
         popupMenu.inflate(R.menu.phone_popup_menu);
         popupMenu.setOnMenuItemClickListener(item -> {
-            DeleteDialog deleteDialog = DeleteDialog.newInstance(EntityType.PHONE_NUMBER, number.getNumber().toString(), deleteCallback);
+            DeleteDialog deleteDialog = DeleteDialog.newInstance(EntityType.PHONE_NUMBER, number.getNumber().toString(), getAdapterPosition(), deleteCallback);
             deleteDialog.setCancelable(false);
             deleteDialog.show(App.getInstance().getFragmentDispatcher().getActivity().getSupportFragmentManager(), "delete_dialog");
             Log.d(App.TAG + "_PhoneItemHolder", "showPopupMenu -> Delete: " + number.toString());

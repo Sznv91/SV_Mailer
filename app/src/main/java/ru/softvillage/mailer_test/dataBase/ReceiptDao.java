@@ -55,9 +55,15 @@ public interface ReceiptDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     void createEmail(Email entity);
 
+    @Query("SELECT * FROM email WHERE id =:id")
+    Email getEmailById(long id);
+
     @Query("DELETE FROM user_phone_number WHERE number =:phoneNumber")
     void deletePhoneNumber(Long phoneNumber);
 
     @Query("DELETE FROM email WHERE phone_number =:phoneNumber")
     void deleteEmailAssociatedWithPhone(Long phoneNumber);
+
+    @Query("DELETE FROM email WHERE email_address =:email")
+    void deleteEmail(String email);
 }

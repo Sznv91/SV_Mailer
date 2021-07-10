@@ -16,11 +16,13 @@ import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.dataBase.entity.Email;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.ui.dialog.DeleteDialog;
+import ru.softvillage.mailer_test.ui.dialog.EditDialog;
 
 public class EmailItemHolder extends RecyclerView.ViewHolder {
     private final RadioButton found_item_radio_selector;
     private Email email;
     private DeleteDialog.IDeleteDialog deleteCallback;
+    private EditDialog.IEditDialog editCallback;
 
     public EmailItemHolder(@NonNull View itemView) {
         super(itemView);
@@ -29,8 +31,9 @@ public class EmailItemHolder extends RecyclerView.ViewHolder {
     }
 
     @SuppressLint("SetTextI18n")
-    public void bind(Email entity, EmailFoundAdapter adapter, DeleteDialog.IDeleteDialog callback) {
-        this.deleteCallback = callback;
+    public void bind(Email entity, EmailFoundAdapter adapter, DeleteDialog.IDeleteDialog deleteCallback, EditDialog.IEditDialog editCallback) {
+        this.deleteCallback = deleteCallback;
+        this.editCallback = editCallback;
         this.email = entity;
         found_item_radio_selector.setOnClickListener(v -> {
             adapter.lastSelectedPosition = getAdapterPosition();
@@ -48,15 +51,25 @@ public class EmailItemHolder extends RecyclerView.ViewHolder {
         });
     }
 
-    @SuppressLint("LongLogTag")
+    @SuppressLint({"LongLogTag", "NonConstantResourceId"})
     private void showPopupMenu(View v) {
         PopupMenu popupMenu = new PopupMenu(found_item_radio_selector.getContext(), v);
         popupMenu.inflate(R.menu.email_popup_menu);
         popupMenu.setOnMenuItemClickListener(item -> {
-            DeleteDialog deleteDialog = DeleteDialog.newInstance(EntityType.EMAIL, email.getEmailAddress(), getAdapterPosition(), deleteCallback);
-            deleteDialog.setCancelable(false);
-            deleteDialog.show(App.getInstance().getFragmentDispatcher().getActivity().getSupportFragmentManager(), "delete_dialog");
-            Log.d(App.TAG + "_EmailItemHolder", "showPopupMenu -> Delete: " + email.toString());
+            switch (item.getItemId()) {
+                case R.id.delete_item_popup:
+                    DeleteDialog deleteDialog = DeleteDialog.newInstance(EntityType.EMAIL, email.getEmailAddress(), getAdapterPosition(), deleteCallback);
+                    deleteDialog.setCancelable(false);
+                    deleteDialog.show(App.getInstance().getFragmentDispatcher().getActivity().getSupportFragmentManager(), "delete_dialog");
+                    Log.d(App.TAG + "_EmailItemHolder", "showPopupMenu -> Delete: " + email.toString());
+                    return false;
+                case R.id.edit_item_popup:
+                    EditDialog editDialog = EditDialog.newInstance(email.getId(), email.getEmailAddress(), getAdapterPosition(), editCallback);
+                    editDialog.setCancelable(false);
+                    editDialog.show(App.getInstance().getFragmentDispatcher().getActivity().getSupportFragmentManager(), "edit_dialog");
+                    Log.d(App.TAG + "_EmailItemHolder", "showPopupMenu -> Edit Click: " + email.toString());
+                    return false;
+            }
             return false;
         });
 

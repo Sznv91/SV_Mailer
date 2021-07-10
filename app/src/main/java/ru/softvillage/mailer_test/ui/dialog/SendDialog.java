@@ -45,7 +45,10 @@ import ru.softvillage.mailer_test.ui.dialog.sendAdapter.PhoneFoundAdapter;
 //https://github.com/Angads25/android-toggle Библиотека для SwitchCompat с возможностью перекраски элементов, и доб. текст
 //https://github.com/BelkaLab/Android-Toggle-Switch больше 2х вариантов выбора в SwitchCompat
 //https://stackoverflow.com/questions/11134144/android-edittext-onchange-listener EditText действие по оканчаию ввода
-public class SendDialog extends DialogFragment implements DeleteDialog.IDeleteDialog, ISelectCallback {
+public class SendDialog extends DialogFragment implements
+        DeleteDialog.IDeleteDialog,
+        EditDialog.IEditDialog,
+        ISelectCallback {
 
     private TextView title_send_dialog,
             subtitle_send_dialog,
@@ -219,6 +222,12 @@ public class SendDialog extends DialogFragment implements DeleteDialog.IDeleteDi
             }
         });
 
+        edit_text_send_sms.setOnFocusChangeListener((v, hasFocus) -> {
+            if (hasFocus && edit_text_send_sms.getRawText().length() == 10){
+                findEmails();
+            }
+        });
+
         edit_text_send_email.addTextChangedListener(new TextWatcher() {
 
             @Override
@@ -238,12 +247,17 @@ public class SendDialog extends DialogFragment implements DeleteDialog.IDeleteDi
                     findPartialEmails(s.toString());
                 }
                 if (s.length() == 0) {
-                    if (phoneNumberList.size() > 0) {
+                    /*if (phoneNumberList.size() > 0) {
                         showPhoneFoundResult();
                     } else {
                         emailList.clear();
                         showControlModule();
+                    }*/
+                    if (textSmsField.length() != 10){
+                        emailList.clear();
+                        showControlModule();
                     }
+
                 }
             }
         });
@@ -329,9 +343,10 @@ public class SendDialog extends DialogFragment implements DeleteDialog.IDeleteDi
         Log.d(App.TAG + "_SendDialog", "showEmailFoundResult -> emailList.size() " + emailList.size());
         if (findByEmail) {
             if (emailList.size() > 0) {
+                showEmailFoundResult();/*
                 holder_email_find_result.setVisibility(View.VISIBLE);
                 holder_phone_find_result.setVisibility(View.GONE);
-                dialog_switch_module.setVisibility(View.GONE);
+                dialog_switch_module.setVisibility(View.GONE);*/
             } else {
                 showControlModule();
             }
@@ -449,7 +464,7 @@ public class SendDialog extends DialogFragment implements DeleteDialog.IDeleteDi
 
     private void initEmailRecyclerView() {
         emailAdapter = new EmailFoundAdapter(LayoutInflater.from(getContext()),
-                this, this);
+                this, this, this::saveEditedEmail);
 
         LinearLayoutManager layoutManager = new LinearLayoutManager(getContext());
         dialog_recycler_view_email_found_item.setLayoutManager(layoutManager);
@@ -490,25 +505,69 @@ public class SendDialog extends DialogFragment implements DeleteDialog.IDeleteDi
                 Long phoneNumber = Long.parseLong(phoneOrNumber);
                 new Thread(() -> {
                     App.getInstance().getDbHelper().getDataBase().receiptDao().deletePhoneNumber(phoneNumber);
+                    for (PhoneNumber currentPhoneNumber : phoneNumberList) {
+                        if (currentPhoneNumber.getNumber().equals(phoneNumber)) {
+                            phoneNumberList.remove(currentPhoneNumber);
+                            break;
+                        }
+                    }
                     requireActivity().runOnUiThread(() -> {
+                        phoneAdapter.setItems(phoneNumberList,false );
                         phoneAdapter.notifyItemRemoved(adapterPosition);
                         updatePhoneList();
                     });
                     App.getInstance().getDbHelper().getDataBase().receiptDao().deleteEmailAssociatedWithPhone(phoneNumber);
-                    updateEmailList();
+//                    updateEmailList();
                 }).start();
                 break;
 
             case EMAIL:
+                new Thread(() -> {
+                    App.getInstance().getDbHelper().getDataBase().receiptDao().deleteEmail(phoneOrNumber);
+                    for (Email email : emailList) {
+                        if (email.getEmailAddress().equals(phoneOrNumber)) {
+                            emailList.remove(email);
+                            break;
+                        }
+                    }
+                    requireActivity().runOnUiThread(() -> {
+                        emailAdapter.setItems(emailList, false);
+                        emailAdapter.notifyItemRemoved(adapterPosition);
+                        updateEmailList();
+                    });
+                }).start();
                 break;
         }
     }
 
+    @Override
+    public void saveEditedEmail(long id, String editedEmail, int adapterPosition) {
+        new Thread(() -> {
+            Email email = App.getInstance().getDbHelper().getDataBase().receiptDao().getEmailById(id);
+            email.setEmailAddress(editedEmail);
+            for (Email currentEmail : emailList) {
+                if (currentEmail.getId().equals(id)) {
+                    currentEmail.setEmailAddress(editedEmail);
+                }
+            }
+            App.getInstance().getDbHelper().getDataBase().receiptDao().createEmail(email);
+            requireActivity().runOnUiThread(() -> {
+                emailAdapter.setItems(emailList, false);
+                emailAdapter.notifyItemChanged(adapterPosition);
+            });
+        }).start();
+    }
+
     private void updatePhoneList() {
+        if (phoneNumberList.isEmpty()) {
+            showControlModule();
+        }
     }
 
     private void updateEmailList() {
-
+        if (emailList.isEmpty()) {
+            showControlModule();
+        }
     }
 
     private void initColor() {
@@ -546,4 +605,5 @@ public class SendDialog extends DialogFragment implements DeleteDialog.IDeleteDi
             edit_text_send_email.setHintTextColor(ContextCompat.getColor(edit_text_send_email.getContext(), R.color.active_fonts_dt));
         }
     }
+
 }

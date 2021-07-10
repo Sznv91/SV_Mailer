@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    tools:context=".ui.dialog.DeleteDialog">
+
+    <TextView
+        android:id="@+id/title_edit_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:fontFamily="@font/roboto_regular"
+        android:textColor="@color/fonts_lt"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Редактировать E-mail" />
+
+    <View
+        android:id="@+id/divider_edit_dialog_title"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/divider_lt"
+        app:layout_constraintTop_toBottomOf="@+id/title_edit_dialog" />
+
+    <EditText
+        android:layout_marginStart="12dp"
+        android:layout_marginEnd="12dp"
+        android:id="@+id/content_edit_dialog"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="10dp"
+        android:background="@drawable/edit_text_background_light"
+        android:fontFamily="@font/roboto_regular"
+        android:gravity="center"
+        android:hint="example@softvillage.ru"
+        android:inputType="textEmailAddress"
+        android:textColor="@color/active_fonts_lt"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/divider_edit_dialog_title" />
+
+    <View
+
+        android:id="@+id/divider_edit_dialog_content"
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginStart="10dp"
+        android:layout_marginTop="10dp"
+        android:layout_marginEnd="10dp"
+        android:background="@color/divider_lt"
+        app:layout_constraintTop_toBottomOf="@+id/content_edit_dialog" />
+
+    <TextView
+        android:id="@+id/title_button_cancel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_medium"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/cancel"
+        android:textColor="@color/icon_lt"
+        android:textSize="16sp"
+
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toLeftOf="@+id/title_button_save"
+        app:layout_constraintTop_toBottomOf="@+id/divider_edit_dialog_content" />
+
+    <TextView
+        android:id="@+id/title_button_save"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_medium"
+        android:paddingTop="10dp"
+        android:paddingBottom="10dp"
+        android:text="@string/title_button_save"
+        android:textColor="@color/header_lt"
+        android:textSize="16sp"
+        app:layout_constraintBottom_toBottomOf="@+id/title_button_cancel"
+        app:layout_constraintLeft_toRightOf="@+id/title_button_cancel"
+        app:layout_constraintRight_toRightOf="parent" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

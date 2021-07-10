@@ -121,7 +121,10 @@ public class DeleteDialog extends DialogFragment {
 
     private void initButton() {
         title_button_cancel.setOnClickListener(v -> dismiss());
-        title_button_delete.setOnClickListener(v -> callback.delete(contentText, position, type));
+        title_button_delete.setOnClickListener(v -> {
+            callback.delete(contentText, position, type);
+            dismiss();
+        });
     }
 
     private void initColor() {
