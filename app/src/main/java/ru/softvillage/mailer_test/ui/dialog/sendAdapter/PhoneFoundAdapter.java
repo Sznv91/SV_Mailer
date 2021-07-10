@@ -49,11 +49,11 @@ public class PhoneFoundAdapter extends RecyclerView.Adapter<PhoneItemHolder> {
         setItems(entityList, true);
     }
 
-    public void setItems(List<PhoneNumber> entityList, boolean needNotify){
+    public void setItems(List<PhoneNumber> entityList, boolean needNotify) {
         itemList.clear();
         itemList.addAll(entityList);
         lastSelectedPosition = -1;
-        if (needNotify){
+        if (needNotify) {
             notifyDataSetChanged();
         }
     }
