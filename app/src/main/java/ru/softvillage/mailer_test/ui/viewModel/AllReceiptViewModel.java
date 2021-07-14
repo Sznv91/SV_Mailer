@@ -28,7 +28,7 @@ import ru.softvillage.mailer_test.App;
 import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
-import ru.softvillage.mailer_test.ui.fragmet.AllReceipt;
+import ru.softvillage.mailer_test.ui.fragmet.IFragmentWithList;
 import ru.softvillage.mailer_test.ui.fragmet.ReceiptDetailFragment;
 import ru.softvillage.mailer_test.ui.recyclerView.ReceiptItemAdapter;
 
@@ -37,11 +37,16 @@ import ru.softvillage.mailer_test.ui.recyclerView.ReceiptItemAdapter;
  * Ограничение выбора дат в календаре
  */
 public class AllReceiptViewModel extends ViewModel {
-    private AllReceipt allReceiptFragment;
+    private IFragmentWithList fragmentWithList;
     private LinearLayoutManager layoutManager;
     Application app = App.getInstance();
     ReceiptItemAdapter adapter;
     List<EvoReceipt> localCopyReceiptEntityListWithDate = new ArrayList<>();
+    private boolean isSvProcessed = false;
+
+    public void setSvProcessed(boolean isProcessed){
+        isSvProcessed = isProcessed;
+    }
 
 
     @SuppressLint("LongLogTag")
@@ -49,13 +54,13 @@ public class AllReceiptViewModel extends ViewModel {
         List<EvoReceipt> goodEntityListWithDate = injectDateEntity(receiptEntities);
         localCopyReceiptEntityListWithDate = goodEntityListWithDate;
         adapter.setItems(goodEntityListWithDate);
-        if (receiptEntities.size() > 0 && allReceiptFragment != null) {
-            allReceiptFragment.hideEmptyListStab();
+        if (receiptEntities.size() > 0 && fragmentWithList != null) {
+            fragmentWithList.hideEmptyListStab();
         }
     };
 
-    public void setAllReceiptFragment(AllReceipt fragment) {
-        this.allReceiptFragment = fragment;
+    public void setFragmentWithList(IFragmentWithList fragment) {
+        this.fragmentWithList = fragment;
     }
 
     public void setLinearLayoutManager(LinearLayoutManager layoutManager) {
@@ -78,7 +83,7 @@ public class AllReceiptViewModel extends ViewModel {
                                 if (App.getInstance().getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT) {
                                     App.getInstance().getFragmentDispatcher().replaceFragment(fragment);
                                 } else if (App.getInstance().getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
-                                    TextView title_receipts = allReceiptFragment.requireActivity().findViewById(R.id.title_receipts);
+                                    TextView title_receipts = fragmentWithList.getActivity().findViewById(R.id.title_receipts);
                                     title_receipts.setText("Детали чека");
                                     int count = App.getInstance().getFragmentDispatcher().getActivity().getSupportFragmentManager().getBackStackEntryCount();
                                     Log.d(App.TAG + "_backStack", "Count back stack is: " + count);
@@ -116,7 +121,11 @@ public class AllReceiptViewModel extends ViewModel {
     }
 
     private void observeOnChangeDb() {
-        App.getInstance().getDbHelper().getAllEvoReceiptLiveData().observeForever(observer);
+        if (isSvProcessed){
+            App.getInstance().getDbHelper().getAllEvoReceiptSendLiveData().observeForever(observer);
+        } else {
+            App.getInstance().getDbHelper().getAllEvoReceiptLiveData().observeForever(observer);
+        }
     }
 
     @SuppressLint("LongLogTag")
@@ -136,7 +145,9 @@ public class AllReceiptViewModel extends ViewModel {
         LocalDate lastProcessedDate = null;
         for (int i = 0; i < receiptEntities.size(); i++) {
             if (receiptEntities.get(i).getDate_time().toLocalDate().equals(lastProcessedDate)) {
-                result.add(receiptEntities.get(i));
+                EvoReceipt toAdd = receiptEntities.get(i);
+                if (!isSvProcessed) toAdd.setSoft_village_processed(false);
+                result.add(toAdd);
             } else {
                 lastProcessedDate = receiptEntities.get(i).getDate_time().toLocalDate();
                 EvoReceipt dateSplitter = new EvoReceipt();
@@ -144,7 +155,9 @@ public class AllReceiptViewModel extends ViewModel {
                 LocalDateTime splitDate = receiptEntities.get(i).getDate_time().withHourOfDay(0).withMinuteOfHour(0).withSecondOfMinute(0).withMillisOfSecond(0);
                 dateSplitter.setDate_time(splitDate);
                 result.add(dateSplitter);
-                result.add(receiptEntities.get(i));
+                EvoReceipt toAdd = receiptEntities.get(i);
+                if (!isSvProcessed) toAdd.setSoft_village_processed(false);
+                result.add(toAdd);
             }
         }
         return result;

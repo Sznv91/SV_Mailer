@@ -13,9 +13,9 @@ import org.joda.time.LocalDateTime;
 import java.util.List;
 
 import ru.softvillage.mailer_test.dataBase.converters.DateTimeConverter;
-import ru.softvillage.mailer_test.dataBase.entity.AbstractEvoReceipt;
 import ru.softvillage.mailer_test.dataBase.entity.Email;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
+import ru.softvillage.mailer_test.dataBase.entity.PartialEvoReceiptSvDbUpdate;
 import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
 import ru.softvillage.mailer_test.network.entity.SentEntity;
 
@@ -24,6 +24,9 @@ public interface ReceiptDao {
 
     @Query("SELECT * FROM evo_receipt_all ORDER BY date_time DESC")
     LiveData<List<EvoReceipt>> getAllEvoReceiptLiveData();
+
+    @Query("SELECT * FROM evo_receipt_all WHERE soft_village_processed = '1' ORDER BY date_time DESC")
+    LiveData<List<EvoReceipt>> getAllEvoReceiptSendLiveData();
 
     @Query("SELECT evo_uuid FROM evo_receipt_all ORDER BY date_time DESC")
     List<String> getAllEvoReceiptUuid();
@@ -39,7 +42,7 @@ public interface ReceiptDao {
     void addEvoReceipt(EvoReceipt receipt);
 
     @Update(entity = EvoReceipt.class)
-    void updateEvoReceipt(AbstractEvoReceipt receipt);
+    void updateEvoReceipt(PartialEvoReceiptSvDbUpdate receipt); //Abstract
 
     @Query("SELECT * FROM user_phone_number WHERE number LIKE :partialNumber ORDER BY count_send DESC")
     List<PhoneNumber> getPhoneNumberList(String partialNumber);

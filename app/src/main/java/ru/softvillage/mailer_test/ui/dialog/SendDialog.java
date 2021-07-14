@@ -248,6 +248,10 @@ public class SendDialog extends DialogFragment implements
                         phoneSetter(enteredText);
                         findEmails();
                     }
+                    if (enteredText.length() < 10){
+                        selectedPhoneNumber = null;
+                        dialog_send_sms_switch.setChecked(false);
+                    }
                 }
             }
         });
@@ -286,6 +290,10 @@ public class SendDialog extends DialogFragment implements
                     clearIconColorFilter(false, true);
                     showControlModule();
                 }
+
+                if (s.length() >= 5){
+                    emailCorrectlyChecker(s.toString());
+                }
             }
         });
 
@@ -310,6 +318,7 @@ public class SendDialog extends DialogFragment implements
             if (edit_text_send_sms.getRawText().length() == 10) {
                 if (selectedPhoneNumber != null) {
                     receipt.setSv_sent_sms(true);
+                    receipt.setSoft_village_processed(true);
                     if (!selectedPhoneNumber.getNumber().equals(Long.valueOf(edit_text_send_sms.getRawText()))) {
                         selectedPhoneNumber = null;
                         receipt.setSv_sent_sms(false);
@@ -317,12 +326,14 @@ public class SendDialog extends DialogFragment implements
                 } else {
                     phoneSetter(edit_text_send_sms.getRawText());
                     receipt.setSv_sent_sms(true);
+                    receipt.setSoft_village_processed(true);
                 }
             }
 
             if (!TextUtils.isEmpty(edit_text_send_email.getText())) {
                 if (selectedEmail != null) {
                     receipt.setSv_sent_email(true);
+                    receipt.setSoft_village_processed(true);
                     if (!selectedEmail.getEmailAddress().equals(edit_text_send_email.getText().toString())) {
                         selectedEmail = null;
                         receipt.setSv_sent_email(false);
@@ -336,6 +347,7 @@ public class SendDialog extends DialogFragment implements
                             newEmail.setLinkedPhoneNumber(selectedPhoneNumber.getNumber());
                         selectedEmail = newEmail;
                         receipt.setSv_sent_email(true);
+                        receipt.setSoft_village_processed(true);
                     }
                 }
             }
@@ -420,8 +432,10 @@ public class SendDialog extends DialogFragment implements
     private String emailCorrectlyChecker(String email) {
         email = email.replaceAll(" ", "");
         if (email.contains("@") && email.contains(".")) {
+            dialog_send_email_switch.setChecked(true);
             return email;
         }
+        dialog_send_email_switch.setChecked(false);
         return null;
     }
 
@@ -519,11 +533,14 @@ public class SendDialog extends DialogFragment implements
         for (PhoneNumber phoneNumber : phoneNumberList) {
             if (phoneNumber.getNumber().equals(phoneNumberDigit)) {
                 selectedPhoneNumber = phoneNumber;
+                dialog_send_sms_switch.setChecked(true);
                 break;
             }
+            dialog_send_sms_switch.setChecked(false);
         }
         if (selectedPhoneNumber == null || !selectedPhoneNumber.getNumber().equals(phoneNumberDigit)) {
             selectedPhoneNumber = new PhoneNumber(phoneNumberDigit);
+            dialog_send_sms_switch.setChecked(true);
         }
     }
 

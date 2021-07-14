@@ -28,6 +28,10 @@ public class DbHelper {
         return dataBase.receiptDao().getAllEvoReceiptLiveData();
     }
 
+    public LiveData<List<EvoReceipt>> getAllEvoReceiptSendLiveData() {
+        return dataBase.receiptDao().getAllEvoReceiptSendLiveData();
+    }
+
     public List<LocalDate> getUniqueDate() {
         LocalDataBase.databaseWriteExecutor.execute(() -> {
             List<LocalDateTime> dateTimeList = dataBase.receiptDao().getAvailableDateTime();

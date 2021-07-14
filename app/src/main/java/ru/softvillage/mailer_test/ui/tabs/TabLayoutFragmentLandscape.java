@@ -43,7 +43,7 @@ public class TabLayoutFragmentLandscape extends Fragment {
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.holder_statistic_fragment, AllReceipt.newInstance()).commit();
-        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.holder_receipts, SendReceipt.newInstance(0)).commit();
+        getActivity().getSupportFragmentManager().beginTransaction().replace(R.id.holder_receipts, SendReceipt.newInstance()).commit();
 
         divider_tabs = view.findViewById(R.id.divider_tabs);
         tab_title_statistic_information = view.findViewById(R.id.tab_title_statistic_information);

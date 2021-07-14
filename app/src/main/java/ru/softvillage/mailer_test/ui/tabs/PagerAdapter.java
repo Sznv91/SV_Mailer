@@ -22,7 +22,7 @@ public class PagerAdapter extends FragmentStateAdapter {
             case 0:
                 return AllReceipt.newInstance();
             case 1:
-                return SendReceipt.newInstance(0);
+                return SendReceipt.newInstance();
         }
         return null;
     }

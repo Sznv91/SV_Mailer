@@ -27,7 +27,7 @@ import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.ui.recyclerView.ReceiptItemAdapter;
 import ru.softvillage.mailer_test.ui.viewModel.AllReceiptViewModel;
 
-public class AllReceipt extends Fragment {
+public class AllReceipt extends Fragment implements IFragmentWithList {
     private AllReceiptViewModel mViewModel;
     private FloatingActionButton fab;
     private ConstraintLayout receipt_all_layout_fragment;
@@ -42,7 +42,7 @@ public class AllReceipt extends Fragment {
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
                              @Nullable Bundle savedInstanceState) {
         mViewModel = new ViewModelProvider(this).get(AllReceiptViewModel.class);
-        mViewModel.setAllReceiptFragment(this);
+        mViewModel.setFragmentWithList(this);
         App.getInstance().getDbHelper().getUniqueDate().size(); // Первичная инициализация доступных дат
 
         return inflater.inflate(R.layout.fragment_all_receipt, container, false);
@@ -51,7 +51,7 @@ public class AllReceipt extends Fragment {
     @Override
     public void onDestroyView() {
         super.onDestroyView();
-        mViewModel.setAllReceiptFragment(null);
+        mViewModel.setFragmentWithList(null);
     }
 
     @Override
@@ -128,6 +128,7 @@ public class AllReceipt extends Fragment {
         });
     }
 
+    @Override
     public void hideEmptyListStab() {
         layout_empty_receipt_list.setVisibility(View.INVISIBLE);
     }
