@@ -1,7 +1,9 @@
 package ru.softvillage.mailer_test;
 
 import android.annotation.SuppressLint;
+import android.app.ActivityManager;
 import android.app.Application;
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.Gson;
@@ -87,7 +89,7 @@ public class App extends Application {
                 .create(BackendInterface.class);
     }
 
-    public static OkHttpClient.Builder getUnsafeOkHttpClient() {
+    private static OkHttpClient.Builder getUnsafeOkHttpClient() {
 
         try {
             // Create a trust manager that does not validate certificate chains
@@ -127,6 +129,16 @@ public class App extends Application {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public static boolean isMyServiceRunning(Class<?> serviceClass) {
+        ActivityManager manager = (ActivityManager) instance.getSystemService(Context.ACTIVITY_SERVICE);
+        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
+            if (serviceClass.getName().equals(service.service.getClassName())) {
+                return true;
+            }
+        }
+        return false;
     }
 }
 

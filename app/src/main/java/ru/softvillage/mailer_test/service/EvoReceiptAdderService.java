@@ -62,7 +62,7 @@ public class EvoReceiptAdderService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         sendNotification(INFO, TITLE, INFO);
 //        return super.onStartCommand(intent, flags, startId);
-        Log.d(App.TAG + "_AddService", "Служба запущенна");
+        Log.d(App.TAG + "_AddService", "Служба синхронизации чеков запущенна");
         if (syncThread == null) {
             syncThread = new Thread(new Runnable() {
                 @Override
@@ -203,7 +203,7 @@ public class EvoReceiptAdderService extends Service {
 
     @Override
     public void onDestroy() {
-        Log.d(App.TAG + "_AddService", "Служба остановлена");
+        Log.d(App.TAG + "_AddService", "Служба синхронизации чеков остановлена");
         super.onDestroy();
         notificationManager.cancel(DEFAULT_NOTIFICATION_ID);
     }

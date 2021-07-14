@@ -15,9 +15,12 @@ import ru.softvillage.mailer_test.App;
 import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.service.EvoReceiptAdderService;
+import ru.softvillage.mailer_test.service.SendToBackendService;
 import ru.softvillage.mailer_test.ui.left_menu.DrawerMenuManager;
 import ru.softvillage.mailer_test.ui.tabs.TabLayoutFragment;
 import ru.softvillage.mailer_test.ui.tabs.TabLayoutFragmentLandscape;
+
+import static ru.softvillage.mailer_test.App.isMyServiceRunning;
 
 /**
  * SplashScreen выполнен по статье
@@ -60,11 +63,12 @@ public class MainActivity extends AppCompatActivity {
         }
 
         startAdderService();
+        startSenderService();
     }
 
     private void startAdderService() {
         if (isMyServiceRunning(EvoReceiptAdderService.class)) {
-            Toast.makeText(getApplicationContext(), "Service already running", Toast.LENGTH_LONG).show();
+            Toast.makeText(getApplicationContext(), "Service adder already running", Toast.LENGTH_SHORT).show();
             return;
         }
         Intent startIntent = new Intent(this, EvoReceiptAdderService.class);
@@ -72,14 +76,14 @@ public class MainActivity extends AppCompatActivity {
         startService(startIntent);
     }
 
-    private boolean isMyServiceRunning(Class<?> serviceClass) {
-        ActivityManager manager = (ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
-        for (ActivityManager.RunningServiceInfo service : manager.getRunningServices(Integer.MAX_VALUE)) {
-            if (serviceClass.getName().equals(service.service.getClassName())) {
-                return true;
-            }
+    private void startSenderService(){
+        if (isMyServiceRunning(SendToBackendService.class)) {
+            Toast.makeText(getApplicationContext(), "Service sender already running", Toast.LENGTH_SHORT).show();
+            return;
         }
-        return false;
+        Intent startIntent = new Intent(this, SendToBackendService.class);
+        startIntent.setAction("start");
+        startService(startIntent);
     }
 
     @Override

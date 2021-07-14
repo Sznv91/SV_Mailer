@@ -17,6 +17,7 @@ import ru.softvillage.mailer_test.dataBase.entity.AbstractEvoReceipt;
 import ru.softvillage.mailer_test.dataBase.entity.Email;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
 import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
+import ru.softvillage.mailer_test.network.entity.SentEntity;
 
 @Dao
 public interface ReceiptDao {
@@ -66,4 +67,13 @@ public interface ReceiptDao {
 
     @Query("DELETE FROM email WHERE email_address =:email")
     void deleteEmail(String email);
+
+    @Insert
+    void addToQueueToSend(SentEntity entity);
+
+    @Query("SELECT * FROM queue_for_sending ORDER BY evo_uuid")
+    List<SentEntity> getQueueSend();
+
+    @Query("DELETE FROM queue_for_sending WHERE evo_uuid = :evoReceiptUuid")
+    void removeFromQueueSend(String evoReceiptUuid);
 }

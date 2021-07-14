@@ -13,12 +13,14 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SWMailerTest">
-
+        <service
+            android:name=".service.SendToBackendService"
+            android:enabled="true"
+            android:exported="true"></service>
         <service
             android:name=".service.EvoReceiptAdderService"
             android:enabled="true"
-            android:exported="true" />
-        <!-- android:theme="@style/Theme.SWMailerTest" -->
+            android:exported="true" /> <!-- android:theme="@style/Theme.SWMailerTest" -->
         <meta-data
             android:name="app_uuid"
             android:value="fdf9ba03-f2ec-47c1-ae3d-363c31794052" />

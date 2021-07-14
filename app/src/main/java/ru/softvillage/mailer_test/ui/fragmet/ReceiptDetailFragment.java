@@ -628,7 +628,7 @@ public class ReceiptDetailFragment extends Fragment {
      */
     private void createSendDialog(View v) {
         LocalDateTime ldt = LocalDateTime.fromDateFields(receipt.getHeader().getDate());
-        SendDialog dialog = SendDialog.newInstance(receipt.getHeader().getNumber(), ldt.toString("dd.MM.yyyy HH:mm:ss"));
+        SendDialog dialog = SendDialog.newInstance(receipt.getHeader().getNumber(), ldt.toString("dd.MM.yyyy HH:mm:ss"), receipt.getHeader().getUuid());
         dialog.setCancelable(false);
         dialog.show(getChildFragmentManager(), "send_dialog");
     }

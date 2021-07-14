@@ -1,6 +1,7 @@
 package ru.softvillage.mailer_test.ui.dialog;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.content.res.Configuration;
 import android.graphics.BlendMode;
 import android.graphics.BlendModeColorFilter;
@@ -38,12 +39,17 @@ import br.com.sapereaude.maskedEditText.MaskedEditText;
 import ru.softvillage.mailer_test.App;
 import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.dataBase.entity.Email;
+import ru.softvillage.mailer_test.dataBase.entity.PartialEvoReceiptSvDbUpdate;
 import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
+import ru.softvillage.mailer_test.network.entity.SentEntity;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
+import ru.softvillage.mailer_test.service.SendToBackendService;
 import ru.softvillage.mailer_test.ui.dialog.sendAdapter.EmailFoundAdapter;
 import ru.softvillage.mailer_test.ui.dialog.sendAdapter.EntityType;
 import ru.softvillage.mailer_test.ui.dialog.sendAdapter.ISelectCallback;
 import ru.softvillage.mailer_test.ui.dialog.sendAdapter.PhoneFoundAdapter;
+
+import static ru.softvillage.mailer_test.App.isMyServiceRunning;
 
 //https://medium.com/swlh/alertdialog-and-customdialog-in-android-with-kotlin-f42a168c1936
 //https://stackoverflow.com/questions/22726408/switch-button-thumb-gets-skewed SwitchCompat like IOS
@@ -85,9 +91,11 @@ public class SendDialog extends DialogFragment implements
 
     private static final String RECEIPT_NUMBER = "receipt_number";
     private static final String RECEIPT_DATE = "receipt_date";
+    private static final String RECEIPT_UUID = "receipt_uuid";
 
     private String receiptNumber;
     private String receiptDate;
+    private String evoUuid;
 
     private boolean canProcessWithETSendSms = true;
     private int lastEmailLength = 0;
@@ -122,11 +130,12 @@ public class SendDialog extends DialogFragment implements
     }
 
 
-    public static SendDialog newInstance(String receiptNumber, String receiptDate) {
+    public static SendDialog newInstance(String receiptNumber, String receiptDate, String evoUuid) {
         SendDialog fragment = new SendDialog();
         Bundle args = new Bundle();
         args.putString(RECEIPT_NUMBER, receiptNumber);
         args.putString(RECEIPT_DATE, receiptDate);
+        args.putString(RECEIPT_UUID, evoUuid);
         fragment.setArguments(args);
         return fragment;
     }
@@ -137,6 +146,7 @@ public class SendDialog extends DialogFragment implements
         if (getArguments() != null) {
             receiptNumber = getArguments().getString(RECEIPT_NUMBER);
             receiptDate = getArguments().getString(RECEIPT_DATE);
+            evoUuid = getArguments().getString(RECEIPT_UUID);
         }
     }
 
@@ -293,24 +303,29 @@ public class SendDialog extends DialogFragment implements
 
         button_cancel.setOnClickListener(v -> Objects.requireNonNull(getDialog()).cancel());
         button_send.setOnClickListener(v -> {
-
+            PartialEvoReceiptSvDbUpdate receipt = new PartialEvoReceiptSvDbUpdate(evoUuid);
             /**
              * Шаг 1. формируем selectedPhoneNumber and selectedEmail
              */
             if (edit_text_send_sms.getRawText().length() == 10) {
                 if (selectedPhoneNumber != null) {
+                    receipt.setSv_sent_sms(true);
                     if (!selectedPhoneNumber.getNumber().equals(Long.valueOf(edit_text_send_sms.getRawText()))) {
                         selectedPhoneNumber = null;
+                        receipt.setSv_sent_sms(false);
                     }
                 } else {
                     phoneSetter(edit_text_send_sms.getRawText());
+                    receipt.setSv_sent_sms(true);
                 }
             }
 
             if (!TextUtils.isEmpty(edit_text_send_email.getText())) {
                 if (selectedEmail != null) {
+                    receipt.setSv_sent_email(true);
                     if (!selectedEmail.getEmailAddress().equals(edit_text_send_email.getText().toString())) {
                         selectedEmail = null;
+                        receipt.setSv_sent_email(false);
                     }
                 } else {
                     String emailAddress = emailCorrectlyChecker(edit_text_send_email.getText().toString());
@@ -320,6 +335,7 @@ public class SendDialog extends DialogFragment implements
                         if (selectedPhoneNumber != null)
                             newEmail.setLinkedPhoneNumber(selectedPhoneNumber.getNumber());
                         selectedEmail = newEmail;
+                        receipt.setSv_sent_email(true);
                     }
                 }
             }
@@ -340,12 +356,43 @@ public class SendDialog extends DialogFragment implements
             /**
              * Шаг 3. Отправляем
              */
+            SentEntity entity = new SentEntity();
+            entity.setEvoUuid(evoUuid);
             if (needSendSms && selectedPhoneNumber != null) {
-
+                entity.setPhoneNumber(selectedPhoneNumber.getNumber());
             }
             if (needSendEmail && selectedEmail != null) {
-
+                entity.setEmail(selectedEmail.getEmailAddress());
             }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    /**
+                     * Выполняем сохранение сущьности в БД для отпрвки на backend.
+                     */
+                    App.getInstance().getDbHelper().getDataBase().receiptDao().addToQueueToSend(entity);
+
+
+                    /**
+                     * Запуск фоновой службы формирования очередей и отправки на сервер.
+                     */
+                    if (!isMyServiceRunning(SendToBackendService.class)) {
+                        Intent startIntent = new Intent(App.getInstance().getApplicationContext(), SendToBackendService.class);
+                        startIntent.setAction("start");
+                        App.getInstance().startService(startIntent);
+
+                        /*Toast.makeText(getApplicationContext(), "Service sender already running", Toast.LENGTH_SHORT).show();
+                        return;*/
+                    }
+
+                    App.getInstance().getDbHelper().getDataBase().receiptDao().updateEvoReceipt(receipt);
+
+                    /**
+                     * Прерываем тред.
+                     */
+//                    Thread.currentThread().interrupt();
+                }
+            }).start();
             //не реализовано
 
             /**
@@ -434,7 +481,9 @@ public class SendDialog extends DialogFragment implements
                 canProcessWithETSendSms = true;
                 getActivity().runOnUiThread(() -> {
                     emailAdapter.setItems(emailList);
-                    setIconColorFilter(false, true);
+                    if (!emailList.isEmpty()) {
+                        setIconColorFilter(false, true);
+                    }
                 });
             }
         });
@@ -453,7 +502,7 @@ public class SendDialog extends DialogFragment implements
                 emailList.addAll(App.getInstance().getDbHelper().getEmailListByPartialMail(partEmail));
                 getActivity().runOnUiThread(() -> {
                     emailAdapter.setItems(emailList);
-                    setIconColorFilter(false, true);
+                    if (!emailList.isEmpty()) setIconColorFilter(false, true);
                     if (needShowFoundModule) showEmailFoundResultModule();
                 });
             }
