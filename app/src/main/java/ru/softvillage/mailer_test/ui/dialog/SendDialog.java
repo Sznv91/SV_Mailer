@@ -65,7 +65,8 @@ public class SendDialog extends DialogFragment implements
             subtitle_send_dialog,
             title_save_contact,
             title_send_email,
-            title_send_sms;
+            title_send_sms,
+            title_button_send;
     private View divider_send_dialog_title,
             divider_send_dialog_sms_email,
             divider_dialog_switch_module;
@@ -164,6 +165,7 @@ public class SendDialog extends DialogFragment implements
         title_save_contact = view.findViewById(R.id.title_save_contact);
         title_send_email = view.findViewById(R.id.title_send_email);
         title_send_sms = view.findViewById(R.id.title_send_sms);
+        title_button_send = view.findViewById(R.id.title_button_send);
         divider_send_dialog_title = view.findViewById(R.id.divider_send_dialog_title);
         divider_send_dialog_sms_email = view.findViewById(R.id.divider_send_dialog_sms_email);
         divider_dialog_switch_module = view.findViewById(R.id.divider_dialog_switch_module);
@@ -204,8 +206,14 @@ public class SendDialog extends DialogFragment implements
         });
         dialog_send_email_switch.setChecked(needSendEmail);
         dialog_send_sms_switch.setChecked(needSendSms);
-        dialog_send_email_switch.setOnCheckedChangeListener((buttonView, isChecked) -> needSendEmail = isChecked);
-        dialog_send_sms_switch.setOnCheckedChangeListener((buttonView, isChecked) -> needSendSms = isChecked);
+        dialog_send_email_switch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            needSendEmail = isChecked;
+            checkPossibilitySending();
+        });
+        dialog_send_sms_switch.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            needSendSms = isChecked;
+            checkPossibilitySending();
+        });
 
         edit_text_send_sms.addTextChangedListener(new TextWatcher() {
             @Override
@@ -251,6 +259,7 @@ public class SendDialog extends DialogFragment implements
                     if (enteredText.length() < 10) {
                         selectedPhoneNumber = null;
                         dialog_send_sms_switch.setChecked(false);
+                        checkPossibilitySending();
                     }
                 }
             }
@@ -292,7 +301,7 @@ public class SendDialog extends DialogFragment implements
                 }
 
                 if (s.length() >= 5) {
-                    emailCorrectlyChecker(s.toString());
+                    emailCorrectlyChecker(s.toString(), true);
                 }
             }
         });
@@ -310,108 +319,7 @@ public class SendDialog extends DialogFragment implements
         });
 
         button_cancel.setOnClickListener(v -> Objects.requireNonNull(getDialog()).cancel());
-        button_send.setOnClickListener(v -> {
-            PartialEvoReceiptSvDbUpdate receipt = new PartialEvoReceiptSvDbUpdate(evoUuid);
-            /**
-             * Шаг 1. формируем selectedPhoneNumber and selectedEmail
-             */
-            if (edit_text_send_sms.getRawText().length() == 10) {
-                if (selectedPhoneNumber != null) {
-                    receipt.setSv_sent_sms(true);
-                    receipt.setSoft_village_processed(true);
-                    if (!selectedPhoneNumber.getNumber().equals(Long.valueOf(edit_text_send_sms.getRawText()))) {
-                        selectedPhoneNumber = null;
-                        receipt.setSv_sent_sms(false);
-                    }
-                } else {
-                    phoneSetter(edit_text_send_sms.getRawText());
-                    receipt.setSv_sent_sms(true);
-                    receipt.setSoft_village_processed(true);
-                }
-            }
 
-            if (!TextUtils.isEmpty(edit_text_send_email.getText())) {
-                if (selectedEmail != null) {
-                    receipt.setSv_sent_email(true);
-                    receipt.setSoft_village_processed(true);
-                    if (!selectedEmail.getEmailAddress().equals(edit_text_send_email.getText().toString())) {
-                        selectedEmail = null;
-                        receipt.setSv_sent_email(false);
-                    }
-                } else {
-                    String emailAddress = emailCorrectlyChecker(edit_text_send_email.getText().toString());
-                    if (emailAddress != null) {
-                        Email newEmail = new Email();
-                        newEmail.setEmailAddress(emailAddress);
-                        if (selectedPhoneNumber != null)
-                            newEmail.setLinkedPhoneNumber(selectedPhoneNumber.getNumber());
-                        selectedEmail = newEmail;
-                        receipt.setSv_sent_email(true);
-                        receipt.setSoft_village_processed(true);
-                    }
-                }
-            }
-
-            /**
-             * Шаг 2. Выполняем проверку переключателей
-             */
-            if (dialog_save_switch.isChecked()) {
-                if (selectedPhoneNumber != null) {
-                    App.getInstance().getDbHelper().createOrReplacePhone(selectedPhoneNumber);
-                }
-                if (selectedEmail != null) {
-                    App.getInstance().getDbHelper().createOrUpdateEmail(selectedEmail);
-                }
-            }
-
-
-            /**
-             * Шаг 3. Отправляем
-             */
-            SentEntity entity = new SentEntity();
-            entity.setEvoUuid(evoUuid);
-            if (needSendSms && selectedPhoneNumber != null) {
-                entity.setPhoneNumber(selectedPhoneNumber.getNumber());
-            }
-            if (needSendEmail && selectedEmail != null) {
-                entity.setEmail(selectedEmail.getEmailAddress());
-            }
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    /**
-                     * Выполняем сохранение сущьности в БД для отпрвки на backend.
-                     */
-                    App.getInstance().getDbHelper().getDataBase().receiptDao().addToQueueToSend(entity);
-
-
-                    /**
-                     * Запуск фоновой службы формирования очередей и отправки на сервер.
-                     */
-                    if (!isMyServiceRunning(SendToBackendService.class)) {
-                        Intent startIntent = new Intent(App.getInstance().getApplicationContext(), SendToBackendService.class);
-                        startIntent.setAction("start");
-                        App.getInstance().startService(startIntent);
-
-                        /*Toast.makeText(getApplicationContext(), "Service sender already running", Toast.LENGTH_SHORT).show();
-                        return;*/
-                    }
-
-                    App.getInstance().getDbHelper().getDataBase().receiptDao().updateEvoReceipt(receipt);
-
-                    /**
-                     * Прерываем тред.
-                     */
-//                    Thread.currentThread().interrupt();
-                }
-            }).start();
-            //не реализовано
-
-            /**
-             * Шаг 4. Закрываем окно.
-             */
-            dismiss();
-        });
 
         icon_send_sms.setOnClickListener(v -> {
             if (holder_phone_find_result.getVisibility() == View.VISIBLE) {
@@ -429,13 +337,13 @@ public class SendDialog extends DialogFragment implements
         });
     }
 
-    private String emailCorrectlyChecker(String email) {
+    private String emailCorrectlyChecker(String email, boolean needMoveSwitch) {
         email = email.replaceAll(" ", "");
         if (email.contains("@") && email.contains(".")) {
-            dialog_send_email_switch.setChecked(true);
+            if (needMoveSwitch) dialog_send_email_switch.setChecked(true);
             return email;
         }
-        dialog_send_email_switch.setChecked(false);
+        if (needMoveSwitch) dialog_send_email_switch.setChecked(false);
         return null;
     }
 
@@ -534,13 +442,16 @@ public class SendDialog extends DialogFragment implements
             if (phoneNumber.getNumber().equals(phoneNumberDigit)) {
                 selectedPhoneNumber = phoneNumber;
                 dialog_send_sms_switch.setChecked(true);
+                checkPossibilitySending();
                 break;
             }
             dialog_send_sms_switch.setChecked(false);
+            checkPossibilitySending();
         }
         if (selectedPhoneNumber == null || !selectedPhoneNumber.getNumber().equals(phoneNumberDigit)) {
             selectedPhoneNumber = new PhoneNumber(phoneNumberDigit);
             dialog_send_sms_switch.setChecked(true);
+            checkPossibilitySending();
         }
     }
 
@@ -641,7 +552,7 @@ public class SendDialog extends DialogFragment implements
     @Override
     public void saveEditedEmail(long id, String editedEmail, int adapterPosition) {
         String correctlyEmail = null;
-        correctlyEmail = emailCorrectlyChecker(editedEmail);
+        correctlyEmail = emailCorrectlyChecker(editedEmail, false);
         String finalCorrectlyEmail = correctlyEmail;
         new Thread(() -> {
             if (finalCorrectlyEmail != null) {
@@ -682,6 +593,7 @@ public class SendDialog extends DialogFragment implements
             title_save_contact.setTextColor(ContextCompat.getColor(title_save_contact.getContext(), R.color.fonts_lt));
             title_send_email.setTextColor(ContextCompat.getColor(title_send_email.getContext(), R.color.fonts_lt));
             title_send_sms.setTextColor(ContextCompat.getColor(title_send_sms.getContext(), R.color.fonts_lt));
+            title_button_send.setTextColor(ContextCompat.getColor(title_button_send.getContext(), R.color.active_fonts_lt));
             divider_send_dialog_title.setBackgroundColor(ContextCompat.getColor(divider_send_dialog_title.getContext(), R.color.divider_lt));
             divider_send_dialog_sms_email.setBackgroundColor(ContextCompat.getColor(divider_send_dialog_sms_email.getContext(), R.color.divider_lt));
             divider_dialog_switch_module.setBackgroundColor(ContextCompat.getColor(divider_send_dialog_sms_email.getContext(), R.color.divider_lt));
@@ -698,6 +610,7 @@ public class SendDialog extends DialogFragment implements
             title_save_contact.setTextColor(ContextCompat.getColor(title_save_contact.getContext(), R.color.fonts_dt));
             title_send_email.setTextColor(ContextCompat.getColor(title_send_email.getContext(), R.color.fonts_dt));
             title_send_sms.setTextColor(ContextCompat.getColor(title_send_sms.getContext(), R.color.fonts_dt));
+            title_button_send.setTextColor(ContextCompat.getColor(title_button_send.getContext(), R.color.active_fonts_dt));
             divider_send_dialog_title.setBackgroundColor(ContextCompat.getColor(divider_send_dialog_title.getContext(), R.color.divider_dt));
             divider_send_dialog_sms_email.setBackgroundColor(ContextCompat.getColor(divider_send_dialog_sms_email.getContext(), R.color.divider_dt));
             divider_dialog_switch_module.setBackgroundColor(ContextCompat.getColor(divider_send_dialog_sms_email.getContext(), R.color.divider_dt));
@@ -762,6 +675,138 @@ public class SendDialog extends DialogFragment implements
             }
         }
 
+    }
+
+    private void checkPossibilitySending() {
+        // перекршиваем кнопку убираем листенер
+        int currentTheme = SessionPresenter.getInstance().getCurrentTheme();
+        int textColor;
+        if (currentTheme == SessionPresenter.THEME_LIGHT) {
+            textColor = ContextCompat.getColor(title_button_send.getContext(), R.color.active_fonts_lt);
+        } else {
+            textColor = ContextCompat.getColor(title_button_send.getContext(), R.color.active_fonts_dt);
+        }
+        title_button_send.setTextColor(textColor);
+        button_send.setOnClickListener(v -> {
+        });
+        int activeButtonTextColor = ContextCompat.getColor(title_button_send.getContext(), R.color.icon_lt);
+        if (selectedPhoneNumber != null && dialog_send_sms_switch.isChecked()) {
+            //перекрашиваем кнопку вешаем листенер
+            title_button_send.setTextColor(activeButtonTextColor);
+            setSendButtonListener();
+            return;
+        }
+        if (emailCorrectlyChecker(edit_text_send_email.getText().toString(), false) != null && dialog_send_email_switch.isChecked()) {
+            //перекрашиваем кнопку вешаем листенер
+            title_button_send.setTextColor(activeButtonTextColor);
+            setSendButtonListener();
+            return;
+        }
+    }
+
+    private void setSendButtonListener() {
+        button_send.setOnClickListener(v -> {
+            PartialEvoReceiptSvDbUpdate receipt = new PartialEvoReceiptSvDbUpdate(evoUuid);
+            /**
+             * Шаг 1. формируем selectedPhoneNumber and selectedEmail
+             */
+            if (edit_text_send_sms.getRawText().length() == 10) {
+                if (selectedPhoneNumber != null) {
+                    receipt.setSv_sent_sms(true);
+                    receipt.setSoft_village_processed(true);
+                    if (!selectedPhoneNumber.getNumber().equals(Long.valueOf(edit_text_send_sms.getRawText()))) {
+                        selectedPhoneNumber = null;
+                        receipt.setSv_sent_sms(false);
+                    }
+                } else {
+                    phoneSetter(edit_text_send_sms.getRawText());
+                    receipt.setSv_sent_sms(true);
+                    receipt.setSoft_village_processed(true);
+                }
+            }
+
+            if (!TextUtils.isEmpty(edit_text_send_email.getText())) {
+                if (selectedEmail != null) {
+                    receipt.setSv_sent_email(true);
+                    receipt.setSoft_village_processed(true);
+                    if (!selectedEmail.getEmailAddress().equals(edit_text_send_email.getText().toString())) {
+                        selectedEmail = null;
+                        receipt.setSv_sent_email(false);
+                    }
+                } else {
+                    String emailAddress = emailCorrectlyChecker(edit_text_send_email.getText().toString(), false);
+                    if (emailAddress != null) {
+                        Email newEmail = new Email();
+                        newEmail.setEmailAddress(emailAddress);
+                        if (selectedPhoneNumber != null)
+                            newEmail.setLinkedPhoneNumber(selectedPhoneNumber.getNumber());
+                        selectedEmail = newEmail;
+                        receipt.setSv_sent_email(true);
+                        receipt.setSoft_village_processed(true);
+                    }
+                }
+            }
+
+            /**
+             * Шаг 2. Выполняем проверку переключателей
+             */
+            if (dialog_save_switch.isChecked()) {
+                if (selectedPhoneNumber != null) {
+                    App.getInstance().getDbHelper().createOrReplacePhone(selectedPhoneNumber);
+                }
+                if (selectedEmail != null) {
+                    App.getInstance().getDbHelper().createOrUpdateEmail(selectedEmail);
+                }
+            }
+
+
+            /**
+             * Шаг 3. Отправляем
+             */
+            SentEntity entity = new SentEntity();
+            entity.setEvoUuid(evoUuid);
+            if (needSendSms && selectedPhoneNumber != null) {
+                entity.setPhoneNumber(selectedPhoneNumber.getNumber());
+            }
+            if (needSendEmail && selectedEmail != null) {
+                entity.setEmail(selectedEmail.getEmailAddress());
+            }
+            new Thread(new Runnable() {
+                @Override
+                public void run() {
+                    /**
+                     * Выполняем сохранение сущьности в БД для отпрвки на backend.
+                     */
+                    App.getInstance().getDbHelper().getDataBase().receiptDao().addToQueueToSend(entity);
+
+
+                    /**
+                     * Запуск фоновой службы формирования очередей и отправки на сервер.
+                     */
+                    if (!isMyServiceRunning(SendToBackendService.class)) {
+                        Intent startIntent = new Intent(App.getInstance().getApplicationContext(), SendToBackendService.class);
+                        startIntent.setAction("start");
+                        App.getInstance().startService(startIntent);
+
+                        /*Toast.makeText(getApplicationContext(), "Service sender already running", Toast.LENGTH_SHORT).show();
+                        return;*/
+                    }
+
+                    App.getInstance().getDbHelper().getDataBase().receiptDao().updateEvoReceipt(receipt);
+
+                    /**
+                     * Прерываем тред.
+                     */
+//                    Thread.currentThread().interrupt();
+                }
+            }).start();
+            //не реализовано
+
+            /**
+             * Шаг 4. Закрываем окно.
+             */
+            dismiss();
+        });
     }
 
 }
