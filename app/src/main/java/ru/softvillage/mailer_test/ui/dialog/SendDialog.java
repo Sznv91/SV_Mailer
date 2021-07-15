@@ -248,7 +248,7 @@ public class SendDialog extends DialogFragment implements
                         phoneSetter(enteredText);
                         findEmails();
                     }
-                    if (enteredText.length() < 10){
+                    if (enteredText.length() < 10) {
                         selectedPhoneNumber = null;
                         dialog_send_sms_switch.setChecked(false);
                     }
@@ -291,7 +291,7 @@ public class SendDialog extends DialogFragment implements
                     showControlModule();
                 }
 
-                if (s.length() >= 5){
+                if (s.length() >= 5) {
                     emailCorrectlyChecker(s.toString());
                 }
             }
@@ -640,8 +640,11 @@ public class SendDialog extends DialogFragment implements
 
     @Override
     public void saveEditedEmail(long id, String editedEmail, int adapterPosition) {
+        String correctlyEmail = null;
+        correctlyEmail = emailCorrectlyChecker(editedEmail);
+        String finalCorrectlyEmail = correctlyEmail;
         new Thread(() -> {
-            if (emailCorrectlyChecker(editedEmail) != null) {
+            if (finalCorrectlyEmail != null) {
                 Email email = App.getInstance().getDbHelper().getDataBase().receiptDao().getEmailById(id);
                 email.setEmailAddress(editedEmail);
                 for (Email currentEmail : emailList) {
