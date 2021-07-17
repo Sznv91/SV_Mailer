@@ -4,6 +4,8 @@
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="ru.evotor.permission.SELL_INTEGRATION_SERVICE" />
+    <uses-permission android:name="ru.evotor.permission.PAYMENT_SYSTEM" />
 
     <application
         android:name=".App"
@@ -13,10 +15,36 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SWMailerTest">
+
+        <service
+            android:name=".service.SellService"
+            android:enabled="true"
+            android:exported="true"
+            android:icon="@mipmap/ic_launcher"
+            android:label="@string/app_name"
+            android:permission="ru.evotor.permission.SELL_INTEGRATION_SERVICE">
+            <meta-data
+                android:name="ru.evotor.sales_screen.BACKGROUND_COLOR"
+                android:value="#FF5722" />
+            <intent-filter>
+                <action android:name="evo.v2.receipt.sell.receiptDiscount" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </service>
+
+        <activity
+            android:name=".SellActivity"
+            android:exported="true">
+            <intent-filter android:priority="20">
+                <!-- Подписывает службу на событие DiscountScreenAdditionalItemsEvent и указывает смарт-терминалу отображать иконку приложения на экране оплаты чека продажи. -->
+                <action android:name="ru.evotor.event.payback.DISCOUNT_SCREEN_ADDITIONAL_ITEMS" />
+            </intent-filter>
+        </activity>
+
         <service
             android:name=".service.SendToBackendService"
             android:enabled="true"
-            android:exported="true"></service>
+            android:exported="true" />
         <service
             android:name=".service.EvoReceiptAdderService"
             android:enabled="true"
@@ -33,17 +61,12 @@
                 android:name="ru.evotor.launcher.BACKGROUND_COLOR"
                 android:value="#7EFF22" />
 
-            <intent-filter android:priority="20">
-                <action android:name="android.intent.action.MAIN" />
-                <!-- Указывает на расоположение инконки на рабочем столе для android устройств (не эвотор) -->
-                <!-- <category android:name="android.intent.category.LAUNCHER" /> -->
-
-
+            <intent-filter>
                 <!-- Указывает, что иконка приложения будет отображаться на главном экране смарт-терминала. -->
-                <category android:name="android.intent.category.EVOTOR" />
+                <action android:name="android.intent.action.MAIN" />
 
-                <!-- Подписывает службу на событие DiscountScreenAdditionalItemsEvent и указывает смарт-терминалу отображать иконку приложения на экране оплаты чека продажи. -->
-                <action android:name="ru.evotor.event.payback.DISCOUNT_SCREEN_ADDITIONAL_ITEMS" />
+                <category android:name="android.intent.category.EVOTOR" />
+                <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
     </application>

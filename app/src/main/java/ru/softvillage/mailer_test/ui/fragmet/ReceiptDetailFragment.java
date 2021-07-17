@@ -27,6 +27,7 @@ import com.google.zxing.WriterException;
 import com.google.zxing.common.BitMatrix;
 
 import org.joda.time.LocalDateTime;
+import org.joda.time.format.DateTimeFormat;
 
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -441,7 +442,12 @@ public class ReceiptDetailFragment extends Fragment {
 
             BigDecimal finalTotalDigit = totalDigit;
             BigDecimal finalTotalDiscount = totalDiscount;
-            BigDecimal total = receipt.getPayments().get(0).getValue();
+
+            /** SellSell
+             * Понимаем что чек не фискализирован, будем делать пересчет суммы из того что имеем.
+             */
+            BigDecimal total = receipt.getPayments().isEmpty() ? BigDecimal.ZERO : receipt.getPayments().get(0).getValue();
+
 
             /**
              * String - тип НДС: 20%
@@ -557,25 +563,32 @@ public class ReceiptDetailFragment extends Fragment {
 
             Cursor<FiscalReceipt> fiscalReceiptCursor = ReceiptApi.getFiscalReceipts(fragment.requireContext(), receipt.getHeader().getUuid());
             String toQrData;
-            while (fiscalReceiptCursor.moveToNext()) {
-                title_session_fm = fiscalReceiptCursor.getValue().getSessionNumber() + 1;
-                title_fd_num = fiscalReceiptCursor.getValue().getDocumentNumber();
-                title_fp_num = fiscalReceiptCursor.getValue().getFiscalIdentifier();
-                localDateTime = LocalDateTime.fromDateFields(fiscalReceiptCursor.getValue().getCreationDate());
-                title_fm_date = localDateTime.toString("dd.MM.YY HH:mm");
-                title_fn_num = fiscalReceiptCursor.getValue().getFiscalStorageNumber();
-            }
-            fiscalReceiptCursor.close();
 
-            toQrData = "t=" + localDateTime.toString("YYYYMMdd") + "T" + localDateTime.toString("HHmm") +
-                    "&s=" + String.format("%.02f", total).replace(",", ".") +
-                    "&fn=" + title_fn_num +
-                    "&i=" + title_fd_num +
-                    "&fp=" + title_fp_num;
-            try {
-                barcode_bitmap = encodeAsBitmap(toQrData, BarcodeFormat.QR_CODE, 150, 150);
-            } catch (WriterException e) {
-                e.printStackTrace();
+            /** SellSell
+             * Понимаем что чек не фискализирован, и курсор пуст. Поставляем заглушку QR, данные фискализации - не отображаем
+             */
+            if (fiscalReceiptCursor != null) {
+                while (fiscalReceiptCursor.moveToNext()) {
+                    title_session_fm = fiscalReceiptCursor.getValue().getSessionNumber() + 1;
+                    title_fd_num = fiscalReceiptCursor.getValue().getDocumentNumber();
+                    title_fp_num = fiscalReceiptCursor.getValue().getFiscalIdentifier();
+                    localDateTime = LocalDateTime.fromDateFields(fiscalReceiptCursor.getValue().getCreationDate());
+                    title_fm_date = localDateTime.toString("dd.MM.YY HH:mm");
+                    title_fn_num = fiscalReceiptCursor.getValue().getFiscalStorageNumber();
+                }
+                fiscalReceiptCursor.close();
+                //} - 592 стр
+
+                toQrData = "t=" + localDateTime.toString("YYYYMMdd") + "T" + localDateTime.toString("HHmm") +
+                        "&s=" + String.format("%.02f", total).replace(",", ".") +
+                        "&fn=" + title_fn_num +
+                        "&i=" + title_fd_num +
+                        "&fp=" + title_fp_num;
+                try {
+                    barcode_bitmap = encodeAsBitmap(toQrData, BarcodeFormat.QR_CODE, 150, 150);
+                } catch (WriterException e) {
+                    e.printStackTrace();
+                }
             }
 
             fragment.setDisplayData(
@@ -627,7 +640,10 @@ public class ReceiptDetailFragment extends Fragment {
      * Вызов окна вводна номера телефона (отправки чека)
      */
     private void createSendDialog(View v) {
-        LocalDateTime ldt = LocalDateTime.fromDateFields(receipt.getHeader().getDate());
+        /** SellSell
+         * Сделать константу, сравнивать её в SendDialog
+         */
+        LocalDateTime ldt = receipt.getHeader().getDate() != null ?  LocalDateTime.fromDateFields(receipt.getHeader().getDate()) : LocalDateTime.parse("01.01.1000 00:00:00", DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss"));
         SendDialog dialog = SendDialog.newInstance(receipt.getHeader().getNumber(), ldt.toString("dd.MM.yyyy HH:mm:ss"), receipt.getHeader().getUuid());
         dialog.setCancelable(false);
         dialog.show(getChildFragmentManager(), "send_dialog");
