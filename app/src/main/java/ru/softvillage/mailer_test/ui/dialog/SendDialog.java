@@ -39,6 +39,7 @@ import br.com.sapereaude.maskedEditText.MaskedEditText;
 import ru.softvillage.mailer_test.App;
 import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.dataBase.entity.Email;
+import ru.softvillage.mailer_test.dataBase.entity.NotFiscalizedReceipt;
 import ru.softvillage.mailer_test.dataBase.entity.PartialEvoReceiptSvDbUpdate;
 import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
 import ru.softvillage.mailer_test.network.entity.SentEntity;
@@ -48,6 +49,7 @@ import ru.softvillage.mailer_test.ui.dialog.sendAdapter.EmailFoundAdapter;
 import ru.softvillage.mailer_test.ui.dialog.sendAdapter.EntityType;
 import ru.softvillage.mailer_test.ui.dialog.sendAdapter.ISelectCallback;
 import ru.softvillage.mailer_test.ui.dialog.sendAdapter.PhoneFoundAdapter;
+import ru.softvillage.mailer_test.ui.fragmet.ReceiptDetailFragment;
 
 import static ru.softvillage.mailer_test.App.isMyServiceRunning;
 
@@ -197,8 +199,14 @@ public class SendDialog extends DialogFragment implements
 
     @SuppressLint("StringFormatMatches")
     private void initField() {
-        title_send_dialog.setText(String.format(getString(R.string.title_send_dialog), receiptNumber));
-        subtitle_send_dialog.setText(String.format(getString(R.string.subtitle_send_dialog), receiptDate));
+        if (TextUtils.isEmpty(receiptNumber)) {
+            title_send_dialog.setText("Введите данные для отправки чека");
+            subtitle_send_dialog.setVisibility(View.GONE);
+        } else {
+            title_send_dialog.setText(String.format(getString(R.string.title_send_dialog), receiptNumber));
+            subtitle_send_dialog.setText(String.format(getString(R.string.subtitle_send_dialog), receiptDate));
+        }
+
 
         dialog_save_switch.setChecked(SessionPresenter.getInstance().isSaveContact());
         dialog_save_switch.setOnCheckedChangeListener((buttonView, isChecked) -> {
@@ -771,36 +779,48 @@ public class SendDialog extends DialogFragment implements
             if (needSendEmail && selectedEmail != null) {
                 entity.setEmail(selectedEmail.getEmailAddress());
             }
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    /**
-                     * Выполняем сохранение сущьности в БД для отпрвки на backend.
-                     */
-                    App.getInstance().getDbHelper().getDataBase().receiptDao().addToQueueToSend(entity);
+
+            // Добавление в очередь ожидания фискализации.
+            if (TextUtils.isEmpty(receiptNumber) && ReceiptDetailFragment.NOT_FISCALIZED_RECEIPT_DATE.toString("dd.MM.yyyy HH:mm:ss").equals(receiptDate)) {
+                new Thread(() -> {
+                    NotFiscalizedReceipt notFiscalizedEntity = new NotFiscalizedReceipt(evoUuid);
+                    notFiscalizedEntity.setPhoneNumber(entity.getPhoneNumber() != null ? entity.getPhoneNumber().toString() : null);
+                    notFiscalizedEntity.setEmail(entity.getEmail());
+                    App.getInstance().getDbHelper().getDataBase().receiptDao().addNotFiscalizedReceipt(notFiscalizedEntity);
+                }).start();
+
+            } else { // отправка фискализированного чека
+
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        /**
+                         * Выполняем сохранение сущьности в БД для отпрвки на backend.
+                         */
+                        App.getInstance().getDbHelper().getDataBase().receiptDao().addToQueueToSend(entity);
 
 
-                    /**
-                     * Запуск фоновой службы формирования очередей и отправки на сервер.
-                     */
-                    if (!isMyServiceRunning(SendToBackendService.class)) {
-                        Intent startIntent = new Intent(App.getInstance().getApplicationContext(), SendToBackendService.class);
-                        startIntent.setAction("start");
-                        App.getInstance().startService(startIntent);
+                        /**
+                         * Запуск фоновой службы формирования очередей и отправки на сервер.
+                         */
+                        if (!isMyServiceRunning(SendToBackendService.class)) {
+                            Intent startIntent = new Intent(App.getInstance().getApplicationContext(), SendToBackendService.class);
+                            startIntent.setAction("start");
+                            App.getInstance().startService(startIntent);
 
                         /*Toast.makeText(getApplicationContext(), "Service sender already running", Toast.LENGTH_SHORT).show();
                         return;*/
-                    }
+                        }
 
-                    App.getInstance().getDbHelper().getDataBase().receiptDao().updateEvoReceipt(receipt);
+                        App.getInstance().getDbHelper().getDataBase().receiptDao().updateEvoReceipt(receipt);
 
-                    /**
-                     * Прерываем тред.
-                     */
+                        /**
+                         * Прерываем тред.
+                         */
 //                    Thread.currentThread().interrupt();
-                }
-            }).start();
-            //не реализовано
+                    }
+                }).start();
+            }
 
             /**
              * Шаг 4. Закрываем окно.

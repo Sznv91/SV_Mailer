@@ -30,6 +30,10 @@ public class Prefs {
         return sharedPreferences.getInt(key, -1);
     }
 
+    public int loadInt(String key, int defValue) {
+        return sharedPreferences.getInt(key, defValue);
+    }
+
     public void saveInt(String key, int value) {
         sharedPreferences.edit().putInt(key, value).commit();
     }

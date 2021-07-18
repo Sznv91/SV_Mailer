@@ -9,6 +9,7 @@ import android.content.Intent;
 import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.os.IBinder;
+import android.text.TextUtils;
 import android.util.Log;
 
 import androidx.core.app.NotificationCompat;
@@ -21,6 +22,7 @@ import ru.softvillage.mailer_test.App;
 import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.network.entity.ReceivedEntity;
 import ru.softvillage.mailer_test.network.entity.SentEntity;
+import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.ui.MainActivity;
 
 public class SendToBackendService extends Service {
@@ -59,6 +61,14 @@ public class SendToBackendService extends Service {
                             Response<ReceivedEntity> receivedEntity = App.getInstance().getBackendInterface().sendReceipt(list.get(0)).execute();
                             if (receivedEntity.isSuccessful()
                                     && receivedEntity.body().isSuccess()) {
+                                SentEntity entity = list.get(0);                        //Обновление
+                                if (entity.getPhoneNumber() != null) {                  //счетчиков
+                                    SessionPresenter.getInstance().setCountSendSms();   //на
+                                }                                                       //UI
+                                if (!TextUtils.isEmpty(entity.getEmail())) {            //
+                                    SessionPresenter.getInstance().setCountSendEmail(); //
+                                }                                                       //
+
                                 App.getInstance().getDbHelper().getDataBase().receiptDao().removeFromQueueSend(receivedEntity.body().getEvo_uuid());
                                 list.clear();
                                 list.addAll(App.getInstance().getDbHelper().getDataBase().receiptDao().getQueueSend());

@@ -152,8 +152,8 @@ public class PositionGoodsItemHolder extends RecyclerView.ViewHolder {
         } else {
             receipt_item_single_position.setText(String.format(App.getInstance().getString(R.string.receipt_item_single_position)
                     , position.getQuantity()
-                    , position.getTotal(BigDecimal.ZERO)
-                    , position.getPriceWithDiscountPosition().setScale(2, RoundingMode.DOWN))
+                    , position.getPriceWithDiscountPosition().setScale(2, RoundingMode.DOWN)
+                    , position.getTotal(BigDecimal.ZERO))
                     .replace(",", "."));
             receipt_item_position_discount.setText(String.format(App.getInstance().getString(R.string.receipt_item_position_discount), position.getDiscountPositionSum()).replace(",", "."));
 

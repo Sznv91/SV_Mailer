@@ -19,6 +19,7 @@ import retrofit2.Response;
 import ru.softvillage.mailer_test.App;
 import ru.softvillage.mailer_test.network.entity.OrgInfo;
 import ru.softvillage.mailer_test.ui.IMainView;
+import ru.softvillage.mailer_test.ui.IUpdateCountersLeftMenu;
 import ru.softvillage.mailer_test.ui.left_menu.DrawerMenuManager;
 import ru.softvillage.mailer_test.util.Prefs;
 
@@ -42,7 +43,9 @@ public class SessionPresenter {
     public final static String SNO_TYPE = "sno_type";
     public final static String ORG_INN = "org_inn";
     public final static String NEED_SAVE_CONTACT = "need_save_contact";
-
+    public final static String COUNT_ALL_RECEIPT = "count_all_receipt";
+    public final static String COUNT_SEND_SMS = "count_send_sms";
+    public final static String COUNT_SEND_EMAIL = "count_send_email";
     /**
      * Блок определения переменных
      */
@@ -54,12 +57,17 @@ public class SessionPresenter {
     @Getter
     private long org_inn;
     private LocalDateTime lastOpenReceiptDetailFragment;
-    private int currentTheme;
+    private int currentTheme,
+            countAllReceipt,
+            countSendSms,
+            countSendEmail;
     private MutableLiveData<Integer> currentThemeLiveData;
     @Getter
     @Setter
     boolean fragmentBusy = false; // false - свободен
     boolean saveContact;
+    @Setter
+    IUpdateCountersLeftMenu updateCounterOnUi;
 
     public static SessionPresenter getInstance() {
         if (instance == null) {
@@ -97,6 +105,10 @@ public class SessionPresenter {
         org_inn = Prefs.getInstance().loadLong(ORG_INN);
 
         saveContact = Prefs.getInstance().loadBoolean(NEED_SAVE_CONTACT, true);
+
+        countAllReceipt = Prefs.getInstance().loadInt(COUNT_ALL_RECEIPT, 0);
+        countSendSms = Prefs.getInstance().loadInt(COUNT_SEND_SMS, 0);
+        countSendEmail = Prefs.getInstance().loadInt(COUNT_SEND_EMAIL, 0);
 
         initOrgInfo();
     }
@@ -216,6 +228,42 @@ public class SessionPresenter {
         if (this.saveContact != saveContact) {
             this.saveContact = saveContact;
             Prefs.getInstance().saveBoolean(NEED_SAVE_CONTACT, this.saveContact);
+        }
+    }
+
+    public int getCountAllReceipt() {
+        return countAllReceipt;
+    }
+
+    public void setCountAllReceipt() {
+        this.countAllReceipt++;
+        Prefs.getInstance().saveInt(COUNT_ALL_RECEIPT, countAllReceipt);
+        if (updateCounterOnUi != null) {
+            updateCounterOnUi.updateValue_receipts_count(this.countAllReceipt);
+        }
+    }
+
+    public int getCountSendSms() {
+        return countSendSms;
+    }
+
+    public void setCountSendSms() {
+        this.countSendSms++;
+        Prefs.getInstance().saveInt(COUNT_SEND_SMS, countSendSms);
+        if (updateCounterOnUi != null) {
+            updateCounterOnUi.updateValue_send_sms(this.countSendSms);
+        }
+    }
+
+    public int getCountSendEmail() {
+        return countSendEmail;
+    }
+
+    public void setCountSendEmail() {
+        this.countSendEmail++;
+        Prefs.getInstance().saveInt(COUNT_SEND_EMAIL, countSendEmail);
+        if (updateCounterOnUi != null) {
+            updateCounterOnUi.updateValue_send_email(this.countSendEmail);
         }
     }
 }

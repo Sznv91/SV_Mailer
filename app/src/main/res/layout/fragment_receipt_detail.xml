@@ -378,6 +378,7 @@
 
                 <ImageView
                     android:id="@+id/qr_holder"
+                    android:src="@drawable/ic_qr_demo"
                     android:layout_width="150dp"
                     android:layout_height="150dp"
                     android:layout_marginTop="10dp"
@@ -419,12 +420,12 @@
 
 
         <TextView
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
             android:id="@+id/title_button_cancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_medium"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:text="@string/cancel"
             android:textColor="@color/header_lt"
             android:textSize="16sp"
@@ -433,12 +434,12 @@
             app:layout_constraintRight_toLeftOf="@+id/title_button_send" />
 
         <TextView
-            android:paddingTop="10dp"
-            android:paddingBottom="10dp"
             android:id="@+id/title_button_send"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="@font/roboto_medium"
+            android:paddingTop="10dp"
+            android:paddingBottom="10dp"
             android:text="@string/button_send"
             android:textColor="@color/icon_lt"
             android:textSize="16sp"

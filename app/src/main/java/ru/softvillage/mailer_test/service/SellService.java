@@ -16,7 +16,7 @@ import ru.evotor.framework.core.action.event.receipt.discount.ReceiptDiscountEve
 import ru.evotor.framework.core.action.event.receipt.discount.ReceiptDiscountEventProcessor;
 import ru.evotor.framework.core.action.processor.ActionProcessor;
 import ru.softvillage.mailer_test.App;
-import ru.softvillage.mailer_test.SellActivity;
+import ru.softvillage.mailer_test.ui.SellActivity;
 
 public class SellService extends IntegrationService {
     public final static String RECEIPT_UUID = "receipt_uuid";

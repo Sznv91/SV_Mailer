@@ -16,6 +16,16 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.SWMailerTest">
 
+        <receiver
+            android:name=".receiver.ReceiptCompleteReceiver"
+            android:enabled="true"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="evotor.intent.action.receipt.sell.RECEIPT_CLOSED" />
+                <action android:name="evotor.intent.action.receipt.sell.CLEARED" />
+            </intent-filter>
+        </receiver>
+
         <service
             android:name=".service.SellService"
             android:enabled="true"
@@ -26,16 +36,19 @@
             <meta-data
                 android:name="ru.evotor.sales_screen.BACKGROUND_COLOR"
                 android:value="#FF5722" />
+
             <intent-filter>
                 <action android:name="evo.v2.receipt.sell.receiptDiscount" />
+
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
         </service>
 
         <activity
-            android:name=".SellActivity"
+            android:name=".ui.SellActivity"
             android:exported="true">
             <intent-filter android:priority="20">
+
                 <!-- Подписывает службу на событие DiscountScreenAdditionalItemsEvent и указывает смарт-терминалу отображать иконку приложения на экране оплаты чека продажи. -->
                 <action android:name="ru.evotor.event.payback.DISCOUNT_SCREEN_ADDITIONAL_ITEMS" />
             </intent-filter>
@@ -62,6 +75,7 @@
                 android:value="#7EFF22" />
 
             <intent-filter>
+
                 <!-- Указывает, что иконка приложения будет отображаться на главном экране смарт-терминала. -->
                 <action android:name="android.intent.action.MAIN" />
 

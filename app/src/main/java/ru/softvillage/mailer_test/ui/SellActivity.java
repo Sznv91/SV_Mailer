@@ -1,12 +1,13 @@
-package ru.softvillage.mailer_test;
+package ru.softvillage.mailer_test.ui;
 
 import android.content.Intent;
 import android.os.Bundle;
 
 import androidx.appcompat.app.AppCompatActivity;
 
+import ru.softvillage.mailer_test.App;
+import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.service.SellService;
-import ru.softvillage.mailer_test.ui.MainActivity;
 import ru.softvillage.mailer_test.ui.fragmet.ReceiptDetailFragment;
 import ru.softvillage.mailer_test.ui.left_menu.DrawerMenuManager;
 

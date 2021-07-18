@@ -26,9 +26,13 @@ import ru.softvillage.mailer_test.BuildConfig;
 import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.ui.IMainView;
+import ru.softvillage.mailer_test.ui.IUpdateCountersLeftMenu;
 import ru.softvillage.mailer_test.ui.dialog.ExitDialog;
 
-public class DrawerMenuManager<T extends AppCompatActivity> implements IMainView, View.OnClickListener {
+public class DrawerMenuManager<T extends AppCompatActivity>
+        implements IMainView,
+        View.OnClickListener,
+        IUpdateCountersLeftMenu {
 
     private final AppCompatActivity activity;
 
@@ -75,6 +79,7 @@ public class DrawerMenuManager<T extends AppCompatActivity> implements IMainView
         initMenu();
         SessionPresenter.getInstance().setiMainView1(this);
         SessionPresenter.getInstance().setDrawerMenuManager(this);
+        SessionPresenter.getInstance().setUpdateCounterOnUi(this);
     }
 
     private void initMenu() {
@@ -111,6 +116,9 @@ public class DrawerMenuManager<T extends AppCompatActivity> implements IMainView
 
         updateVersion();
         updateUITheme();
+        updateValue_receipts_count(SessionPresenter.getInstance().getCountAllReceipt());
+        updateValue_send_sms(SessionPresenter.getInstance().getCountSendSms());
+        updateValue_send_email(SessionPresenter.getInstance().getCountSendEmail());
 
         titleExit.setOnClickListener(this);
         changeThemeBottom.setOnClickListener(this);
@@ -282,5 +290,20 @@ public class DrawerMenuManager<T extends AppCompatActivity> implements IMainView
         // mDrawer.setDrawerIndicatorEnabled(!enable);
         // ......
         // To re-iterate, the order in which you enable and disable views IS important #dontSimplify.
+    }
+
+    @Override
+    public void updateValue_receipts_count(int allReceiptCount) {
+        activity.runOnUiThread(() -> value_receipts_count.setText(String.format(activity.getString(R.string.value_left_menu), allReceiptCount)));
+    }
+
+    @Override
+    public void updateValue_send_sms(int countSendSms) {
+        activity.runOnUiThread(() ->value_send_sms.setText(String.format(activity.getString(R.string.value_left_menu), countSendSms)));
+    }
+
+    @Override
+    public void updateValue_send_email(int countSendEmail) {
+        activity.runOnUiThread(() ->value_send_email.setText(String.format(activity.getString(R.string.value_left_menu), countSendEmail)));
     }
 }

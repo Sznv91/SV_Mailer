@@ -33,6 +33,7 @@ import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.dataBase.entity.Email;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
 import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
+import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.ui.MainActivity;
 
 /**
@@ -142,6 +143,7 @@ public class EvoReceiptAdderService extends Service {
                             Log.d(App.TAG + "_AdderService -> Receipt.Header", "Выполняем запись в БД: " + receipt.toString());
 
                             App.getInstance().getDbHelper().getDataBase().receiptDao().addEvoReceipt(receipt);
+                            SessionPresenter.getInstance().setCountAllReceipt(); // Обновление каунтера на UI
                         } else {
                             existInDbUuidList.remove(tempReceipt.getUuid());
                         }

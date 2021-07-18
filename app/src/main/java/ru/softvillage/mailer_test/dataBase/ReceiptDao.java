@@ -15,6 +15,7 @@ import java.util.List;
 import ru.softvillage.mailer_test.dataBase.converters.DateTimeConverter;
 import ru.softvillage.mailer_test.dataBase.entity.Email;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
+import ru.softvillage.mailer_test.dataBase.entity.NotFiscalizedReceipt;
 import ru.softvillage.mailer_test.dataBase.entity.PartialEvoReceiptSvDbUpdate;
 import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
 import ru.softvillage.mailer_test.network.entity.SentEntity;
@@ -79,4 +80,16 @@ public interface ReceiptDao {
 
     @Query("DELETE FROM queue_for_sending WHERE evo_uuid = :evoReceiptUuid")
     void removeFromQueueSend(String evoReceiptUuid);
+
+    @Insert
+    void addNotFiscalizedReceipt(NotFiscalizedReceipt receipt);
+
+    @Query("SELECT * FROM not_fiscalized_receipt WHERE evo_uuid =:evoUuid")
+    NotFiscalizedReceipt getNotFiscalizedReceiptById(String evoUuid);
+
+    @Query("DELETE FROM not_fiscalized_receipt WHERE evo_uuid = :evoUuid")
+    void removeNotFiscalizedReceiptById(String evoUuid);
+
+    @Query("DELETE FROM not_fiscalized_receipt")
+    void removeAllNotFiscalizedReceipt();
 }

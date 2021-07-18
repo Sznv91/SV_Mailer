@@ -91,6 +91,7 @@ public class MainActivity extends AppCompatActivity {
         App.getInstance().getFragmentDispatcher().setActivity(null);
         SessionPresenter.getInstance().setiMainView1(null);
         SessionPresenter.getInstance().setDrawerMenuManager(null);
+        SessionPresenter.getInstance().setUpdateCounterOnUi(null);
         super.onDestroy();
     }
 }

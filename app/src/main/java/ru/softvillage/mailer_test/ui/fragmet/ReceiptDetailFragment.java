@@ -4,6 +4,7 @@ import android.annotation.SuppressLint;
 import android.graphics.Bitmap;
 import android.graphics.PorterDuff;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -56,6 +57,8 @@ import static android.graphics.Color.WHITE;
  * create an instance of this fragment.
  */
 public class ReceiptDetailFragment extends Fragment {
+
+    public static final LocalDateTime NOT_FISCALIZED_RECEIPT_DATE = LocalDateTime.parse("01.01.1000 00:00:00", DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss"));
     PrepareToDisplay backgroundThread;
     /**
      * Элементы несущие информационную нагрузку.
@@ -118,6 +121,8 @@ public class ReceiptDetailFragment extends Fragment {
 
     @Setter
     private Receipt receipt = null;
+
+    private boolean isFiscalized = true;
 
     public ReceiptDetailFragment() {
         SessionPresenter.getInstance().getDrawerManager().showUpButton(true);
@@ -225,6 +230,48 @@ public class ReceiptDetailFragment extends Fragment {
         super.onDestroy();
     }
 
+    private void hideFiscalField(String dsaleNumber, BigDecimal dtotalCost, BigDecimal ddiscount,
+                                 BigDecimal dtotal, String dndsDigit, String dndsType, Receipt receipt) {
+        requireActivity().runOnUiThread(new Runnable() {
+            @Override
+            public void run() {
+                title_sno.setVisibility(View.GONE);
+                title_session_fm.setVisibility(View.GONE);
+                title_fd_num.setVisibility(View.GONE);
+                title_fp_num.setVisibility(View.GONE);
+                title_fm_date.setVisibility(View.GONE);
+                content_sno.setVisibility(View.GONE);
+                title_rn_kkt.setVisibility(View.GONE);
+                title_zn_kkt.setVisibility(View.GONE);
+                title_site_fns.setVisibility(View.GONE);
+                title_fn_num.setVisibility(View.GONE);
+                title_inn_num.setVisibility(View.GONE);
+
+                if (!TextUtils.isEmpty(dsaleNumber)) {
+                    saleNumber.setText(String.format(getActivity().getString(R.string.receipt_detail_sale_num), dsaleNumber));
+                } else {
+                    saleNumber.setVisibility(View.INVISIBLE);
+                }
+                totalCost.setText(String.format("= %.02f", dtotalCost).replace(",", "."));
+                discount.setText(String.format("= %.02f", ddiscount).replace(",", "."));
+                total.setText(String.format("= %.02f", dtotal).replace(",", "."));
+                cash.setText(String.format("= %.02f", dtotal).replace(",", "."));
+                ndsDigit.setText(String.format("= %s", dndsDigit));
+                ndsType.setText(dndsType);
+                adapter.setItems(receipt);
+
+                fragment_receipt_loader.setVisibility(View.GONE);
+                SessionPresenter.getInstance().setFragmentBusy(false); // Признак того что загрузка фрагмента завершена, можно отпускать диспетчер.
+
+                shop_name.setText(SessionPresenter.getInstance().getShop_name());
+                address.setText(SessionPresenter.getInstance().getAddress());
+                payment_location_address_city.setText(SessionPresenter.getInstance().getPayment_place());
+                content_sno.setText(SessionPresenter.getInstance().getSno_type());
+            }
+        });
+        App.getInstance().getFragmentDispatcher().setAllowBack(true);
+    }
+
     public void setDisplayData(String dsaleNumber, BigDecimal dtotalCost, BigDecimal ddiscount,
                                BigDecimal dtotal, String dndsDigit, String dndsType, Receipt receipt,
                                long title_session_fm, long title_fd_num, long title_fp_num,
@@ -232,7 +279,13 @@ public class ReceiptDetailFragment extends Fragment {
                                Bitmap barcode_bitmap) {
 
         requireActivity().runOnUiThread(() -> {
-            saleNumber.setText(String.format(getActivity().getString(R.string.receipt_detail_sale_num), dsaleNumber));
+
+            if (!TextUtils.isEmpty(dsaleNumber)) {
+                saleNumber.setText(String.format(getActivity().getString(R.string.receipt_detail_sale_num), dsaleNumber));
+            } else {
+                saleNumber.setVisibility(View.INVISIBLE);
+            }
+
             totalCost.setText(String.format("= %.02f", dtotalCost).replace(",", "."));
             discount.setText(String.format("= %.02f", ddiscount).replace(",", "."));
             total.setText(String.format("= %.02f", dtotal).replace(",", "."));
@@ -446,7 +499,7 @@ public class ReceiptDetailFragment extends Fragment {
             /** SellSell
              * Понимаем что чек не фискализирован, будем делать пересчет суммы из того что имеем.
              */
-            BigDecimal total = receipt.getPayments().isEmpty() ? BigDecimal.ZERO : receipt.getPayments().get(0).getValue();
+            BigDecimal total = receipt.getPayments().isEmpty() ? totalDigit : receipt.getPayments().get(0).getValue();
 
 
             /**
@@ -568,6 +621,7 @@ public class ReceiptDetailFragment extends Fragment {
              * Понимаем что чек не фискализирован, и курсор пуст. Поставляем заглушку QR, данные фискализации - не отображаем
              */
             if (fiscalReceiptCursor != null) {
+                fragment.isFiscalized = true;
                 while (fiscalReceiptCursor.moveToNext()) {
                     title_session_fm = fiscalReceiptCursor.getValue().getSessionNumber() + 1;
                     title_fd_num = fiscalReceiptCursor.getValue().getDocumentNumber();
@@ -589,23 +643,30 @@ public class ReceiptDetailFragment extends Fragment {
                 } catch (WriterException e) {
                     e.printStackTrace();
                 }
+                fragment.setDisplayData(
+                        receipt.getHeader().getNumber(),
+                        finalTotalDigit,
+                        finalTotalDiscount,
+                        total,
+                        ndsDigit.toString(),
+                        ndsType.toString(),
+                        receipt,
+                        title_session_fm,
+                        title_fd_num,
+                        title_fp_num,
+                        title_fm_date,
+                        title_fn_num,
+                        barcode_bitmap);
+            } else {
+                fragment.isFiscalized = false;
+                fragment.hideFiscalField(receipt.getHeader().getNumber(),
+                        finalTotalDigit,
+                        finalTotalDiscount,
+                        total,
+                        ndsDigit.toString(),
+                        ndsType.toString(),
+                        receipt);
             }
-
-            fragment.setDisplayData(
-                    receipt.getHeader().getNumber(),
-                    finalTotalDigit,
-                    finalTotalDiscount,
-                    total,
-                    ndsDigit.toString(),
-                    ndsType.toString(),
-                    receipt,
-                    title_session_fm,
-                    title_fd_num,
-                    title_fp_num,
-                    title_fm_date,
-                    title_fn_num,
-                    barcode_bitmap
-            );
             Thread.currentThread().interrupt();
         }
 
@@ -640,11 +701,13 @@ public class ReceiptDetailFragment extends Fragment {
      * Вызов окна вводна номера телефона (отправки чека)
      */
     private void createSendDialog(View v) {
-        /** SellSell
-         * Сделать константу, сравнивать её в SendDialog
-         */
-        LocalDateTime ldt = receipt.getHeader().getDate() != null ?  LocalDateTime.fromDateFields(receipt.getHeader().getDate()) : LocalDateTime.parse("01.01.1000 00:00:00", DateTimeFormat.forPattern("dd.MM.yyyy HH:mm:ss"));
-        SendDialog dialog = SendDialog.newInstance(receipt.getHeader().getNumber(), ldt.toString("dd.MM.yyyy HH:mm:ss"), receipt.getHeader().getUuid());
+        LocalDateTime ldt = receipt.getHeader().getDate() != null ? LocalDateTime.fromDateFields(receipt.getHeader().getDate()) : NOT_FISCALIZED_RECEIPT_DATE;
+        SendDialog dialog;
+        if (isFiscalized){
+            dialog = SendDialog.newInstance(receipt.getHeader().getNumber(), ldt.toString("dd.MM.yyyy HH:mm:ss"), receipt.getHeader().getUuid());
+        } else {
+            dialog = SendDialog.newInstance(null, NOT_FISCALIZED_RECEIPT_DATE.toString("dd.MM.yyyy HH:mm:ss"), receipt.getHeader().getUuid());
+        }
         dialog.setCancelable(false);
         dialog.show(getChildFragmentManager(), "send_dialog");
     }
