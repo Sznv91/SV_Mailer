@@ -205,7 +205,7 @@ public class ReceiptDetailFragment extends Fragment {
         control_module = view.findViewById(R.id.control_module);
         initColor(SessionPresenter.getInstance().getCurrentTheme());
 
-        button_cancel.setOnClickListener(v -> getActivity().onBackPressed());
+        button_cancel.setOnClickListener(v -> requireActivity().onBackPressed());
         button_send.setOnClickListener(this::createSendDialog);
 
         /**
@@ -703,7 +703,7 @@ public class ReceiptDetailFragment extends Fragment {
     private void createSendDialog(View v) {
         LocalDateTime ldt = receipt.getHeader().getDate() != null ? LocalDateTime.fromDateFields(receipt.getHeader().getDate()) : NOT_FISCALIZED_RECEIPT_DATE;
         SendDialog dialog;
-        if (isFiscalized){
+        if (isFiscalized) {
             dialog = SendDialog.newInstance(receipt.getHeader().getNumber(), ldt.toString("dd.MM.yyyy HH:mm:ss"), receipt.getHeader().getUuid());
         } else {
             dialog = SendDialog.newInstance(null, NOT_FISCALIZED_RECEIPT_DATE.toString("dd.MM.yyyy HH:mm:ss"), receipt.getHeader().getUuid());

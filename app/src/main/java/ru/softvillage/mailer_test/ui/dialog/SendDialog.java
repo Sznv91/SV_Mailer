@@ -780,6 +780,9 @@ public class SendDialog extends DialogFragment implements
                 entity.setEmail(selectedEmail.getEmailAddress());
             }
 
+            /**
+             * Если чек не фискализирован (окно продажи)
+             */
             // Добавление в очередь ожидания фискализации.
             if (TextUtils.isEmpty(receiptNumber) && ReceiptDetailFragment.NOT_FISCALIZED_RECEIPT_DATE.toString("dd.MM.yyyy HH:mm:ss").equals(receiptDate)) {
                 new Thread(() -> {
@@ -789,6 +792,9 @@ public class SendDialog extends DialogFragment implements
                     App.getInstance().getDbHelper().getDataBase().receiptDao().addNotFiscalizedReceipt(notFiscalizedEntity);
                 }).start();
 
+                /**
+                 * Если чек фискализирован (отправка из приложения mailer)
+                 */
             } else { // отправка фискализированного чека
 
                 new Thread(new Runnable() {
@@ -825,8 +831,8 @@ public class SendDialog extends DialogFragment implements
             /**
              * Шаг 4. Закрываем окно.
              */
-            dismiss();
+            dismiss(); //Закрываем диалог
+            requireActivity().onBackPressed(); //Закрываем ReceiptDetail
         });
     }
-
 }
