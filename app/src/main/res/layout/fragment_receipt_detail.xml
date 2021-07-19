@@ -45,7 +45,7 @@
                 android:layout_gravity="start"
                 android:fontFamily="@font/roboto_medium"
                 android:paddingStart="10dp"
-                android:text="Приход"
+                android:text="@string/receipt_type_sell"
                 android:textColor="@color/active_fonts_lt" />
 
             <androidx.constraintlayout.widget.ConstraintLayout

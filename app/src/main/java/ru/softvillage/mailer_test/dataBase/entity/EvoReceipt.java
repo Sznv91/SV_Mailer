@@ -2,6 +2,7 @@ package ru.softvillage.mailer_test.dataBase.entity;
 
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.Ignore;
 import androidx.room.Index;
 import androidx.room.TypeConverters;
 
@@ -18,6 +19,10 @@ import ru.softvillage.mailer_test.dataBase.converters.DateTimeConverter;
 })
 @TypeConverters({DateTimeConverter.class, BigDecimalConverter.class})
 public class EvoReceipt extends AbstractEvoReceipt {
+    @Ignore
+    public static final String TYPE_SELL = "SELL";
+    @Ignore
+    public static final String TYPE_PAYBACK = "PAYBACK";
     /**
      * Данные получаемые из курсора при выборке всех чеков
      */

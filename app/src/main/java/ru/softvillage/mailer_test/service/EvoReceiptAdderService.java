@@ -18,10 +18,7 @@ import org.joda.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.concurrent.ThreadLocalRandom;
 
 import lombok.Builder;
 import lombok.Data;
@@ -30,9 +27,7 @@ import ru.evotor.framework.receipt.ReceiptApi;
 import ru.evotor.query.Cursor;
 import ru.softvillage.mailer_test.App;
 import ru.softvillage.mailer_test.R;
-import ru.softvillage.mailer_test.dataBase.entity.Email;
 import ru.softvillage.mailer_test.dataBase.entity.EvoReceipt;
-import ru.softvillage.mailer_test.dataBase.entity.PhoneNumber;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.ui.MainActivity;
 
@@ -114,47 +109,60 @@ public class EvoReceiptAdderService extends Service {
                     }*/
 
 
+                    Cursor<Receipt.Header> cursorSell = ReceiptApi.getReceiptHeaders(getApplicationContext(), Receipt.Type.SELL);
 
-                    Cursor<Receipt.Header> cursor = ReceiptApi.getReceiptHeaders(getApplicationContext(), Receipt.Type.SELL);
+                    processedCursor(cursorSell,
+                            () -> {
+                                if (cursorSell != null) cursorSell.close();
+                                Cursor<Receipt.Header> cursorPayback = ReceiptApi.getReceiptHeaders(getApplicationContext(), Receipt.Type.PAYBACK);
+                                processedCursor(cursorPayback, () -> {
+                                    if (cursorPayback != null) cursorPayback.close();
+                                    EvoReceiptAdderService.this.stopSelf();
+                                });
+                            });
 
-                    List<EvoReceiptTemp> tempList = new ArrayList<>();
-                    while (cursor != null && cursor.moveToNext()) {
-                        tempList.add(EvoReceiptTemp.builder()
-                                .uuid(cursor.getValue().getUuid())
-                                .number(cursor.getValue().getNumber())
-                                .type(cursor.getValue().getType().toString())
-                                .date(cursor.getValue().getDate())
-                                .build());
-                    }
-                    if (cursor != null) cursor.close();
-                    Collections.reverse(tempList);
-
-                    List<String> existInDbUuidList = App.getInstance().getDbHelper().getDataBase().receiptDao().getAllEvoReceiptUuid();
-                    for (EvoReceiptTemp tempReceipt : tempList) {
-                        if (!existInDbUuidList.contains(tempReceipt.getUuid())) {
-                            EvoReceipt receipt = new EvoReceipt(tempReceipt.getUuid());
-                            receipt.setEvo_receipt_number(tempReceipt.getNumber());
-                            receipt.setEvo_type(tempReceipt.getType());
-                            receipt.setDate_time(LocalDateTime.fromDateFields(tempReceipt.getDate()));
-
-                            Receipt extractedFromEvoApiReceipt = ReceiptApi.getReceipt(getApplicationContext(), receipt.getEvo_uuid());
-                            receipt.setCountOfPosition(extractedFromEvoApiReceipt.getPositions().size());
-                            receipt.setPrice(extractedFromEvoApiReceipt.getPayments().get(0).getValue());
-                            Log.d(App.TAG + "_AdderService -> Receipt.Header", "Выполняем запись в БД: " + receipt.toString());
-
-                            App.getInstance().getDbHelper().getDataBase().receiptDao().addEvoReceipt(receipt);
-                            SessionPresenter.getInstance().setCountAllReceipt(); // Обновление каунтера на UI
-                        } else {
-                            existInDbUuidList.remove(tempReceipt.getUuid());
-                        }
-                    }
-                    stopSelf();
+//                    stopSelf();
                 }
             });
             syncThread.start();
         }
 
         return Service.START_STICKY;
+    }
+
+    private void processedCursor(Cursor<Receipt.Header> cursor, completeProcessCallback callback) {
+        List<EvoReceiptTemp> tempList = new ArrayList<>();
+        while (cursor != null && cursor.moveToNext()) {
+            tempList.add(EvoReceiptTemp.builder()
+                    .uuid(cursor.getValue().getUuid())
+                    .number(cursor.getValue().getNumber())
+                    .type(cursor.getValue().getType().toString())
+                    .date(cursor.getValue().getDate())
+                    .build());
+        }
+        if (cursor != null) cursor.close();
+        Collections.reverse(tempList);
+
+        List<String> existInDbUuidList = App.getInstance().getDbHelper().getDataBase().receiptDao().getAllEvoReceiptUuid();
+        for (EvoReceiptTemp tempReceipt : tempList) {
+            if (!existInDbUuidList.contains(tempReceipt.getUuid())) {
+                EvoReceipt receipt = new EvoReceipt(tempReceipt.getUuid());
+                receipt.setEvo_receipt_number(tempReceipt.getNumber());
+                receipt.setEvo_type(tempReceipt.getType());
+                receipt.setDate_time(LocalDateTime.fromDateFields(tempReceipt.getDate()));
+
+                Receipt extractedFromEvoApiReceipt = ReceiptApi.getReceipt(getApplicationContext(), receipt.getEvo_uuid());
+                receipt.setCountOfPosition(extractedFromEvoApiReceipt.getPositions().size());
+                receipt.setPrice(extractedFromEvoApiReceipt.getPayments().get(0).getValue());
+                Log.d(App.TAG + "_AdderService -> Receipt.Header", "Выполняем запись в БД: " + receipt.toString());
+
+                App.getInstance().getDbHelper().getDataBase().receiptDao().addEvoReceipt(receipt);
+                SessionPresenter.getInstance().setCountAllReceipt(); // Обновление каунтера на UI
+            } else {
+                existInDbUuidList.remove(tempReceipt.getUuid());
+            }
+        }
+        callback.complete();
     }
 
     public void sendNotification(String Ticker, String Title, String Text) {
@@ -217,5 +225,9 @@ public class EvoReceiptAdderService extends Service {
         String number;
         String type;
         Date date;
+    }
+
+    private interface completeProcessCallback {
+        void complete();
     }
 }

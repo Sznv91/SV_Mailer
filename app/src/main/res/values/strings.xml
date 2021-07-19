@@ -11,8 +11,10 @@
     <string name="cancel">ОТМЕНА</string>
     <string name="title_dialog_exit">Закрыть Mailer?</string>
     <string name="title_receipt_sale">Чек продажи № %s на %d позиции</string>
+    <string name="title_receipt_payback">Чек возврата № %s на %d позиции</string>
     <string name="tv_static_summ">Сумма %.02f руб.</string>
     <string name="receipt_detail_sale_num">Продажа №%s</string>
+    <string name="receipt_detail_payback_sale_num">Возврат продажи №%s</string>
     <string name="receipt_detail_session_id">Смена №%d</string>
     <string name="title_empty_receipt_list">Журнал чеков пуст</string>
     <string name="receipt_item_position_cost">ЦЕНА = %.02f</string>
@@ -51,6 +53,8 @@
     <string name="edit_type_email">Редактировать E-mail</string>
     <string name="delete_popup">Удалить</string>
     <string name="edit_item_popup">Редактировать</string>
+    <string name="receipt_type_sell">ПРИХОД</string>
+    <string name="receipt_type_payback_sell">ВОЗВРАТ ПРИХОДА</string>
 
 
 </resources>

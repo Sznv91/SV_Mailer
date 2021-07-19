@@ -235,6 +235,23 @@ public class ReceiptDetailFragment extends Fragment {
         requireActivity().runOnUiThread(new Runnable() {
             @Override
             public void run() {
+                if (receipt.getHeader().getType().equals(Receipt.Type.SELL)) {
+                    receipt_type.setText(getString(R.string.receipt_type_sell));
+                    if (!TextUtils.isEmpty(dsaleNumber)) {
+                        saleNumber.setText(String.format(requireActivity().getString(R.string.receipt_detail_sale_num), dsaleNumber));
+                    } else {
+                        saleNumber.setVisibility(View.INVISIBLE);
+                    }
+                }
+                if (receipt.getHeader().getType().equals(Receipt.Type.PAYBACK)) {
+                    receipt_type.setText(getString(R.string.receipt_type_payback_sell));
+                    if (!TextUtils.isEmpty(dsaleNumber)) {
+                        saleNumber.setText(String.format(requireActivity().getString(R.string.receipt_detail_payback_sale_num), dsaleNumber));
+                    } else {
+                        saleNumber.setVisibility(View.INVISIBLE);
+                    }
+                }
+
                 title_sno.setVisibility(View.GONE);
                 title_session_fm.setVisibility(View.GONE);
                 title_fd_num.setVisibility(View.GONE);
@@ -247,11 +264,6 @@ public class ReceiptDetailFragment extends Fragment {
                 title_fn_num.setVisibility(View.GONE);
                 title_inn_num.setVisibility(View.GONE);
 
-                if (!TextUtils.isEmpty(dsaleNumber)) {
-                    saleNumber.setText(String.format(getActivity().getString(R.string.receipt_detail_sale_num), dsaleNumber));
-                } else {
-                    saleNumber.setVisibility(View.INVISIBLE);
-                }
                 totalCost.setText(String.format("= %.02f", dtotalCost).replace(",", "."));
                 discount.setText(String.format("= %.02f", ddiscount).replace(",", "."));
                 total.setText(String.format("= %.02f", dtotal).replace(",", "."));
@@ -279,11 +291,21 @@ public class ReceiptDetailFragment extends Fragment {
                                Bitmap barcode_bitmap) {
 
         requireActivity().runOnUiThread(() -> {
-
-            if (!TextUtils.isEmpty(dsaleNumber)) {
-                saleNumber.setText(String.format(getActivity().getString(R.string.receipt_detail_sale_num), dsaleNumber));
-            } else {
-                saleNumber.setVisibility(View.INVISIBLE);
+            if (receipt.getHeader().getType().equals(Receipt.Type.SELL)) {
+                receipt_type.setText(getString(R.string.receipt_type_sell));
+                if (!TextUtils.isEmpty(dsaleNumber)) {
+                    saleNumber.setText(String.format(requireActivity().getString(R.string.receipt_detail_sale_num), dsaleNumber));
+                } else {
+                    saleNumber.setVisibility(View.INVISIBLE);
+                }
+            }
+            if (receipt.getHeader().getType().equals(Receipt.Type.PAYBACK)) {
+                receipt_type.setText(getString(R.string.receipt_type_payback_sell));
+                if (!TextUtils.isEmpty(dsaleNumber)) {
+                    saleNumber.setText(String.format(requireActivity().getString(R.string.receipt_detail_payback_sale_num), dsaleNumber));
+                } else {
+                    saleNumber.setVisibility(View.INVISIBLE);
+                }
             }
 
             totalCost.setText(String.format("= %.02f", dtotalCost).replace(",", "."));
