@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/confirm_layout"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <TextView
+        android:layout_marginTop="12dp"
+        android:id="@+id/title_send_confirm_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_bold"
+        android:text="Информирование"
+        android:textSize="18sp"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <TextView
+        android:gravity="center"
+        android:id="@+id/subtitle_send_confirm_dialog"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_regular"
+        android:text="Чек будет отправлен в близжайшее время"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_send_confirm_dialog" />
+
+    <TextView
+        android:id="@+id/title_phone_number_receiver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Телефонный номер получателя: "
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/subtitle_send_confirm_dialog"
+        app:layout_constraintBottom_toTopOf="@+id/content_phone_number_receiver"/>
+
+    <TextView
+        android:id="@+id/content_phone_number_receiver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_phone_number_receiver"
+        app:layout_constraintBottom_toTopOf="@+id/title_email_receiver"
+        tools:text="+7 928 751 83 19" />
+
+    <TextView
+        android:id="@+id/title_email_receiver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Email получателя: "
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintBottom_toTopOf="@+id/content_email_receiver"
+        app:layout_constraintTop_toBottomOf="@+id/content_phone_number_receiver" />
+
+    <TextView
+        android:id="@+id/content_email_receiver"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/roboto_bold"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/title_email_receiver"
+        app:layout_constraintBottom_toTopOf="@+id/button_ok"
+        tools:text="sazonov91@gmail.com" />
+
+    <TextView
+        android:layout_marginTop="12dp"
+        android:layout_marginBottom="12dp"
+        android:gravity="center"
+        android:textColor="@color/icon_dt"
+        android:id="@+id/button_ok"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="OK"
+        app:layout_constraintTop_toBottomOf="@+id/content_email_receiver"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

@@ -95,6 +95,7 @@ public class SendDialog extends DialogFragment implements
     private static final String RECEIPT_NUMBER = "receipt_number";
     private static final String RECEIPT_DATE = "receipt_date";
     private static final String RECEIPT_UUID = "receipt_uuid";
+    private static final String IS_FISCALIZED = "is_fiscalized";
 
     private String receiptNumber;
     private String receiptDate;
@@ -106,6 +107,7 @@ public class SendDialog extends DialogFragment implements
     private Email selectedEmail;
     private List<PhoneNumber> phoneNumberList = new ArrayList<>();
     private List<Email> emailList = new ArrayList<>();
+    private boolean isFiscalized = true;
 
     public SendDialog() {
         // Required empty public constructor
@@ -133,12 +135,13 @@ public class SendDialog extends DialogFragment implements
     }
 
 
-    public static SendDialog newInstance(String receiptNumber, String receiptDate, String evoUuid) {
+    public static SendDialog newInstance(String receiptNumber, String receiptDate, String evoUuid, boolean isFiscalized) {
         SendDialog fragment = new SendDialog();
         Bundle args = new Bundle();
         args.putString(RECEIPT_NUMBER, receiptNumber);
         args.putString(RECEIPT_DATE, receiptDate);
         args.putString(RECEIPT_UUID, evoUuid);
+        args.putBoolean(IS_FISCALIZED, isFiscalized);
         fragment.setArguments(args);
         return fragment;
     }
@@ -150,6 +153,7 @@ public class SendDialog extends DialogFragment implements
             receiptNumber = getArguments().getString(RECEIPT_NUMBER);
             receiptDate = getArguments().getString(RECEIPT_DATE);
             evoUuid = getArguments().getString(RECEIPT_UUID);
+            isFiscalized = getArguments().getBoolean(IS_FISCALIZED);
         }
     }
 
@@ -831,8 +835,10 @@ public class SendDialog extends DialogFragment implements
             /**
              * Шаг 4. Закрываем окно.
              */
+
+            SendConfirmDialog dialog = SendConfirmDialog.newInstance(receiptNumber, entity.getPhoneNumber() != null ? entity.getPhoneNumber().toString() : null, entity.getEmail(), isFiscalized);
+            dialog.show(getParentFragmentManager(), "send_confirm_dialog"); //Показываем поддтверждение отправки
             dismiss(); //Закрываем диалог
-            requireActivity().onBackPressed(); //Закрываем ReceiptDetail
         });
     }
 }

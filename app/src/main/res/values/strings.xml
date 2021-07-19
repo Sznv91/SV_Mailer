@@ -55,6 +55,8 @@
     <string name="edit_item_popup">Редактировать</string>
     <string name="receipt_type_sell">ПРИХОД</string>
     <string name="receipt_type_payback_sell">ВОЗВРАТ ПРИХОДА</string>
+    <string name="receipt_send_confirm_subtitle">Чек №%s будет отправлен после оплаты</string>
+    <string name="receipt_send_confirm_subtitle_without_number">Чек будет отправлен после оплаты</string>
 
 
 </resources>

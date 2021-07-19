@@ -521,7 +521,7 @@ public class ReceiptDetailFragment extends Fragment {
             /** SellSell
              * Понимаем что чек не фискализирован, будем делать пересчет суммы из того что имеем.
              */
-            BigDecimal total = receipt.getPayments().isEmpty() ? totalDigit : receipt.getPayments().get(0).getValue();
+            BigDecimal total = receipt.getPayments().isEmpty() ? totalDigit.subtract(totalDiscount) : receipt.getPayments().get(0).getValue();
 
 
             /**
@@ -726,9 +726,9 @@ public class ReceiptDetailFragment extends Fragment {
         LocalDateTime ldt = receipt.getHeader().getDate() != null ? LocalDateTime.fromDateFields(receipt.getHeader().getDate()) : NOT_FISCALIZED_RECEIPT_DATE;
         SendDialog dialog;
         if (isFiscalized) {
-            dialog = SendDialog.newInstance(receipt.getHeader().getNumber(), ldt.toString("dd.MM.yyyy HH:mm:ss"), receipt.getHeader().getUuid());
+            dialog = SendDialog.newInstance(receipt.getHeader().getNumber(), ldt.toString("dd.MM.yyyy HH:mm:ss"), receipt.getHeader().getUuid(), isFiscalized);
         } else {
-            dialog = SendDialog.newInstance(null, NOT_FISCALIZED_RECEIPT_DATE.toString("dd.MM.yyyy HH:mm:ss"), receipt.getHeader().getUuid());
+            dialog = SendDialog.newInstance(null, NOT_FISCALIZED_RECEIPT_DATE.toString("dd.MM.yyyy HH:mm:ss"), receipt.getHeader().getUuid(), isFiscalized);
         }
         dialog.setCancelable(false);
         dialog.show(getChildFragmentManager(), "send_dialog");

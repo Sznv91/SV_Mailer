@@ -23,11 +23,17 @@ public class ReceiptSendItemViewHolder extends ReceiptItemViewHolder {
     public void bind(EvoReceipt entity) {
         Log.d(App.TAG + "_ReceiptSendItemViewHolder", "entity.toString: " + entity.toString());
         if (entity.getEvo_receipt_number().equals("0")) {
-            title_receipt_sale.setText(String.format("Чек продажи на %d позиции", entity.getCountOfPosition()));
+            if (entity.getEvo_type().equals(EvoReceipt.TYPE_SELL))
+                title_receipt_sale.setText(String.format("Чек продажи на %d позиции", entity.getCountOfPosition()));
+            if (entity.getEvo_type().equals(EvoReceipt.TYPE_PAYBACK))
+                title_receipt_sale.setText(String.format("Чек возврата на %d позиции", entity.getCountOfPosition()));
             int tabIconColor = ContextCompat.getColor(App.getInstance(), R.color.active_fonts_lt);
             iv_static_check_list.getDrawable().setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
         } else {
-            title_receipt_sale.setText(String.format(App.getInstance().getString(R.string.title_receipt_sale), entity.getEvo_receipt_number(), entity.getCountOfPosition()));
+            if (entity.getEvo_type().equals(EvoReceipt.TYPE_SELL))
+                title_receipt_sale.setText(String.format(App.getInstance().getString(R.string.title_receipt_sale), entity.getEvo_receipt_number(), entity.getCountOfPosition()));
+            if (entity.getEvo_type().equals(EvoReceipt.TYPE_PAYBACK))
+                title_receipt_sale.setText(String.format(App.getInstance().getString(R.string.title_receipt_payback), entity.getEvo_receipt_number(), entity.getCountOfPosition()));
             iv_static_check_list.setImageDrawable(ContextCompat.getDrawable(iv_static_check_list.getContext(), R.drawable.ic_recipient_list));
         }
 
