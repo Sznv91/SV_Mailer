@@ -7,11 +7,13 @@ import android.graphics.PorterDuff;
 import android.graphics.drawable.Drawable;
 import android.os.Build;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.ActionBarDrawerToggle;
 import androidx.appcompat.app.AppCompatActivity;
@@ -19,6 +21,8 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.content.ContextCompat;
 import androidx.drawerlayout.widget.DrawerLayout;
+
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Locale;
 
@@ -29,6 +33,8 @@ import ru.softvillage.mailer_test.ui.IMainView;
 import ru.softvillage.mailer_test.ui.IUpdateCountersLeftMenu;
 import ru.softvillage.mailer_test.ui.dialog.ExitDialog;
 
+import static ru.softvillage.mailer_test.App.TAG;
+
 public class DrawerMenuManager<T extends AppCompatActivity>
         implements IMainView,
         View.OnClickListener,
@@ -38,25 +44,54 @@ public class DrawerMenuManager<T extends AppCompatActivity>
 
     private Toolbar toolbar;
     private DrawerLayout drawer;
-    private ConstraintLayout drawerMenu;
+    private ConstraintLayout drawerMenu,
+            main_menu,
+            about_menu,
+            about_menu_feedback,
+            about_menu_rate_the_app,
+            about_menu_privacy_policy,
+            about_menu_user_agreement,
+            about_menu_licenses,
+            about_menu_data_protection;
+
     private ImageView changeTheme,
             icon_receipts_count,
             icon_send_sms,
             icon_send_email,
             icon_sim,
-            icon_about;
+            icon_about,
+
+    about_menu_image_back,
+            about_menu_icon_feedback,
+            about_menu_icon_rate_the_app,
+            about_menu_icon_privacy_policy,
+            about_menu_icon_user_agreement,
+            about_menu_icon_licenses,
+            about_menu_icon_data_protection;
 
     private Drawable dIconReceiptsCount,
             dIconSendSms,
             dIconSendEmail,
             dIconSim,
-            dIconAbout;
+            dIconAbout,
+
+    dIcon_about_menu_button_back,
+            dIcon_about_menu_icon_feedback,
+            dIcon_about_menu_icon_rate_the_app,
+            dIcon_about_menu_icon_privacy_policy,
+            dIcon_about_menu_icon_user_agreement,
+            dIcon_about_menu_icon_licenses,
+            dIcon_about_menu_icon_data_protection;
 
     private View divider_left_menu_title,
             divider_left_menu_values_module,
-            dividerExit;
+            dividerExit,
 
-    private FrameLayout changeThemeBottom;
+    about_menu_divider_title;
+
+    private FrameLayout changeThemeBottom,
+
+    about_menu_button_back;
     private TextView titleParams,
             title_receipts_count,
             value_receipts_count,
@@ -67,7 +102,16 @@ public class DrawerMenuManager<T extends AppCompatActivity>
             title_sim,
             title_about,
             titleExit,
-            version;
+            version,
+
+    about_menu_title_about,
+            about_menu_version,
+            about_menu_title_feedback,
+            about_menu_title_rate_the_app,
+            about_menu_title_privacy_policy,
+            about_menu_title_user_agreement,
+            about_menu_title_licenses,
+            about_menu_title_data_protection;
 
     private ActionBarDrawerToggle toggle;
     private ActionBar mActionBar;
@@ -114,6 +158,41 @@ public class DrawerMenuManager<T extends AppCompatActivity>
         dIconSim = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_left_menu_sim);
         dIconAbout = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_left_menu_about);
 
+        dIcon_about_menu_button_back = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_left_menu_arrow_back);
+        dIcon_about_menu_icon_feedback = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_icon_feedback);
+        dIcon_about_menu_icon_rate_the_app = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_about_menu_icon_rate_the_app);
+        dIcon_about_menu_icon_privacy_policy = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_icon_privacy_policy);
+        dIcon_about_menu_icon_user_agreement = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_icon_user_agreement);
+        dIcon_about_menu_icon_licenses = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_icon_licenses);
+        dIcon_about_menu_icon_data_protection = ContextCompat.getDrawable(activity.getApplicationContext(), R.drawable.ic_icon_data_protection);
+
+        main_menu = activity.findViewById(R.id.main_menu);
+        about_menu = activity.findViewById(R.id.about_menu);
+        about_menu_image_back = activity.findViewById(R.id.about_menu_image_back);
+        about_menu_icon_feedback = activity.findViewById(R.id.about_menu_icon_feedback);
+        about_menu_icon_rate_the_app = activity.findViewById(R.id.about_menu_icon_rate_the_app);
+        about_menu_icon_privacy_policy = activity.findViewById(R.id.about_menu_icon_privacy_policy);
+        about_menu_icon_user_agreement = activity.findViewById(R.id.about_menu_icon_user_agreement);
+        about_menu_icon_licenses = activity.findViewById(R.id.about_menu_icon_licenses);
+        about_menu_icon_data_protection = activity.findViewById(R.id.about_menu_icon_data_protection);
+        about_menu_divider_title = activity.findViewById(R.id.about_menu_divider_title);
+        about_menu_button_back = activity.findViewById(R.id.about_menu_button_back);
+        about_menu_title_about = activity.findViewById(R.id.about_menu_title_about);
+        about_menu_version = activity.findViewById(R.id.about_menu_version);
+        about_menu_title_feedback = activity.findViewById(R.id.about_menu_title_feedback);
+        about_menu_title_rate_the_app = activity.findViewById(R.id.about_menu_title_rate_the_app);
+        about_menu_title_privacy_policy = activity.findViewById(R.id.about_menu_title_privacy_policy);
+        about_menu_title_user_agreement = activity.findViewById(R.id.about_menu_title_user_agreement);
+        about_menu_title_licenses = activity.findViewById(R.id.about_menu_title_licenses);
+        about_menu_title_data_protection = activity.findViewById(R.id.about_menu_title_data_protection);
+
+        about_menu_feedback = activity.findViewById(R.id.about_menu_feedback);
+        about_menu_rate_the_app = activity.findViewById(R.id.about_menu_rate_the_app);
+        about_menu_privacy_policy = activity.findViewById(R.id.about_menu_privacy_policy);
+        about_menu_user_agreement = activity.findViewById(R.id.about_menu_user_agreement);
+        about_menu_licenses = activity.findViewById(R.id.about_menu_licenses);
+        about_menu_data_protection = activity.findViewById(R.id.about_menu_data_protection);
+
         updateVersion();
         updateUITheme();
         updateValue_receipts_count(SessionPresenter.getInstance().getCountAllReceipt());
@@ -123,12 +202,40 @@ public class DrawerMenuManager<T extends AppCompatActivity>
         titleExit.setOnClickListener(this);
         changeThemeBottom.setOnClickListener(this);
         title_about.setOnClickListener(this);
+        about_menu_button_back.setOnClickListener(this);
+        about_menu_feedback.setOnClickListener(this);
+        about_menu_rate_the_app.setOnClickListener(this);
+        about_menu_privacy_policy.setOnClickListener(this);
+        about_menu_user_agreement.setOnClickListener(this);
+        about_menu_licenses.setOnClickListener(this);
+        about_menu_data_protection.setOnClickListener(this);
 
         toolbar.setTitle(activity.getString(R.string.app_name));
         activity.setSupportActionBar(toolbar);
         toggle = new ActionBarDrawerToggle(activity, drawer, toolbar, R.string.navigation_drawer_open, R.string.navigation_drawer_close);
         mActionBar = activity.getSupportActionBar();
         drawer.addDrawerListener(toggle);
+        drawer.addDrawerListener(new DrawerLayout.DrawerListener() {
+            @Override
+            public void onDrawerSlide(@NonNull @NotNull View drawerView, float slideOffset) {
+
+            }
+
+            @Override
+            public void onDrawerOpened(@NonNull @NotNull View drawerView) {
+
+            }
+
+            @Override
+            public void onDrawerClosed(@NonNull @NotNull View drawerView) {
+                makeVisiblyMainMenu();
+            }
+
+            @Override
+            public void onDrawerStateChanged(int newState) {
+
+            }
+        });
         toggle.syncState();
 
         drawerMenu.post(new Runnable() {
@@ -155,6 +262,7 @@ public class DrawerMenuManager<T extends AppCompatActivity>
 
     private void updateVersion() {
         version.setText(String.format(Locale.getDefault(), "v %s (%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
+        about_menu_version.setText(String.format("Версия %s (%d)", BuildConfig.VERSION_NAME, BuildConfig.VERSION_CODE));
     }
 
     @Override
@@ -179,6 +287,16 @@ public class DrawerMenuManager<T extends AppCompatActivity>
             title_about.setTextColor(ContextCompat.getColor(title_about.getContext(), R.color.fonts_lt));
             titleExit.setTextColor(ContextCompat.getColor(titleExit.getContext(), R.color.fonts_lt));
             version.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_lt));
+
+            about_menu_title_about.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_lt));
+            about_menu_version.setTextColor(ContextCompat.getColor(version.getContext(), R.color.active_fonts_lt));
+            about_menu_title_feedback.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_lt));
+            about_menu_title_rate_the_app.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_lt));
+            about_menu_title_privacy_policy.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_lt));
+            about_menu_title_user_agreement.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_lt));
+            about_menu_title_licenses.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_lt));
+            about_menu_title_data_protection.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_lt));
+            about_menu_divider_title.setBackgroundColor(ContextCompat.getColor(dividerExit.getContext(), R.color.divider_lt));
         } else {
             toolbar.setBackgroundColor(ContextCompat.getColor(toolbar.getContext(), R.color.background_dt));
             drawer.setBackgroundColor(ContextCompat.getColor(drawer.getContext(), R.color.background_dt));
@@ -198,36 +316,73 @@ public class DrawerMenuManager<T extends AppCompatActivity>
             title_about.setTextColor(ContextCompat.getColor(title_about.getContext(), R.color.fonts_dt));
             titleExit.setTextColor(ContextCompat.getColor(titleExit.getContext(), R.color.fonts_dt));
             version.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_dt));
+
+            about_menu_title_about.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_dt));
+            about_menu_version.setTextColor(ContextCompat.getColor(version.getContext(), R.color.active_fonts_dt));
+            about_menu_title_feedback.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_dt));
+            about_menu_title_rate_the_app.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_dt));
+            about_menu_title_privacy_policy.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_dt));
+            about_menu_title_user_agreement.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_dt));
+            about_menu_title_licenses.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_dt));
+            about_menu_title_data_protection.setTextColor(ContextCompat.getColor(version.getContext(), R.color.fonts_dt));
+            about_menu_divider_title.setBackgroundColor(ContextCompat.getColor(dividerExit.getContext(), R.color.divider_dt));
         }
         icon_receipts_count.setImageDrawable(dIconReceiptsCount);
         icon_send_sms.setImageDrawable(dIconSendSms);
         icon_send_email.setImageDrawable(dIconSendEmail);
         icon_sim.setImageDrawable(dIconSim);
         icon_about.setImageDrawable(dIconAbout);
+
+        about_menu_image_back.setImageDrawable(dIcon_about_menu_button_back);
+        about_menu_icon_feedback.setImageDrawable(dIcon_about_menu_icon_feedback);
+        about_menu_icon_rate_the_app.setImageDrawable(dIcon_about_menu_icon_rate_the_app);
+        about_menu_icon_privacy_policy.setImageDrawable(dIcon_about_menu_icon_privacy_policy);
+        about_menu_icon_user_agreement.setImageDrawable(dIcon_about_menu_icon_user_agreement);
+        about_menu_icon_licenses.setImageDrawable(dIcon_about_menu_icon_licenses);
+        about_menu_icon_data_protection.setImageDrawable(dIcon_about_menu_icon_data_protection);
+
     }
 
     private void changeIconColor(int themeStyle) {
-        int tabIconColor = ContextCompat.getColor(activity.getApplicationContext(), R.color.icon_dt);
+        int iconColor = ContextCompat.getColor(activity.getApplicationContext(), R.color.icon_dt);
+        int arrowBackColor = ContextCompat.getColor(activity.getApplicationContext(), R.color.active_fonts_dt);
         if (themeStyle == SessionPresenter.THEME_LIGHT) {
-            tabIconColor = ContextCompat.getColor(activity.getApplicationContext(), R.color.fonts_lt);
+            iconColor = ContextCompat.getColor(activity.getApplicationContext(), R.color.fonts_lt);
+            arrowBackColor = ContextCompat.getColor(activity.getApplicationContext(), R.color.active_fonts_lt);
         }
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-            dIconReceiptsCount.setColorFilter(new BlendModeColorFilter(tabIconColor, BlendMode.SRC_IN));
-            dIconSendSms.setColorFilter(new BlendModeColorFilter(tabIconColor, BlendMode.SRC_IN));
-            dIconSendEmail.setColorFilter(new BlendModeColorFilter(tabIconColor, BlendMode.SRC_IN));
-            dIconSim.setColorFilter(new BlendModeColorFilter(tabIconColor, BlendMode.SRC_IN));
-            dIconAbout.setColorFilter(new BlendModeColorFilter(tabIconColor, BlendMode.SRC_IN));
+            dIconReceiptsCount.setColorFilter(new BlendModeColorFilter(iconColor, BlendMode.SRC_IN));
+            dIconSendSms.setColorFilter(new BlendModeColorFilter(iconColor, BlendMode.SRC_IN));
+            dIconSendEmail.setColorFilter(new BlendModeColorFilter(iconColor, BlendMode.SRC_IN));
+            dIconSim.setColorFilter(new BlendModeColorFilter(iconColor, BlendMode.SRC_IN));
+            dIconAbout.setColorFilter(new BlendModeColorFilter(iconColor, BlendMode.SRC_IN));
+
+            dIcon_about_menu_button_back.setColorFilter(new BlendModeColorFilter(arrowBackColor, BlendMode.SRC_IN));
+            dIcon_about_menu_icon_feedback.setColorFilter(new BlendModeColorFilter(iconColor, BlendMode.SRC_IN));
+            dIcon_about_menu_icon_rate_the_app.setColorFilter(new BlendModeColorFilter(iconColor, BlendMode.SRC_IN));
+            dIcon_about_menu_icon_privacy_policy.setColorFilter(new BlendModeColorFilter(iconColor, BlendMode.SRC_IN));
+            dIcon_about_menu_icon_user_agreement.setColorFilter(new BlendModeColorFilter(iconColor, BlendMode.SRC_IN));
+            dIcon_about_menu_icon_licenses.setColorFilter(new BlendModeColorFilter(iconColor, BlendMode.SRC_IN));
+            dIcon_about_menu_icon_data_protection.setColorFilter(new BlendModeColorFilter(iconColor, BlendMode.SRC_IN));
         } else {
-            dIconReceiptsCount.setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
-            dIconSendSms.setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
-            dIconSendEmail.setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
-            dIconSim.setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
-            dIconAbout.setColorFilter(tabIconColor, PorterDuff.Mode.SRC_IN);
+            dIconReceiptsCount.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+            dIconSendSms.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+            dIconSendEmail.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+            dIconSim.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+            dIconAbout.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+
+            dIcon_about_menu_button_back.setColorFilter(arrowBackColor, PorterDuff.Mode.SRC_IN);
+            dIcon_about_menu_icon_feedback.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+            dIcon_about_menu_icon_rate_the_app.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+            dIcon_about_menu_icon_privacy_policy.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+            dIcon_about_menu_icon_user_agreement.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+            dIcon_about_menu_icon_licenses.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
+            dIcon_about_menu_icon_data_protection.setColorFilter(iconColor, PorterDuff.Mode.SRC_IN);
         }
     }
 
-    @SuppressLint("NonConstantResourceId")
+    @SuppressLint({"NonConstantResourceId", "LongLogTag"})
     @Override
     public void onClick(View v) {
         switch (v.getId()) {
@@ -241,9 +396,42 @@ public class DrawerMenuManager<T extends AppCompatActivity>
                 SessionPresenter.getInstance().setCurrentTheme(currentTheme + 1);
                 break;
             case R.id.title_about:
-//                activity.getSupportFragmentManager().beginTransaction().replace(R.id.drawer, new AboutFragment()).addToBackStack("about_fragment").commit();
+                makeVisiblyAboutMenu();
+                break;
+            case R.id.about_menu_button_back:
+                makeVisiblyMainMenu();
+                break;
+            case R.id.about_menu_feedback:
+                Log.d(TAG + "_DrawerMenuManager", "tap on about_menu_feedback");
+                break;
+            case R.id.about_menu_rate_the_app:
+                Log.d(TAG + "_DrawerMenuManager", "tap on about_menu_rate_the_app");
+                break;
+            case R.id.about_menu_privacy_policy:
+                Log.d(TAG + "_DrawerMenuManager", "tap on about_menu_privacy_policy");
+                break;
+            case R.id.about_menu_user_agreement:
+                Log.d(TAG + "_DrawerMenuManager", "tap on about_menu_user_agreement");
+                break;
+            case R.id.about_menu_licenses:
+                Log.d(TAG + "_DrawerMenuManager", "tap on about_menu_licenses");
+                break;
+            case R.id.about_menu_data_protection:
+                Log.d(TAG + "_DrawerMenuManager", "tap on about_menu_data_protection");
                 break;
         }
+    }
+
+    private void makeVisiblyMainMenu() {
+        main_menu.setVisibility(View.VISIBLE);
+        version.setVisibility(View.VISIBLE);
+        about_menu.setVisibility(View.GONE);
+    }
+
+    private void makeVisiblyAboutMenu() {
+        main_menu.setVisibility(View.GONE);
+        version.setVisibility(View.GONE);
+        about_menu.setVisibility(View.VISIBLE);
     }
 
     public void showUpButton(boolean show) {
@@ -299,11 +487,11 @@ public class DrawerMenuManager<T extends AppCompatActivity>
 
     @Override
     public void updateValue_send_sms(int countSendSms) {
-        activity.runOnUiThread(() ->value_send_sms.setText(String.format(activity.getString(R.string.value_left_menu), countSendSms)));
+        activity.runOnUiThread(() -> value_send_sms.setText(String.format(activity.getString(R.string.value_left_menu), countSendSms)));
     }
 
     @Override
     public void updateValue_send_email(int countSendEmail) {
-        activity.runOnUiThread(() ->value_send_email.setText(String.format(activity.getString(R.string.value_left_menu), countSendEmail)));
+        activity.runOnUiThread(() -> value_send_email.setText(String.format(activity.getString(R.string.value_left_menu), countSendEmail)));
     }
 }
