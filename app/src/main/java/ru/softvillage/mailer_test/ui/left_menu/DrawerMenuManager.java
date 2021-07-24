@@ -31,6 +31,7 @@ import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.ui.IMainView;
 import ru.softvillage.mailer_test.ui.IUpdateCountersLeftMenu;
+import ru.softvillage.mailer_test.ui.dialog.AboutDialog;
 import ru.softvillage.mailer_test.ui.dialog.ExitDialog;
 
 import static ru.softvillage.mailer_test.App.TAG;
@@ -385,6 +386,7 @@ public class DrawerMenuManager<T extends AppCompatActivity>
     @SuppressLint({"NonConstantResourceId", "LongLogTag"})
     @Override
     public void onClick(View v) {
+        AboutDialog dialog;
         switch (v.getId()) {
             case R.id.titleExit:
                 ExitDialog exitDialog = ExitDialog.newInstance();
@@ -402,21 +404,39 @@ public class DrawerMenuManager<T extends AppCompatActivity>
                 makeVisiblyMainMenu();
                 break;
             case R.id.about_menu_feedback:
+                dialog = AboutDialog.newInstance(AboutDialog.TYPE_FEEDBACK);
+                dialog.setCancelable(false);
+                dialog.show(activity.getSupportFragmentManager(), AboutDialog.TYPE_FEEDBACK);
                 Log.d(TAG + "_DrawerMenuManager", "tap on about_menu_feedback");
                 break;
             case R.id.about_menu_rate_the_app:
+                dialog = AboutDialog.newInstance(AboutDialog.TYPE_RATE_THE_APP);
+                dialog.setCancelable(false);
+                dialog.show(activity.getSupportFragmentManager(), AboutDialog.TYPE_RATE_THE_APP);
                 Log.d(TAG + "_DrawerMenuManager", "tap on about_menu_rate_the_app");
                 break;
             case R.id.about_menu_privacy_policy:
+                dialog = AboutDialog.newInstance(AboutDialog.TYPE_PRIVACY_POLICY);
+                dialog.setCancelable(false);
+                dialog.show(activity.getSupportFragmentManager(), AboutDialog.TYPE_PRIVACY_POLICY);
                 Log.d(TAG + "_DrawerMenuManager", "tap on about_menu_privacy_policy");
                 break;
             case R.id.about_menu_user_agreement:
+                dialog = AboutDialog.newInstance(AboutDialog.TYPE_USER_AGREEMENT);
+                dialog.setCancelable(false);
+                dialog.show(activity.getSupportFragmentManager(), AboutDialog.TYPE_USER_AGREEMENT);
                 Log.d(TAG + "_DrawerMenuManager", "tap on about_menu_user_agreement");
                 break;
             case R.id.about_menu_licenses:
+                dialog = AboutDialog.newInstance(AboutDialog.TYPE_LICENSES);
+                dialog.setCancelable(false);
+                dialog.show(activity.getSupportFragmentManager(), AboutDialog.TYPE_LICENSES);
                 Log.d(TAG + "_DrawerMenuManager", "tap on about_menu_licenses");
                 break;
             case R.id.about_menu_data_protection:
+                dialog = AboutDialog.newInstance(AboutDialog.TYPE_DATA_PROTECTION);
+                dialog.setCancelable(false);
+                dialog.show(activity.getSupportFragmentManager(), AboutDialog.TYPE_DATA_PROTECTION);
                 Log.d(TAG + "_DrawerMenuManager", "tap on about_menu_data_protection");
                 break;
         }

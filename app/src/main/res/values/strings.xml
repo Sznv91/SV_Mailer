@@ -57,6 +57,12 @@
     <string name="receipt_type_payback_sell">ВОЗВРАТ ПРИХОДА</string>
     <string name="receipt_send_confirm_subtitle">Чек №%s будет отправлен после оплаты</string>
     <string name="receipt_send_confirm_subtitle_without_number">Чек будет отправлен после оплаты</string>
+    <string name="about_menu_title_feedback">Обратная связь</string>
+    <string name="about_menu_title_rate_the_app">Оцените приложение</string>
+    <string name="about_menu_title_privacy_policy">Политика конфиденциальности</string>
+    <string name="about_menu_title_user_agreement">Пользовательское соглашение</string>
+    <string name="about_menu_title_licenses">Лицензии</string>
+    <string name="about_menu_title_data_protection">Защита данных</string>
 
 
 </resources>
