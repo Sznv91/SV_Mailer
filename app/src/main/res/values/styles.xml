@@ -6,4 +6,9 @@
         <!-- для Android 5+ вы можете поменять цвет colorPrimaryDark, чтобы соответствовать цвету windowBackground -->
         <!-- <item name="colorPrimaryDark">@android:color/white</item> -->
     </style>
+
+    <style name="MyCheckBox" parent="Theme.AppCompat.Light">
+        <item name="colorControlActivated">@color/icon_lt</item>
+        <item name="colorControlNormal">@color/header_lt</item>
+    </style>
 </resources>

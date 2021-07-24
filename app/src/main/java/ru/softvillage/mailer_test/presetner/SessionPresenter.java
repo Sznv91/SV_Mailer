@@ -46,6 +46,8 @@ public class SessionPresenter {
     public final static String COUNT_ALL_RECEIPT = "count_all_receipt";
     public final static String COUNT_SEND_SMS = "count_send_sms";
     public final static String COUNT_SEND_EMAIL = "count_send_email";
+    public final static String IS_CHECKED_USER_AGREEMENT = "is_checked_user_agreement";
+
     /**
      * Блок определения переменных
      */
@@ -65,7 +67,7 @@ public class SessionPresenter {
     @Getter
     @Setter
     boolean fragmentBusy = false; // false - свободен
-    boolean saveContact;
+    boolean saveContact, isCheckedUserAgreement;
     @Setter
     IUpdateCountersLeftMenu updateCounterOnUi;
 
@@ -109,6 +111,8 @@ public class SessionPresenter {
         countAllReceipt = Prefs.getInstance().loadInt(COUNT_ALL_RECEIPT, 0);
         countSendSms = Prefs.getInstance().loadInt(COUNT_SEND_SMS, 0);
         countSendEmail = Prefs.getInstance().loadInt(COUNT_SEND_EMAIL, 0);
+
+        isCheckedUserAgreement = Prefs.getInstance().loadBoolean(IS_CHECKED_USER_AGREEMENT);
 
         initOrgInfo();
     }
@@ -264,6 +268,17 @@ public class SessionPresenter {
         Prefs.getInstance().saveInt(COUNT_SEND_EMAIL, countSendEmail);
         if (updateCounterOnUi != null) {
             updateCounterOnUi.updateValue_send_email(this.countSendEmail);
+        }
+    }
+
+    public boolean getIsCheckedUserAgreement() {
+        return isCheckedUserAgreement;
+    }
+
+    public void setIsCheckedUserAgreement(boolean checkedUserAgreement) {
+        if (this.isCheckedUserAgreement != checkedUserAgreement) {
+            isCheckedUserAgreement = checkedUserAgreement;
+            Prefs.getInstance().saveBoolean(IS_CHECKED_USER_AGREEMENT, checkedUserAgreement);
         }
     }
 }

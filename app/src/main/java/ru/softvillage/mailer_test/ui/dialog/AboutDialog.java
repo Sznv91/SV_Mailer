@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -38,6 +39,7 @@ public class AboutDialog extends DialogFragment {
             about_dialog_content,
             about_dialog_button_close;
     private Drawable dIcon;
+    private CheckBox about_dialog_checkbox;
 
 
     public AboutDialog() {
@@ -94,6 +96,7 @@ public class AboutDialog extends DialogFragment {
         about_dialog_title = view.findViewById(R.id.about_dialog_title);
         about_dialog_content = view.findViewById(R.id.about_dialog_content);
         about_dialog_button_close = view.findViewById(R.id.about_dialog_button_close);
+        about_dialog_checkbox = view.findViewById(R.id.about_dialog_checkbox);
 
 
         initContent();
@@ -116,6 +119,7 @@ public class AboutDialog extends DialogFragment {
                 dIcon = ContextCompat.getDrawable(about_dialog_icon.getContext(), R.drawable.ic_icon_privacy_policy);
                 break;
             case TYPE_USER_AGREEMENT:
+                about_dialog_checkbox.setVisibility(View.VISIBLE);
                 about_dialog_title.setText(getText(R.string.about_menu_title_user_agreement));
                 dIcon = ContextCompat.getDrawable(about_dialog_icon.getContext(), R.drawable.ic_icon_user_agreement);
                 break;
@@ -136,7 +140,30 @@ public class AboutDialog extends DialogFragment {
     }
 
     private void initButton() {
-        about_dialog_button_close.setOnClickListener(v -> dismiss());
+        if (dialogType.equals(TYPE_USER_AGREEMENT)) {
+            if (SessionPresenter.getInstance().getCurrentTheme() == SessionPresenter.THEME_LIGHT)
+                about_dialog_button_close.setTextColor(ContextCompat.getColor(about_dialog_button_close.getContext(), R.color.active_fonts_lt));
+            else
+                about_dialog_button_close.setTextColor(ContextCompat.getColor(about_dialog_button_close.getContext(), R.color.active_fonts_dt));
+            about_dialog_checkbox.setOnCheckedChangeListener((buttonView, isChecked) -> {
+                if (isChecked) {
+                    SessionPresenter.getInstance().setIsCheckedUserAgreement(true);
+                    about_dialog_button_close.setTextColor(ContextCompat.getColor(about_dialog_button_close.getContext(), R.color.header_lt));
+                    about_dialog_button_close.setOnClickListener(v -> dismiss());
+                } else {
+                    SessionPresenter.getInstance().setIsCheckedUserAgreement(false);
+                    if (SessionPresenter.getInstance().getCurrentTheme() == SessionPresenter.THEME_LIGHT)
+                        about_dialog_button_close.setTextColor(ContextCompat.getColor(about_dialog_button_close.getContext(), R.color.active_fonts_lt));
+                    else
+                        about_dialog_button_close.setTextColor(ContextCompat.getColor(about_dialog_button_close.getContext(), R.color.active_fonts_dt));
+                    about_dialog_button_close.setOnClickListener(v -> {
+                    });
+                }
+            });
+            about_dialog_checkbox.setChecked(SessionPresenter.getInstance().getIsCheckedUserAgreement());
+        } else {
+            about_dialog_button_close.setOnClickListener(v -> dismiss());
+        }
     }
 
     private void initColor() {
@@ -144,11 +171,13 @@ public class AboutDialog extends DialogFragment {
 
         if (SessionPresenter.getInstance().getCurrentTheme() == SessionPresenter.THEME_LIGHT) {
             iconColor = ContextCompat.getColor(about_dialog_icon.getContext(), R.color.active_fonts_lt);
+            about_dialog_checkbox.setTextColor(ContextCompat.getColor(about_dialog_checkbox.getContext(), R.color.fonts_lt));
             about_dialog_title.setTextColor(ContextCompat.getColor(about_dialog_title.getContext(), R.color.fonts_lt));
             about_dialog_content.setTextColor(ContextCompat.getColor(about_dialog_content.getContext(), R.color.fonts_lt));
 
         } else {
             iconColor = ContextCompat.getColor(about_dialog_icon.getContext(), R.color.icon_dt);
+            about_dialog_checkbox.setTextColor(ContextCompat.getColor(about_dialog_checkbox.getContext(), R.color.fonts_dt));
             about_dialog_title.setTextColor(ContextCompat.getColor(about_dialog_title.getContext(), R.color.fonts_dt));
             about_dialog_content.setTextColor(ContextCompat.getColor(about_dialog_content.getContext(), R.color.fonts_dt));
         }

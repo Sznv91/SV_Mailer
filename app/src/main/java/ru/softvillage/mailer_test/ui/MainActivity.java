@@ -16,6 +16,7 @@ import ru.softvillage.mailer_test.R;
 import ru.softvillage.mailer_test.presetner.SessionPresenter;
 import ru.softvillage.mailer_test.service.EvoReceiptAdderService;
 import ru.softvillage.mailer_test.service.SendToBackendService;
+import ru.softvillage.mailer_test.ui.dialog.AboutDialog;
 import ru.softvillage.mailer_test.ui.left_menu.DrawerMenuManager;
 import ru.softvillage.mailer_test.ui.tabs.TabLayoutFragment;
 import ru.softvillage.mailer_test.ui.tabs.TabLayoutFragmentLandscape;
@@ -55,6 +56,11 @@ public class MainActivity extends AppCompatActivity {
         DrawerMenuManager<MainActivity> manager = new DrawerMenuManager<>(this); // Инициализация бокового меню
 
         if (savedInstanceState == null) {
+            if (!SessionPresenter.getInstance().getIsCheckedUserAgreement()){
+                AboutDialog dialog = AboutDialog.newInstance(AboutDialog.TYPE_USER_AGREEMENT);
+                dialog.setCancelable(false);
+                dialog.show(getSupportFragmentManager(), AboutDialog.TYPE_USER_AGREEMENT);
+            }
             if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_PORTRAIT)
                 getSupportFragmentManager().beginTransaction().replace(R.id.fragment_holder, new TabLayoutFragment()).commit();
             else if (getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE) {
