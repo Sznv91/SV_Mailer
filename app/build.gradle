@@ -7,10 +7,11 @@ android {
     buildToolsVersion "30.0.3"
 
     defaultConfig {
-        applicationId "ru.softvillage.mailer__test"
+        applicationId "ru.softvillage.mailer_main"
+        flavorDimensions "mode"
         minSdkVersion 23
         targetSdkVersion 30
-        versionCode 1
+        versionCode 3
         versionName "0.0.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
@@ -22,6 +23,21 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+
+    productFlavors {
+        primary {
+            manifestPlaceholders = [uuid:"6cc6d84a-2a2b-4995-80d7-6cb9336463e6"]
+        }
+        version_for_their {
+            applicationId "ru.softvillage.mailer_for_their"
+            manifestPlaceholders = [uuid:"1111111111111111111111111"]
+        }
+        version_test {
+            applicationId "ru.softvillage.mailer__test"
+            manifestPlaceholders = [uuid:"fdf9ba03-f2ec-47c1-ae3d-363c31794052"]
+        }
+    }
+
     compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8

@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="ru.softvillage.mailer_test">
+    package="ru.softvillage.mailer_main">
 
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.INTERNET" />
@@ -90,10 +90,10 @@
             android:exported="true" /> <!-- android:theme="@style/Theme.SWMailerTest" -->
         <meta-data
             android:name="app_uuid"
-            android:value="fdf9ba03-f2ec-47c1-ae3d-363c31794052" />
+            android:value="${uuid}" />
 
         <activity
-            android:name=".ui.MainActivity"
+            android:name="ru.softvillage.mailer_main.ui.MainActivity"
             android:label="@string/title_activity_main"
             android:theme="@style/Theme.SWMailerTest.Launcher">
             <meta-data

@@ -1,2 +1,2 @@
 include ':app'
-rootProject.name = "SW Mailer Test"
+rootProject.name = "SV Mailer"
