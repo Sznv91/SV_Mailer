@@ -14,7 +14,6 @@
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
-        android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.SWMailerTest">
 
@@ -32,12 +31,11 @@
             android:name=".service.SellService"
             android:enabled="true"
             android:exported="true"
-            android:icon="@mipmap/ic_launcher"
             android:label="@string/app_name"
             android:permission="ru.evotor.permission.SELL_INTEGRATION_SERVICE">
             <meta-data
                 android:name="ru.evotor.sales_screen.BACKGROUND_COLOR"
-                android:value="#FF5722" />
+                android:value="#67a520" />
 
             <intent-filter>
                 <action android:name="evo.v2.receipt.sell.receiptDiscount" />
