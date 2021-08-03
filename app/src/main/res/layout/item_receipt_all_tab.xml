@@ -53,25 +53,25 @@
 
     <ImageView
         tools:visibility="visible"
-        android:visibility="invisible"
-        android:id="@+id/sv_send_email"
+        android:visibility="gone"
+        android:id="@+id/sv_send_sms"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/title_receipt_time"
         app:layout_constraintRight_toRightOf="@+id/title_receipt_time"
-        android:src="@drawable/ic_mailer_sended_email" />
+        android:src="@drawable/ic_mailer_sended_sms" />
 
     <ImageView
         tools:visibility="visible"
-        android:visibility="invisible"
-        android:id="@+id/sv_send_sms"
+        android:visibility="gone"
+        android:id="@+id/sv_send_email"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        app:layout_constraintBottom_toBottomOf="@+id/sv_send_email"
-        app:layout_constraintRight_toLeftOf="@+id/sv_send_email"
-        android:src="@drawable/ic_mailer_sended_sms" />
+        app:layout_constraintBottom_toBottomOf="@+id/sv_send_sms"
+        app:layout_constraintRight_toLeftOf="@+id/sv_send_sms"
+        android:src="@drawable/ic_mailer_sended_email" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

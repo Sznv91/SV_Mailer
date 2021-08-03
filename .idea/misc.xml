@@ -3,6 +3,8 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Android/Projects/Evotor/test_mailer/app/src/main/res/layout/fragment_send_receipt.xml" value="0.17617753623188406" />
+        <entry key="..\:/Android/Projects/Evotor/test_mailer/app/src/main/res/layout/item_receipt_all_tab.xml" value="0.33" />
         <entry key="..\:/Android/Projects/Evotor/test_mailer/app/src/main/res/layout/menu_left.xml" value="0.18478260869565216" />
       </map>
     </option>
